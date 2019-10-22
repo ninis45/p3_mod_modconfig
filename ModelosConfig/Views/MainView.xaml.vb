@@ -47,6 +47,18 @@
 
     End Sub
 
+    Private Sub ShowCond(sender As Object, e As RoutedEventArgs)
+        Dim db As New ModeloCI.Entities_ModeloCI()
+        Dim ConfigView As New ConfigView(Context.IdAgujero, Context.LiftMethod, Context.Errors, Context.FechaPrueba)
+
+
+        ConfigView.ShowDialog()
+        Dim ModModel As New ModModel(Context.IdAgujero)
+
+        Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+
+    End Sub
+
     Private Sub ShowPozo(sender As Object, e As RoutedEventArgs)
         Dim PozoView As New PozoView()
 

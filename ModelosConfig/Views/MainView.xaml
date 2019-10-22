@@ -52,18 +52,25 @@
                 DisplayMemberPath="FECHAMODELO"
                 Visibility="{Binding Modelos.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14"    >
                 </telerik:RadComboBox >
-                <Button   Width="30" Padding="2" Click="ShowConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14">
+                <Button  Margin="1 0"  Width="30" Padding="2" Click="ShowConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Crear nuevo modelo">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <telerik:RadGlyph Glyph="&#xe13a;" />
+                            <telerik:RadGlyph Glyph="&#xe11e;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-               
-               
-               
-                
+                <Button Margin="1 0"   Width="30" Padding="2" Click="ShowCond" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Actualizar condiciones de operación">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <telerik:RadGlyph Glyph="&#xe13c;" />
+                            <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+
+
+
             </StackPanel>
             
 
@@ -120,45 +127,32 @@
                 <Label Content="En cola" FontSize="30" Foreground="DarkCyan" ></Label>
                 <Label Content="{Binding Prog}" HorizontalAlignment="Center"></Label>
             </StackPanel>
+            <Grid  Grid.Row="1" Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="33*"/>
+                    <ColumnDefinition Width="33*"/>
+
+                    <ColumnDefinition Width="33*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50*"/>
+                    <RowDefinition Height="50*"/>
+
+                </Grid.RowDefinitions>
+                <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
+                <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
+                <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
 
 
-            <telerik:RadTabControl TabStripPlacement="Left" Align="Right" Grid.Row="1" Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
-                <telerik:RadTabItem Header="Resultados" Height="30" FontFamily="Century Gothic" FontSize="14">
-                    <Grid >
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="33*"/>
-                            <ColumnDefinition Width="33*"/>
+                <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
+                <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
+                <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc" Grid.ColumnSpan="2"/>
+            </Grid>
 
-                            <ColumnDefinition Width="33*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50*"/>
-                            <RowDefinition Height="50*"/>
+            
 
-                        </Grid.RowDefinitions>
-                        <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
-                        <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
-                        <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
-
-
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc" Grid.ColumnSpan="2"/>
-                  </Grid>
-
-                </telerik:RadTabItem>
-                <telerik:RadTabItem Header="Estabilidad" Visibility="{Binding Configuraciones.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14">
-                    <Grid Name="GrdEstabilidad">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"></RowDefinition>
-                        </Grid.RowDefinitions>
-                    </Grid>
-
-                </telerik:RadTabItem>
-                
-            </telerik:RadTabControl>
-           
-
+            
+            
             
 
             <!--GRAFICAS GENERADAS-->

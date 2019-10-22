@@ -107,6 +107,9 @@
     <Reference Include="Telerik.Windows.Controls.Data">
       <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Data.dll</HintPath>
     </Reference>
+    <Reference Include="Telerik.Windows.Controls.Docking">
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF45\Telerik.Windows.Controls.Docking.dll</HintPath>
+    </Reference>
     <Reference Include="Telerik.Windows.Controls.FileDialogs, Version=2019.1.220.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF40\Telerik.Windows.Controls.FileDialogs.dll</HintPath>
@@ -225,8 +228,12 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ViewModels\CombosViewModel.vb" />
+    <Compile Include="ViewModels\CondViewModel.vb" />
     <Compile Include="ViewModels\ConfigViewModel.vb" />
     <Compile Include="ViewModels\MainViewModel.vb" />
+    <Compile Include="Views\CondView.xaml.vb">
+      <DependentUpon>CondView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ConfigView.xaml.vb">
       <DependentUpon>ConfigView.xaml</DependentUpon>
     </Compile>
@@ -240,6 +247,10 @@
       <DependentUpon>PozoView.xaml</DependentUpon>
     </Compile>
     <Page Include="Resources\Notices.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CondView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
