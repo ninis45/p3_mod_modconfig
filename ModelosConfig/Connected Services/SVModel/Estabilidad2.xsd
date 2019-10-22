@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://vwvheappd013.pemex.pmx.com/Modelo/Estabilidad.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/EstabilidadLib.Clases" />
+  <xs:element name="DoWork">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DoWorkResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Recomendacion">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RecomendacionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="RecomendacionResult" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Pozo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Ptr_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Pwh_Min" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_Max" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Qgi_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Dvalve_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_num" type="xs:int" />
+        <xs:element minOccurs="0" name="DiaVal_min" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaVal_max" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaVal_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Wc_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Cd" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaValve_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Caso" type="xs:int" />
+        <xs:element minOccurs="0" name="Metodologia" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PozoResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/EstabilidadLib.Clases" minOccurs="0" name="PozoResult" nillable="true" type="q1:ArrayOfEstabilidadDePozos.Parametros_Estabilidad" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Mapa">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="Ptr_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Pwh_Min" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_Max" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Qgi_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Dvalve_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_num" type="xs:int" />
+        <xs:element minOccurs="0" name="DiaVal_min" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaVal_max" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaVal_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Wc_min" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_max" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_num" type="xs:int" />
+        <xs:element minOccurs="0" name="Cd" type="xs:double" />
+        <xs:element minOccurs="0" name="Ptr_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Pwh_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Qgi_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Dvalve_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="DiaValve_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Wc_Act" type="xs:double" />
+        <xs:element minOccurs="0" name="Caso" type="xs:int" />
+        <xs:element minOccurs="0" name="Metodologia" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MapaResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/EstabilidadLib.Clases" minOccurs="0" name="MapaResult" nillable="true" type="q2:ArrayOfMapaEstabilidad.Parametros_Estabilidad" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

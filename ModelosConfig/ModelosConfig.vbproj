@@ -1,0 +1,405 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <RootNamespace>ModelosConfig</RootNamespace>
+    <AssemblyName>ModelosConfig</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <MyType>Custom</MyType>
+    <Deterministic>true</Deterministic>
+    <ProjectGuid>{B8BD835E-9016-4576-B119-911B05D4AAAE}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>true</IncrementalBuild>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>ModelosConfig.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <IncrementalBuild>false</IncrementalBuild>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>ModelosConfig.xml</DocumentationFile>
+    <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DBConnection">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\DBConnection.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Lagrange">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Lagrange.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="ModeloCI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ModeloCI.dll</HintPath>
+    </Reference>
+    <Reference Include="ModelosEstabilidad, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\ModelosEstabilidad.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Unity.Wpf">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.Unity.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="Prism.Wpf">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="TeeChart">
+      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.dll</HintPath>
+    </Reference>
+    <Reference Include="TeeChart.WPF">
+      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="TeeChart.Xaml.WPF">
+      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.Xaml.WPF.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Data">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.FileDialogs, Version=2019.1.220.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF40\Telerik.Windows.Controls.FileDialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.GridView">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.GridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Input">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="Unity.Abstractions">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Unity.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Container">
+      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Unity.Container.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Clases\Analisis.vb" />
+    <Compile Include="Clases\BaseDatos.vb" />
+    <Compile Include="Clases\BaseDatosServidor.vb" />
+    <Compile Include="Clases\Inicial.vb" />
+    <Compile Include="Clases\Mecanico.vb" />
+    <Compile Include="Connected Services\SVDeclinacion\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Connected Services\SVModel\Reference.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="grfCorrelacion.Designer.vb">
+      <DependentUpon>grfCorrelacion.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfCorrelacion.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="grfDiag.Designer.vb">
+      <DependentUpon>grfDiag.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfDiag.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="grfGas.designer.vb">
+      <DependentUpon>grfGas.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfGas.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="grfProductividad.Designer.vb">
+      <DependentUpon>grfProductividad.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfProductividad.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="grfVlp.Designer.vb">
+      <DependentUpon>grfVlp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfVlp.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="grfWc.Designer.vb">
+      <DependentUpon>grfWc.vb</DependentUpon>
+    </Compile>
+    <Compile Include="grfWc.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Helpers\InverseBoolean.vb" />
+    <Compile Include="Helpers\NullToBolean.vb" />
+    <Compile Include="Helpers\NumToBool.vb" />
+    <Compile Include="Helpers\ToVisibility.vb" />
+    <Compile Include="Interfaces\IDeclinacion.vb" />
+    <Compile Include="Libraries\Settings.vb" />
+    <Compile Include="Models\AgujeroModel.vb" />
+    <Compile Include="Models\BecModel.vb" />
+    <Compile Include="Models\BncModel.vb" />
+    <Compile Include="Models\MecanicoModel.vb" />
+    <Compile Include="Models\ModModel.vb" />
+    <Compile Include="Resources\UsrControls\usrAforo.Designer.vb">
+      <DependentUpon>usrAforo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrAforo.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrPvt.Designer.vb">
+      <DependentUpon>usrPvt.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrPvt.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrTemperatura.Designer.vb">
+      <DependentUpon>usrTemperatura.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrTemperatura.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrTrayectoria.Designer.vb">
+      <DependentUpon>usrTrayectoria.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\UsrControls\usrTrayectoria.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ViewModels\CombosViewModel.vb" />
+    <Compile Include="ViewModels\ConfigViewModel.vb" />
+    <Compile Include="ViewModels\MainViewModel.vb" />
+    <Compile Include="Views\ConfigView.xaml.vb">
+      <DependentUpon>ConfigView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GraphView.xaml.vb">
+      <DependentUpon>GraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainView.xaml.vb">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PozoView.xaml.vb">
+      <DependentUpon>PozoView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Resources\Notices.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConfigView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\GraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\PozoView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="System.Threading.Tasks" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows" />
+    <Import Include="System.Windows.Controls" />
+    <Import Include="System.Windows.Data" />
+    <Import Include="System.Windows.Documents" />
+    <Import Include="System.Windows.Input" />
+    <Import Include="System.Windows.Shapes" />
+    <Import Include="System.Windows.Media" />
+    <Import Include="System.Windows.Media.Imaging" />
+    <Import Include="System.Windows.Navigation" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="My Project\AssemblyInfo.vb">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="grfCorrelacion.resx">
+      <DependentUpon>grfCorrelacion.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grfDiag.resx">
+      <DependentUpon>grfDiag.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grfGas.resx">
+      <DependentUpon>grfGas.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grfProductividad.resx">
+      <DependentUpon>grfProductividad.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grfVlp.resx">
+      <DependentUpon>grfVlp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="grfWc.resx">
+      <DependentUpon>grfWc.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\licenses.licx" />
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Licenses.licx" />
+    <EmbeddedResource Include="Resources\UsrControls\usrAforo.resx">
+      <DependentUpon>usrAforo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UsrControls\usrPvt.resx">
+      <DependentUpon>usrPvt.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UsrControls\usrTemperatura.resx">
+      <DependentUpon>usrTemperatura.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UsrControls\usrTrayectoria.resx">
+      <DependentUpon>usrTrayectoria.vb</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVDeclinacion\Service1.wsdl" />
+    <None Include="Connected Services\SVDeclinacion\Service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVDeclinacion\Service11.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVDeclinacion\Service12.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVModel\Estabilidad.wsdl" />
+    <None Include="Connected Services\SVModel\Estabilidad.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVModel\Estabilidad1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Connected Services\SVModel\Estabilidad2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="My Project\DataSources\ModelosEstabilidad.SVModel.EstabilidadDePozosParametros_Estabilidad.datasource" />
+    <None Include="My Project\DataSources\ModelosEstabilidad.SVModel.MapaEstabilidadParametros_Estabilidad.datasource" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\SVDeclinacion\" />
+    <WCFMetadataStorage Include="Connected Services\SVModel\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVModel\Estabilidad.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVModel\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVModel\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVModel\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Connected Services\SVDeclinacion\Service1.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVDeclinacion\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVDeclinacion\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\SVDeclinacion\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>

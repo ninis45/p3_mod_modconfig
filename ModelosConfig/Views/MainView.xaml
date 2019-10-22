@@ -1,0 +1,184 @@
+﻿<UserControl
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ModelosConfig"   
+       
+        xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"       
+        xmlns:WPF="clr-namespace:Steema.TeeChart.WPF;assembly=TeeChart.WPF" x:Class="MainWindow"
+        mc:Ignorable="d" Width="auto" Height="auto" >
+    <UserControl.Resources>
+        <telerik:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <telerik:StringToGlyphConverter x:Key="StringToGlyphConverter"/>
+        <telerik:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"></telerik:NumberToVisibilityConverter>
+        <local:ToVisibility x:Key="WRToVisibility"></local:ToVisibility>
+        <local:NumToBool x:Key="WRNumToBool"></local:NumToBool>  
+
+    </UserControl.Resources>
+  
+    <Grid>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+            
+        </Grid.RowDefinitions>
+
+       
+        <!--Comienza Menu-->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60*"/>
+                <ColumnDefinition Width="40"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" Grid.Column="0">
+                <TextBlock Text="{Binding Pozo}" HorizontalAlignment="Left"  FontStyle="Oblique" FontFamily="Century Gothic" FontSize="14"   VerticalAlignment="Center" >
+                </TextBlock>
+                <TextBlock Text="{Binding Panel}" HorizontalAlignment="Left" FontStyle="Oblique" FontFamily="Century Gothic" FontSize="14" VerticalAlignment="Center"></TextBlock>
+
+                <TextBlock Text="{Binding SAP}" HorizontalAlignment="Left" FontStyle="Oblique" FontFamily="Century Gothic" FontSize="14" VerticalAlignment="Center"/>
+
+            </StackPanel>            
+            <StackPanel Grid.Row="1"  Orientation="Horizontal" Margin="6" HorizontalAlignment="Right">           
+               
+                <telerik:RadComboBox 
+                EmptyText="Modelos"
+                ItemsSource="{Binding Modelos,Mode=TwoWay}"              
+                  
+                SelectedValue="{Binding IdModPozo}"
+                SelectedValuePath="IDMODPOZO"
+                DisplayMemberPath="FECHAMODELO"
+                Visibility="{Binding Modelos.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14"    >
+                </telerik:RadComboBox >
+                <Button   Width="30" Padding="2" Click="ShowConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <telerik:RadGlyph Glyph="&#xe13a;" />
+                            <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+               
+               
+               
+                
+            </StackPanel>
+            
+
+        </Grid>
+        <!--Termina Menu-->
+       
+        <!--COMIENZA BODY-->
+        <Grid Grid.Row="1"  Name="GrdMain" >
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="../Resources/Notices.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+
+                </ResourceDictionary>
+
+            </Grid.Resources>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Visibility="{Binding Estatus,ConverterParameter=0, Converter={StaticResource WRToVisibility}, Mode=TwoWay}">
+                <Label Content="Modelo pendiente" FontSize="30" Foreground="DarkCyan" HorizontalAlignment="Center" ></Label>
+                <Label Content="{Binding Prog}" HorizontalAlignment="Center"></Label>
+
+                
+                <Border Style="{StaticResource alert-danger}" Width="550" Visibility="{Binding Errors.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding Errors}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock>- </TextBlock>
+                                    <TextBlock Text="{Binding Message}"></TextBlock>
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <Border Style="{StaticResource alert-warning}" Width="550" Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                    <ItemsControl ItemsSource="{Binding Warnings}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock>-</TextBlock>
+                                    <TextBlock Text="{Binding Message}" ToolTip="{Binding Message}"></TextBlock>
+                                </StackPanel>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+            </StackPanel>
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 300 0 300" Visibility="{Binding Estatus,ConverterParameter=1, Converter={StaticResource WRToVisibility}, Mode=TwoWay}">
+                <Label Content="En cola" FontSize="30" Foreground="DarkCyan" ></Label>
+                <Label Content="{Binding Prog}" HorizontalAlignment="Center"></Label>
+            </StackPanel>
+
+
+            <telerik:RadTabControl TabStripPlacement="Left" Align="Right" Grid.Row="1" Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
+                <telerik:RadTabItem Header="Resultados" Height="30" FontFamily="Century Gothic" FontSize="14">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="33*"/>
+                            <ColumnDefinition Width="33*"/>
+
+                            <ColumnDefinition Width="33*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+
+                        </Grid.RowDefinitions>
+                        <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
+                        <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
+                        <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
+
+
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc" Grid.ColumnSpan="2"/>
+                  </Grid>
+
+                </telerik:RadTabItem>
+                <telerik:RadTabItem Header="Estabilidad" Visibility="{Binding Configuraciones.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14">
+                    <Grid Name="GrdEstabilidad">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                    </Grid>
+
+                </telerik:RadTabItem>
+                
+            </telerik:RadTabControl>
+           
+
+            
+
+            <!--GRAFICAS GENERADAS-->
+
+            
+            
+
+        </Grid>
+        <!--Termina Body-->
+        
+
+        
+        
+
+
+
+
+
+
+
+    </Grid>
+
+</UserControl>

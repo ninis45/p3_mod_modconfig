@@ -1,0 +1,294 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CO2" xml:space="preserve">
+    <value>%CO2 (mol)</value>
+  </data>
+  <data name="COMPACT" xml:space="preserve">
+    <value>Modelo de reducción de permeabilidad por compactación</value>
+  </data>
+  <data name="COMPLETION" xml:space="preserve">
+    <value>Terminación</value>
+  </data>
+  <data name="DATGENDATE" xml:space="preserve">
+    <value>Fecha</value>
+  </data>
+  <data name="DIAMVAL" xml:space="preserve">
+    <value>Diam válvula de BN (64 avos pg)</value>
+  </data>
+  <data name="DIETZ" xml:space="preserve">
+    <value>Factor de forma (adim)</value>
+  </data>
+  <data name="DRAINAGE" xml:space="preserve">
+    <value>Área de drene (m2)</value>
+  </data>
+  <data name="EMULSION" xml:space="preserve">
+    <value>Emulsión</value>
+  </data>
+  <data name="ENTRY" xml:space="preserve">
+    <value>Usar RGIL o Qgi</value>
+  </data>
+  <data name="FLOWTYPE" xml:space="preserve">
+    <value>Tipo de flujo</value>
+  </data>
+  <data name="FLUID" xml:space="preserve">
+    <value>Fluido</value>
+  </data>
+  <data name="GASCONING" xml:space="preserve">
+    <value>Coni. de Gas</value>
+  </data>
+  <data name="GLRATE" xml:space="preserve">
+    <value>QGI(MMPie3/Dia)</value>
+  </data>
+  <data name="GLRINY" xml:space="preserve">
+    <value>RGIL(m3/m3)</value>
+  </data>
+  <data name="GQIMAX" xml:space="preserve">
+    <value>Qgi maximo MMpie3/día</value>
+  </data>
+  <data name="GRAVELPACK" xml:space="preserve">
+    <value>Ctrl. de Arenas</value>
+  </data>
+  <data name="GRAVITY" xml:space="preserve">
+    <value>Dens. del Gas BN</value>
+  </data>
+  <data name="H2S" xml:space="preserve">
+    <value>%H2S (mol)</value>
+  </data>
+  <data name="HTC" xml:space="preserve">
+    <value>Coef. Transf. Calor (BTU/pie/hr/oF)</value>
+  </data>
+  <data name="HYDRATE" xml:space="preserve">
+    <value>Hidratos</value>
+  </data>
+  <data name="INFLOWTYPE" xml:space="preserve">
+    <value>Tipo de Afluencia</value>
+  </data>
+  <data name="IPRMETHOD" xml:space="preserve">
+    <value>Correlación de flujo en el yacimiento</value>
+  </data>
+  <data name="IRELK" xml:space="preserve">
+    <value>Emplear permeabilidades relativas</value>
+  </data>
+  <data name="LIFTMETHOD" xml:space="preserve">
+    <value>SAP</value>
+  </data>
+  <data name="LIFTTYPE" xml:space="preserve">
+    <value>Tipo SAP</value>
+  </data>
+  <data name="METHOD" xml:space="preserve">
+    <value>Método de BN</value>
+  </data>
+  <data name="MGSKINMETHOD" xml:space="preserve">
+    <value>Factor de daño</value>
+  </data>
+  <data name="MGSKINMODEL" xml:space="preserve">
+    <value>Modelo de daño</value>
+  </data>
+  <data name="N2" xml:space="preserve">
+    <value>%N2 (mol)</value>
+  </data>
+  <data name="OUTPUTRES" xml:space="preserve">
+    <value>Presión de salida</value>
+  </data>
+  <data name="PI" xml:space="preserve">
+    <value>Índice de productividad (bl/día/kg/cm2)</value>
+  </data>
+  <data name="PREDICT" xml:space="preserve">
+    <value>Predicción</value>
+  </data>
+  <data name="PRES" xml:space="preserve">
+    <value>Presión del yacimiento (kg/cm2)</value>
+  </data>
+  <data name="PTEST" xml:space="preserve">
+    <value>Presión de fondo fluyendo (kg/cm2)</value>
+  </data>
+  <data name="PVTMODEL" xml:space="preserve">
+    <value>Modelo PVT</value>
+  </data>
+  <data name="QGIMIN" xml:space="preserve">
+    <value>Qgi mínimo MMpie3/día</value>
+  </data>
+  <data name="QTEST" xml:space="preserve">
+    <value>Gasto de liquido del aforo (bl/día)</value>
+  </data>
+  <data name="RANGESYSTEM" xml:space="preserve">
+    <value>Rango</value>
+  </data>
+  <data name="RDRAINAGE" xml:space="preserve">
+    <value>Radio del Drene(m)</value>
+  </data>
+  <data name="RESPERM" xml:space="preserve">
+    <value>Permeabilidad del yacimiento (md)</value>
+  </data>
+  <data name="RGATOTALAFORO" xml:space="preserve">
+    <value>RGA</value>
+  </data>
+  <data name="SEPARATOR" xml:space="preserve">
+    <value>Separador</value>
+  </data>
+  <data name="SKIN" xml:space="preserve">
+    <value>Daño(Adm)</value>
+  </data>
+  <data name="TEMPMODEL" xml:space="preserve">
+    <value>Modelo Temp.</value>
+  </data>
+  <data name="THICKNESS" xml:space="preserve">
+    <value>Espesor del yacimiento (m)</value>
+  </data>
+  <data name="THPD" xml:space="preserve">
+    <value>PWDIN(km/cm2)</value>
+  </data>
+  <data name="THTD" xml:space="preserve">
+    <value>TWH Dinámico</value>
+  </data>
+  <data name="THTE" xml:space="preserve">
+    <value>TWH Est.(ºC)</value>
+  </data>
+  <data name="TOTGOR" xml:space="preserve">
+    <value>RGA Total(m3/m3)</value>
+  </data>
+  <data name="TRES" xml:space="preserve">
+    <value>Temperatura del yacimiento (oC)</value>
+  </data>
+  <data name="TRPRES" xml:space="preserve">
+    <value>Presión de Inyección del gas de BN (kg/cm2)</value>
+  </data>
+  <data name="VALVEDEPTH" xml:space="preserve">
+    <value>Prof. Valv. Inyec.</value>
+  </data>
+  <data name="VISMOD" xml:space="preserve">
+    <value>Modelo de viscosidad</value>
+  </data>
+  <data name="VOLGASINY" xml:space="preserve">
+    <value>Volumen de Gas Inyeccion</value>
+  </data>
+  <data name="WATVIS" xml:space="preserve">
+    <value>Viscosidad de agua</value>
+  </data>
+  <data name="WBR" xml:space="preserve">
+    <value>Radio Pozo(in)</value>
+  </data>
+  <data name="WC" xml:space="preserve">
+    <value>Agua(%)</value>
+  </data>
+  <data name="WELLTYPE" xml:space="preserve">
+    <value>Tipo de pozo</value>
+  </data>
+</root>
