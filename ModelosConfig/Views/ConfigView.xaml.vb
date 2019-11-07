@@ -7,12 +7,12 @@ Public Class ConfigView
 
     Public ContextConfig As ConfigViewModel
 
-    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As Double, ByVal Errors As ObservableCollection(Of ModelosEstabilidad.FlashData), ByVal FechaPrueba As String)
+    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As Double, ByVal IdUsuario As String, ByVal Errors As ObservableCollection(Of String), ByVal FechaPrueba As String)
 
         ' Esta llamada es exigida por el diseñador.
         InitializeComponent()
 
-        ContextConfig = New ConfigViewModel(IdAgujero, LiftMethod, Errors, Me.wfhTrayectoria, Me.wfhTemperatura, Me.wfhAforos, Me.wfhPvts, FechaPrueba)
+        ContextConfig = New ConfigViewModel(IdAgujero, LiftMethod, IdUsuario, Errors, Me.wfhTrayectoria, Me.wfhTemperatura, Me.wfhAforos, Me.wfhPvts, FechaPrueba)
         ContextConfig.FormView = Me
         Me.DataContext = ContextConfig
 
@@ -32,24 +32,22 @@ Public Class ConfigView
 
     End Sub
 
-    Private Sub TextBox_TextChanged(sender As Object, e As TextChangedEventArgs)
 
-    End Sub
-
-    Private Sub ComboBox_SelectionChanged(sender As Object, e As SelectionChangedEventArgs)
-
-    End Sub
     Private Sub DeleteFile(sender As Object, e As RoutedEventArgs)
-        ContextConfig.ModArchivo = Nothing
+        ContextConfig.ArchivoPvt = Nothing
     End Sub
-    Private Sub OpenDialogBEC(sender As Object, e As RoutedEventArgs)
+
+    Private Sub ClearFile(sender As Object, e As RoutedEventArgs)
+        ContextConfig.NewArchivoPvt = Nothing
+    End Sub
+    Private Sub SelectFile(sender As Object, e As RoutedEventArgs)
         Dim Dialog As New RadOpenFileDialog()
         'File.Owner = Owner
         Dialog.Filter = "All files (*.Out)|*.Out"
         Dialog.ShowDialog()
 
         If Dialog.DialogResult = True Then
-            ContextConfig.FileBEC = Dialog.FileName
+            ContextConfig.NewArchivoPvt = Dialog.FileName
 
         End If
     End Sub

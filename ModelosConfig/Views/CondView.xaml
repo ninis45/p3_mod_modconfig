@@ -1,12 +1,318 @@
-﻿<Window x:Class="CondView"
+﻿<Window xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"  x:Class="CondView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModelosConfig"
         mc:Ignorable="d"
-        Title="Condiciones de operación" Height="450" Width="800">
-    <Grid>
+        Title="{Binding Titulo}" Height="540" Width="1200" WindowState="Normal" ResizeMode="NoResize">
+    <Window.Resources>
+        <telerik:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <local:ToVisibility x:Key="WRToVisibility"></local:ToVisibility>
+        <Style x:Key="Addon" TargetType="{x:Type Label}">
+            <Setter Property="Background" Value="#CCCCCC"></Setter>
+            <Setter Property="Margin" Value="0 1"></Setter>
+        </Style>
+        <Style x:Key="Box" TargetType="{x:Type Label}">
+            <Setter Property="BorderBrush" Value="#CCCCCC"></Setter>
+            <Setter Property="BorderThickness" Value="1"></Setter>
+            <Setter Property="Margin" Value="0 1"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid  Background="#FFE5E5E5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>            
+        </Grid.RowDefinitions>
+
         
+        <TabControl Grid.Column="0" Margin="10" Visibility="{Binding VwModPozo,Converter={StaticResource NullToVisibilityConverter}}">
+            <TabItem Header="QuickLook">
+                <StackPanel >
+                    
+                    <telerik:RadCartesianChart Height="400">
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid MajorLinesVisibility="Y" StripLinesVisibility="Y" />
+                        </telerik:RadCartesianChart.Grid>
+                        <telerik:RadCartesianChart.Behaviors>
+                            <telerik:ChartCrosshairBehavior x:Name="bhv" />
+                            <telerik:ChartPanAndZoomBehavior ZoomMode="Both" />
+                        </telerik:RadCartesianChart.Behaviors>
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:LinearAxis  Title="Presion" ></telerik:LinearAxis>
+                        </telerik:RadCartesianChart.HorizontalAxis>
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis  Title="Metros verticales" LabelFitMode="Rotate" IsInverse="True" />
+                        </telerik:RadCartesianChart.VerticalAxis>
+                        <telerik:RadCartesianChart.Series>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[0]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#00cc00" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[1]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff3399" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[2]}">
+                                <telerik:ScatterLineSeries.HorizontalAxis>
+                                    <telerik:LinearAxis  Title="Temperatura" VerticalLocation="Top" ></telerik:LinearAxis>
+                                </telerik:ScatterLineSeries.HorizontalAxis>
+
+
+                            </telerik:ScatterLineSeries>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#0066ff" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[3]}">
+                               
+                            </telerik:ScatterLineSeries>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff0000" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[4]}">
+                               
+
+                            </telerik:ScatterLineSeries>
+                        </telerik:RadCartesianChart.Series>
+                    </telerik:RadCartesianChart>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,10">
+                        <Rectangle Fill="#ff6600" Height="3" Width="15" Margin="5,0" />
+                        <TextBlock Text="Abajo - Arriba" Margin="0,0,9,0" />
+                        <Rectangle Fill="#00cc00" Height="3" Width="15" Margin="0,0,5,0" />
+                        <TextBlock Text="Arriba - Abajo" />
+                        <Rectangle Fill="#ff3399" Height="3" Width="15" Margin="0,0,5,0" />
+                        <TextBlock Text="Ptr. Medida" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                        <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}"/>
+                        <Rectangle Fill="#0066ff" Height="3" Width="15" Margin="0,0,5,0" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                        <TextBlock Text="Ptr. Teórica" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                        <Rectangle Fill="#ff0000" Height="3" Width="15" Margin="0,0,5,0" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                        <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                        
+                        
+                    </StackPanel>
+                </StackPanel>
+               
+               
+
+
+            </TabItem>
+            <TabItem Header="Carta BEC" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}">
+
+                <StackPanel>
+                    <telerik:RadCartesianChart Height="400">
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid MajorLinesVisibility="Y" StripLinesVisibility="Y" />
+                        </telerik:RadCartesianChart.Grid>
+                        <telerik:RadCartesianChart.Behaviors>
+                            <telerik:ChartCrosshairBehavior x:Name="bhv2" />
+                            <telerik:ChartPanAndZoomBehavior ZoomMode="Both" />
+                        </telerik:RadCartesianChart.Behaviors>
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:LinearAxis  Title="Operating Rate" ></telerik:LinearAxis>
+                        </telerik:RadCartesianChart.HorizontalAxis>
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis  Title="Head"  />
+                        </telerik:RadCartesianChart.VerticalAxis>
+                        <telerik:RadCartesianChart.Series>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="40 Hz"  ItemsSource="{Binding Gas[0]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="50 Hz"  ItemsSource="{Binding Gas[1]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="60 Hz"  ItemsSource="{Binding Gas[2]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="70 Hz"  ItemsSource="{Binding Gas[3]}"/>
+
+
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#00cc00" ToolTip="40 Hz"  ItemsSource="{Binding Gas[4]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff3399" ToolTip="50 Hz"  ItemsSource="{Binding Gas[5]}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#0066ff" ToolTip="60 Hz"  ItemsSource="{Binding Gas[6]}"/>
+
+
+                            <telerik:ScatterPointSeries ItemsSource="{Binding Gas[7]}"     XValueBinding="Xaux" YValueBinding="Yaux"  >
+                                <telerik:ScatterPointSeries.PointTemplate>
+                                    <DataTemplate>
+                                        <Ellipse Width="10" 
+                                            Height="10"   Stroke="#ff6600" StrokeThickness="3" />
+                                    </DataTemplate>
+                                </telerik:ScatterPointSeries.PointTemplate>
+
+                            </telerik:ScatterPointSeries>
+                        </telerik:RadCartesianChart.Series>
+                    </telerik:RadCartesianChart>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20,10">
+                        <!--<Rectangle Fill="#ff6600" Height="3" Width="15" Margin="5,0" />
+                        <TextBlock Text="Abajo - Arriba" Margin="0,0,9,0" />-->
+                        <Rectangle Fill="#00cc00" Height="3" Width="15" Margin="0,0,5,0" />
+                        <TextBlock Text="Rango Mínimo" />
+                        <Rectangle Fill="#ff3399" Height="3" Width="15" Margin="0,0,5,0" />
+                        <TextBlock Text="Rango Máximo" />
+                        <Rectangle Fill="#0066ff" Height="3" Width="15" Margin="0,0,5,0" />
+                        <TextBlock Text="Mejor Eficiencia" />
+                        
+                    </StackPanel>
+                    
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Gasto de Liquido" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+                <StackPanel>
+                    <telerik:RadCartesianChart Height="400">
+                        <telerik:RadCartesianChart.Grid>
+                            <telerik:CartesianChartGrid MajorLinesVisibility="Y" StripLinesVisibility="Y" />
+                        </telerik:RadCartesianChart.Grid>
+                        <telerik:RadCartesianChart.Behaviors>
+                            <telerik:ChartCrosshairBehavior x:Name="bhv3" />
+                            <telerik:ChartPanAndZoomBehavior ZoomMode="Both" />
+                        </telerik:RadCartesianChart.Behaviors>
+                        <telerik:RadCartesianChart.HorizontalAxis>
+                            <telerik:LinearAxis  Title="QGI" ></telerik:LinearAxis>
+                        </telerik:RadCartesianChart.HorizontalAxis>
+                        <telerik:RadCartesianChart.VerticalAxis>
+                            <telerik:LinearAxis  Title="Oil rate"  />
+                        </telerik:RadCartesianChart.VerticalAxis>
+                        <telerik:RadCartesianChart.Series>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600"  ItemsSource="{Binding Gas[0]}"/>
+                            
+
+                            <telerik:ScatterPointSeries ItemsSource="{Binding Gas[1]}"     XValueBinding="Xaux" YValueBinding="Yaux"  >
+                                <telerik:ScatterPointSeries.PointTemplate>
+                                    <DataTemplate>
+                                        <Ellipse Width="10" 
+                                            Height="10"   Stroke="#ff6600" StrokeThickness="3" />
+                                    </DataTemplate>
+                                </telerik:ScatterPointSeries.PointTemplate>
+
+                            </telerik:ScatterPointSeries>
+                        </telerik:RadCartesianChart.Series>
+                    </telerik:RadCartesianChart>
+                </StackPanel>
+               
+            </TabItem>
+        </TabControl>
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                
+            </Grid.RowDefinitions>
+
+            <Label Content="PBF" FontWeight="Bold" Grid.Column="0" Style="{StaticResource Addon}" ></Label>
+            <Label Content="{Binding ModPozoQuick.PBF}" Grid.Column="1" Style="{StaticResource Box}" ></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="PBE" FontWeight="Bold" Grid.Row="1" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.PBE}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="1" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="PVAL" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.PVAL}" Grid.Column="1" Grid.Row="2" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="2" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="PCA" FontWeight="Bold" Grid.Row="3" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.PCA}" Grid.Column="1" Grid.Row="3" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="3" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="TVAL" FontWeight="Bold" Grid.Row="4" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.TVAL}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="4" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="GOR" FontWeight="Bold" Grid.Row="5" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.GOR}" Grid.Column="1" Grid.Row="5" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="5" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="GORFREE" FontWeight="Bold" Grid.Row="6" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.GORFREE}" Grid.Column="1" Grid.Row="6" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="6" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="DPVAL" FontWeight="Bold" Grid.Row="7" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.DPVAL}" Grid.Column="1" Grid.Row="7" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="7" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="PTRTEO" FontWeight="Bold" Grid.Row="8" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.PTRTEO}" Grid.Column="1" Grid.Row="8" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="8" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="DPYAC" FontWeight="Bold" Grid.Row="9" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.DPYAC}" Grid.Column="1" Grid.Row="9" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="9" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="IP" FontWeight="Bold" Grid.Row="10" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.IP}" Grid.Column="1" Grid.Row="10" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="10" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="TFCAL" FontWeight="Bold" Grid.Row="11" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.TFCAL}" Grid.Column="1" Grid.Row="11" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="11" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="TFPER" FontWeight="Bold" Grid.Row="12" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.TFPER}" Grid.Column="1" Grid.Row="12" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="12" Style="{StaticResource Addon}" ></Label>
+
+        </Grid>
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                <RowDefinition Height="28"></RowDefinition>
+                
+            </Grid.RowDefinitions>
+
+            <Label Content="BC_PPR" FontWeight="Bold" Grid.Column="0" Style="{StaticResource Addon}" ></Label>
+            <Label Content="{Binding ModPozoQuick.BC_PPR}" Grid.Column="1" Style="{StaticResource Box}" ></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_SVOLT" FontWeight="Bold" Grid.Row="1" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_SVOLT}" Grid.Column="1" Grid.Row="1" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="1" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_PINPRES" FontWeight="Bold" Grid.Row="2" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_PINPRES}" Grid.Column="1" Grid.Row="2" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="2" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_PDPRES" FontWeight="Bold" Grid.Row="3" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_PDPRES}" Grid.Column="1" Grid.Row="3" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="3" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_DRATE" FontWeight="Bold" Grid.Row="4" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_DRATE}" Grid.Column="1" Grid.Row="4" Style="{StaticResource Box}"></Label>
+            <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="4" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_GASFREE" FontWeight="Bold" Grid.Row="5" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_GASFREE}" Grid.Column="1" Grid.Row="5" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="5" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_DACRP" FontWeight="Bold" Grid.Row="6" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_DACRP}" Grid.Column="1" Grid.Row="6" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="6" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_PRATE" FontWeight="Bold" Grid.Row="7" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_PRATE}" Grid.Column="1" Grid.Row="7" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="7" Style="{StaticResource Addon}" ></Label>
+
+            <Label Content="BC_PHEAD" FontWeight="Bold" Grid.Row="8" Grid.Column="0" Style="{StaticResource Addon}"></Label>
+            <Label Content="{Binding ModPozoQuick.BC_PHEAD}" Grid.Column="1" Grid.Row="8" Style="{StaticResource Box}"></Label>
+            <Label Content="m3/m3" Grid.Column="2" Grid.Row="8" Style="{StaticResource Addon}" ></Label>
+        </Grid>
+
     </Grid>
 </Window>

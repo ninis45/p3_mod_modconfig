@@ -31,6 +31,8 @@ Public Class Mecanico
 
 
         'Verificar que las Trs esten ordenados por Profundidad Inicio
+        'Extraccion de TRS hasta llegar a base 0
+        '=========================================================================================================
         For i = 0 To VwTrs.Count - 1
 
             If ComponentsTR.Contains(VwTrs(i).COMPONENTE) = False Then
@@ -51,6 +53,8 @@ Public Class Mecanico
             End If
         Next
 
+        'Extraccion de TPS
+        '========================================================================================================================
         For i = 0 To VwTps.Count - 1
 
             Dim TrActive = (From Tr In VwTrs Where Tr.PROFUNDIDADINICIO < VwTps(i).PROFUNDIDAD And Tr.PROFUNDIDADFIN > VwTps(i).PROFUNDIDAD).OrderByDescending(Function(o) o.PROFUNDIDADFIN).ToList()
@@ -144,11 +148,15 @@ Public Class Mecanico
 
             Dim fin = Tps(i).MD
 
-            AddCuts(Tps(i), ini, fin)
-
             If Tps(i).Type = 0 Then
+                Tuberias.Add(Tps(i))
                 Emr = True
+            Else
+                AddCuts(Tps(i), ini, fin)
             End If
+
+
+
 
         Next
 

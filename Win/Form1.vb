@@ -1,6 +1,7 @@
 ﻿Public Class Form1
     Public window As ModelosConfig.MainWindow
 
+
     Sub New()
 
         ' Esta llamada es exigida por el diseñador.
@@ -18,17 +19,18 @@
         '10BE3254-304F-45F0-B86D-8184EDCAE730   AYATSIL 133 2019-03-25
         '508FE906-74C0-4290-BB3F-D2F719B10F47   MAALOB 492D   09/02/2019
         '2F9C28FD-FAAB-4835-96AC-18A838BBF960   ZAAP10  2019-02-09     
+        '651DA901-78F6-448A-A823-E5ED1CE14D4F MALOOB-431
+        '6A8C3840-FDF4-449A-AFD5-12F63A804EA0 MALOOB-403
 
 
 
 
-
-        window = New ModelosConfig.MainWindow("DDB3A31F-0143-42E3-819B-9B4A4B631D33", "2019-02-09")
+        window = New ModelosConfig.MainWindow("DDB3A31F-0143-42E3-819B-9B4A4B631D33", "2019-03-27", "9FB4F4ED-4D05-421D-B3BF-6DD4A1E3E275")
         ElementHost1.Child = window
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        window.actualizar(TextBox1.Text, "2018-08-03")
+        window.actualizar(TextBox1.Text, "2018-08-03", "9FB4F4ED-4D05-421D-B3BF-6DD4A1E3E275")
         ElementHost1.Child = window
     End Sub
 End Class

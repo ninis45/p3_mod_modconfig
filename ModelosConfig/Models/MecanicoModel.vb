@@ -13,27 +13,25 @@ Public Class MecanicoModel
     Property ModPozoTuberia As MOD_POZO_TUBERIA
     Property NewTuberia As List(Of Tuberia)
     Private VwMecanicos As List(Of MOD_POZO_TUBERIA)
-    Private TipoTuberias As Dictionary(Of Integer, String)
+
     Private db As New ModeloCI.Entities_ModeloCI()
+    Private TipoTuberias As Dictionary(Of Integer, String) = db.CAT_TIPO_TUBERIA.Where(Function(w) w.ENDRECORD Is Nothing).ToDictionary(Function(d) d.NUMERO, Function(d) d.IDTIPOTUBERIA)
     Sub New()
 
     End Sub
     Sub New(ByVal Tuberia As List(Of Tuberia))
 
         Me.VwMecanicos = New List(Of MOD_POZO_TUBERIA)
-        Me.TipoTuberias = db.CAT_TIPO_TUBERIA.Where(Function(w) w.ENDRECORD Is Nothing).ToDictionary(Function(d) d.NUMERO, Function(d) d.IDTIPOTUBERIA)
+
         For Each t In Tuberia
             Me.VwMecanicos.Add(New MOD_POZO_TUBERIA() With {.MD = t.MD, .CIDIAM = t.CIDIAM, .CIROUG = t.CIROUG, .ETIQUETA = t.Label, .TIDIAM = t.TIDIAM, .TIROUG = t.TIROUG, .TODIAM = t.TODIAM, .TOROUG = t.TOROUG, .IDTIPOTUBERIA = TipoTuberias(t.Type)})
         Next
     End Sub
     Sub New(ByVal VwMecanicos As List(Of MOD_POZO_TUBERIA))
-        Me.TipoTuberias = db.CAT_TIPO_TUBERIA.Where(Function(w) w.ENDRECORD Is Nothing).ToDictionary(Function(d) d.NUMERO, Function(d) d.IDTIPOTUBERIA)
+
         Me.VwMecanicos = VwMecanicos
     End Sub
     Sub Reset()
-        'Dim db As New Entities_ModeloCI()
-        'VwMecanicos.Clear()
-        'Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), False)
         If NewTuberia.Count > 0 Then
             For Each t In NewTuberia
                 Me.VwMecanicos.Add(New MOD_POZO_TUBERIA() With {.MD = t.MD, .CIDIAM = t.CIDIAM, .CIROUG = t.CIROUG, .ETIQUETA = t.Label, .TIDIAM = t.TIDIAM, .TIROUG = t.TIROUG, .TODIAM = t.TODIAM, .TOROUG = t.TOROUG})

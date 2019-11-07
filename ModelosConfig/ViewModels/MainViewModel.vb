@@ -24,9 +24,11 @@ Public Class MainViewModel
     Property Mecanicos As List(Of Tuberia)
     Property NewMecanicos As List(Of Tuberia)
 
-    Sub New(ByVal IdAgujero As String, ByVal Fecha As String)
+    Public Property IdUsuario As String
 
+    Sub New(ByVal IdAgujero As String, ByVal Fecha As String, ByVal IdUsuario As String)
 
+        Me.IdUsuario = IdUsuario
 
         'IDAGUJERO                                    LIFTMETHOD           FECHA P.
         '55A5DD64-F543-4B5F-874A-8E1C49CDEF4A             1               2016-01-25    
@@ -76,7 +78,7 @@ Public Class MainViewModel
         LiftMethod = AgujeroModel.LiftMethod
         Pozo = "Modelo del Pozo: " + AgujeroModel.Pozo
         Configuraciones = New List(Of CONFIGURACION)
-        Modelos = db.VW_MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.ESTATUS = 3 And w.FUNCION <> 1).OrderBy(Function(o) o.FECHAMODELO).ToList()
+        Modelos = db.VW_MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.ESTATUS = 3 And w.FUNCION = 6).OrderBy(Function(o) o.FECHAMODELO).ToList()
 
 
         Mecanicos = AgujeroModel.Mecanicos ' db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
@@ -289,6 +291,8 @@ Public Class MainViewModel
         End Set
     End Property
 
+
+
     Private _flash_data As ModelosEstabilidad.FlashData
     Public Property FlashData As ModelosEstabilidad.FlashData
         Get
@@ -330,15 +334,15 @@ Public Class MainViewModel
         End Set
     End Property
 
-    Private _errors As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
-    Public Property Errors As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+    Private _errors As ObjectModel.ObservableCollection(Of String)
+    Public Property Errors As ObjectModel.ObservableCollection(Of String)
         Get
             If _errors Is Nothing Then
-                _errors = New ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+                _errors = New ObjectModel.ObservableCollection(Of String)
             End If
             Return _errors
         End Get
-        Set(value As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData))
+        Set(value As ObjectModel.ObservableCollection(Of String))
             _errors = value
 
             RaisePropertyChanged("Errors")
@@ -417,20 +421,20 @@ Public Class MainViewModel
         End If
 
         If Mecanicos.Count = 0 Then
-            Errors.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = "No hay estado mecánico para el Modelo, se recomienda revisar el módulo de Estado Mecanico a fin de generar un nuevo listado para el dicho modelo"})
+            Errors.Add("No hay estado mecánico para el Modelo, se recomienda revisar el módulo de Estado Mecanico a fin de generar un nuevo listado para el dicho modelo")
         End If
 
 
         If Aforos = 0 Then
-            Errors.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = "No hay registros de aforo"})
+            Errors.Add("No hay registros de aforo")
         End If
 
         If Pvts = 0 Then
-            Errors.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = "No hay registro de Pvts"})
+            Errors.Add("No hay registro de Pvts")
         End If
 
         If Trays = 0 Then
-            Errors.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = "No hay registros de Trayectoria"})
+            Errors.Add("No hay registros de Trayectoria")
         End If
 
 
@@ -799,7 +803,7 @@ Public Class MainViewModel
                 Next i
 
                 grfGas.TChart1.Series(7).Legend.Visible = False
-                grfGas.TChart1.Series(8).Add(model.Qpromedio.GetValueOrDefault(), model.General.GetValueOrDefault())
+                'grfGas.TChart1.Series(8).Add(model.Qpromedio.GetValueOrDefault(), model.General.GetValueOrDefault())REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
 
         End Select
     End Sub

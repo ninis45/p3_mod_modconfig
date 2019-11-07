@@ -22,8 +22,7 @@
         
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>
-            
+            <RowDefinition Height="*"/>            
         </Grid.RowDefinitions>
 
        
@@ -63,7 +62,7 @@
                 <Button Margin="1 0"   Width="30" Padding="2" Click="ShowCond" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Actualizar condiciones de operación">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <telerik:RadGlyph Glyph="&#xe13c;" />
+                            <telerik:RadGlyph Glyph="&#xe107;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
@@ -100,7 +99,7 @@
 
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock>- </TextBlock>
-                                    <TextBlock Text="{Binding Message}"></TextBlock>
+                                    <TextBlock Text="{Binding}"></TextBlock>
                                 </StackPanel>
 
                             </DataTemplate>

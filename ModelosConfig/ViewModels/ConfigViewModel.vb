@@ -33,8 +33,8 @@ Public Class ConfigViewModel
 
 
 
-    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As String, ByVal Errors As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData), ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal FechaPrueba As String)
-        ModModel = New ModModel(db, IdAgujero, FechaPrueba)
+    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As String, ByVal IdUsuario As String, ByVal Errors As ObjectModel.ObservableCollection(Of String), ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal FechaPrueba As String)
+        ModModel = New ModModel(db, IdAgujero, FechaPrueba, IdUsuario, LiftMethod)
         WfhTrayectoria.Child = usrTrayectoria
         WfhTemperatura.Child = usrTemperatura
         WfhAforo.Child = usrAforo
@@ -52,14 +52,14 @@ Public Class ConfigViewModel
             Me.IdModPozo = ModModel.IdModPozo
             Me.IdPozo = ModModel.IdPozo
             Me.Comenta = ModModel.Comenta
+            Me.ArchivoPvt = ModModel.ArchivoPvt
 
             ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
             ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
 
             Me.LiftMethod = ModModel.LiftMethod
 
-            'Selecciona el PVT
-            'Dim Pvt = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
 
 
             If ModTrayectorias.Count > 0 Then
@@ -67,7 +67,7 @@ Public Class ConfigViewModel
             End If
 
             If LiftMethod <> ModModel.LiftMethod Then
-                Dim q = MsgBox("El Sistema de Producción artificial es diferente.¿Desea cambiarla?", MsgBoxStyle.YesNoCancel)
+                Dim q = MsgBox("El Sistema de Producción artificial es diferente.¿Desea cambiarla?", MsgBoxStyle.YesNo)
                 If q = MsgBoxResult.Yes Then
                     Me.LiftMethod = LiftMethod
                 End If
@@ -138,20 +138,17 @@ Public Class ConfigViewModel
         End If
         'COMANDOS
         '***********************************************************************************************************************
-        _command_save = New DelegateCommand(AddressOf OnSave)
-        _on_load_aforo = New DelegateCommand(AddressOf LoadAforo)
-
-        _command_up = New DelegateCommand(AddressOf OnUp)
-        _command_down = New DelegateCommand(AddressOf OnDown)
-
+        CommandSave = New DelegateCommand(AddressOf OnSave)
+        OnLoadAforo = New DelegateCommand(AddressOf LoadAforo)
+        CommandUp = New DelegateCommand(AddressOf OnUp)
+        CommandDown = New DelegateCommand(AddressOf OnDown)
         CommandResetMec = New DelegateCommand(AddressOf OnLoadMecanico)
 
         'ESTADO MECANICO OJO HAY QUE REVISAR
         '***********************************************************************************************************************
         Dim ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
-        Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), False)
 
-        Tuberias = Mecanico.GetTuberias()
+
 
         If ModTuberias.Count > 0 Then
             LoadMecanico(ModTuberias)
@@ -239,12 +236,12 @@ Public Class ConfigViewModel
             RaisePropertyChanged("Mecanico")
         End Set
     End Property
-    Private _errors As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
-    Public Property Errors As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+    Private _errors As ObjectModel.ObservableCollection(Of String)
+    Public Property Errors As ObjectModel.ObservableCollection(Of String)
         Get
             Return _errors
         End Get
-        Set(value As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData))
+        Set(value As ObjectModel.ObservableCollection(Of String))
             _errors = value
             RaisePropertyChanged("Errors")
         End Set
@@ -378,6 +375,39 @@ Public Class ConfigViewModel
         End Set
     End Property
 
+    Private _archivo_pvt As String
+    Public Property ArchivoPvt As String
+        Get
+            Return _archivo_pvt
+        End Get
+        Set(value As String)
+            _archivo_pvt = value
+
+            If _archivo_pvt Is Nothing Then
+                EnabledPvt = True
+            Else
+                EnabledPvt = False
+            End If
+            RaisePropertyChanged("ArchivoPvt")
+        End Set
+    End Property
+
+    Private _new_archivo_pvt As String
+    Public Property NewArchivoPvt As String
+        Get
+            If _new_archivo_pvt Is Nothing And ArchivoPvt Is Nothing Then
+                EnabledPvt = True
+            Else
+                EnabledPvt = False
+            End If
+            Return _new_archivo_pvt
+        End Get
+        Set(value As String)
+            _new_archivo_pvt = value
+            RaisePropertyChanged("NewArchivoPvt")
+        End Set
+    End Property
+
     Private _mod_archivo As ARCHIVOS_PROSPER
     Public Property ModArchivo As ARCHIVOS_PROSPER
         Get
@@ -415,8 +445,8 @@ Public Class ConfigViewModel
 
 
                     If ModBNC.IDMODPOZOBNC > 0 Then
-                        Method = ModBNC.METHOD
-                        Entry = ModBNC.ENTRY
+                        Method = ModBNC.METHOD.GetValueOrDefault()
+                        Entry = ModBNC.ENTRY.GetValueOrDefault()
                     Else
                         ModBNC = New MOD_POZO_BNC() With {
                         .CO2 = 0,
@@ -997,47 +1027,24 @@ Public Class ConfigViewModel
         End Set
     End Property
 
+#Region "Deshabilitadores"
+    Private _enabled_pvt As Boolean
+    Public Property EnabledPvt As Boolean
+        Get
+            Return _enabled_pvt
+        End Get
+        Set(value As Boolean)
+            _enabled_pvt = value
+            RaisePropertyChanged("EnabledPvt")
+        End Set
+    End Property
+#End Region
 
 #Region "Comandos"
-    'Private _command_reset_mec As ICommand
-    'Public Property CommandResetMec As ICommand
-    '    Get
-    '        Return
-    '    End Get
-    '    Set(value As ICommand)
-
-    '    End Set
-    'End Property
     Public Property CommandResetMec As ICommand
-    Private _command_up As ICommand
     Public Property CommandUp As ICommand
-        Get
-            Return _command_up
-        End Get
-        Set(value As ICommand)
-            _command_up = value
-        End Set
-    End Property
-
-    Private _command_down As ICommand
     Public Property CommandDown As ICommand
-        Get
-            Return _command_down
-        End Get
-        Set(value As ICommand)
-            _command_down = value
-        End Set
-    End Property
-
-    Private _command_save As ICommand
     Public Property CommandSave As ICommand
-        Get
-            Return _command_save
-        End Get
-        Set(value As ICommand)
-            _command_save = value
-        End Set
-    End Property
 #End Region
 
 #Region "Variables"
@@ -1090,7 +1097,7 @@ Public Class ConfigViewModel
 
         End Set
     End Property
-
+    'Depreciado temporalmente, se encuentra en ModGeneral.Wc
     Private _wc As Double
     Public Property Wc As Double
         Get
@@ -1644,17 +1651,6 @@ Public Class ConfigViewModel
         End Set
     End Property
 
-    Private _file_bec As String
-    Public Property FileBEC As String
-        Get
-            Return _file_bec
-        End Get
-        Set(value As String)
-            _file_bec = value
-            RaisePropertyChanged("FileBEC")
-        End Set
-    End Property
-
 
 #End Region
 
@@ -1728,6 +1724,8 @@ Public Class ConfigViewModel
 
             ModGeneral.LIFTMETHOD = Me.LiftMethod
             ModModel.ModGeneral = ModGeneral
+            ModModel.NewArchivoPvt = NewArchivoPvt
+            ModModel.ArchivoPvt = ArchivoPvt
             ' ModModel.Formacion = Formacion
 
 
@@ -1737,7 +1735,7 @@ Public Class ConfigViewModel
                 Case 1
                     ModModel.ModBNC = ModBNC
                 Case 2
-                    ModModel.FilePath = FileBEC
+                    'ModModel.FilePath = FileBEC
                     ModModel.ModBEC = ModBEC
             End Select
 
@@ -1822,13 +1820,14 @@ Public Class ConfigViewModel
         Try
             If result = MessageBoxResult.Yes Then
                 ' ModGeneral.IDAFORO = aforo.IDAFORO
+                ModGeneral.WC = aforo.FRACAGUA 'Wc = aforo.FRACAGUA
                 ModGeneral.QTEST = aforo.PRODLIQ 'Qtest = aforo.PRODLIQ
-                ModGeneral.RGATOTALAFORO = (aforo.PRODGASFORM * 1000000) / (5.615 * aforo.PRODLIQ * (100 - Wc) / 100) 'RgaTotalAforo = aforo.PRODGASFORM
-                ModGeneral.TOTGOR = (aforo.PRODGASFORM * 1000000) / (5.615 * aforo.PRODLIQ * (100 - Wc) / 100)
+                ModGeneral.RGATOTALAFORO = (aforo.PRODGASFORM * 1000000) / (5.615 * aforo.PRODLIQ * (100 - ModGeneral.WC) / 100) 'RgaTotalAforo = aforo.PRODGASFORM
+                ModGeneral.TOTGOR = (aforo.PRODGASFORM * 1000000) / (5.615 * aforo.PRODLIQ * (100 - ModGeneral.WC) / 100)
                 ModGeneral.GLRINY = aforo.VOLGASINY 'GlRiny = aforo.VOLGASINY | Volumen de Gas Inyeccion
                 ModGeneral.THPD = aforo.PTP1 'Thpd = aforo.PTP1
                 ModBNC.TRPRES = aforo.PTR1 'Trpres = aforo.PTR1
-                ModGeneral.WC = aforo.FRACAGUA 'Wc = aforo.FRACAGUA
+
                 ModGeneral.THTD = IIf(aforo.TEMP > 0, aforo.TEMP, ModGeneral.THTD) 'Thtd = aforo.TEMP
 
                 LoadDeclinacion(aforo.FECHA)
@@ -1860,10 +1859,16 @@ Public Class ConfigViewModel
         Return True
     End Function
     Private Sub OnLoadMecanico()
-        LoadMecanico()
+
+        Dim result = MessageBox.Show("Los datos del estado mecánico para este modelo se van a eliminar y reiniciar con otros valores nuevos.¿Desea continuar con esta acción? ", "Campos inteligentes", MessageBoxButton.YesNo)
+
+        If result = MessageBoxResult.Yes Then
+            LoadMecanico()
+        End If
+
     End Sub
-    Private Sub LoadMecanico(ByVal Tuberias As List(Of MOD_POZO_TUBERIA))
-        Dim MecanicoModel As New MecanicoModel(Tuberias)
+    Private Sub LoadMecanico(ByVal ModTuberias As List(Of MOD_POZO_TUBERIA))
+        Dim MecanicoModel As New MecanicoModel(ModTuberias)
         ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)(MecanicoModel.GetList().OrderBy(Function(o) o.Orden))
         MaxTp = MecanicoModel.GetMaxTp()
 
@@ -1873,20 +1878,31 @@ Public Class ConfigViewModel
             ModBEC.LONGCABLE_BEC = ModBEC.PROF_BEC
         End If
     End Sub
+    ''' <summary>
+    ''' Recarga el estado mecanico nuevamente con los datos de TPs y TRs
+    ''' </summary>
     Private Sub LoadMecanico()
+        Try
+            Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), True)
 
-        If ModMecanicos IsNot Nothing Then
-            ModMecanicos.Clear()
-        End If
+            Tuberias = Mecanico.GetTuberias()
+            If ModMecanicos IsNot Nothing Then
+                ModMecanicos.Clear()
+            End If
 
-        Dim MecanicoModel As New MecanicoModel(Tuberias)
-        ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)(MecanicoModel.GetList().OrderBy(Function(o) o.Orden))
-        MaxTp = MecanicoModel.GetMaxTp()
+            Dim MecanicoModel As New MecanicoModel(Tuberias)
+            ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)(MecanicoModel.GetList().OrderBy(Function(o) o.Orden))
+            MaxTp = MecanicoModel.GetMaxTp()
 
-        If ModBEC.PROF_BEC = 0 And MaxTp > 0 Then
-            ModBEC.PROF_BEC = MaxTp
-            ModBEC.LONGCABLE_BEC = ModBEC.PROF_BEC
-        End If
+            If ModBEC.PROF_BEC = 0 And MaxTp > 0 Then
+                ModBEC.PROF_BEC = MaxTp
+                ModBEC.LONGCABLE_BEC = ModBEC.PROF_BEC
+            End If
+
+        Catch ex As Exception
+            Errors.Add(ex.Message)
+        End Try
+
     End Sub
 
 

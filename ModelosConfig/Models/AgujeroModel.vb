@@ -67,7 +67,7 @@ Public Class AgujeroModel
             Me.LiftMethod = method.PROSPER
         Else
             Me.LiftMethod = 0
-            Throw New Exception("No existe el Lift Method")
+            Throw New Exception("No hay sistema artificial asignado")
 
         End If
 
@@ -87,7 +87,7 @@ Public Class AgujeroModel
     End Function
     'DEPRECIADO TEMPORALMENTE
     Function GetEdoGeneral() As VW_EDO_GENERAL
-        Dim General = (From edo_general In db.VW_EDO_GENERAL Where edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION <> 1 And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION <> 1).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
+        Dim General = (From edo_general In db.VW_EDO_GENERAL Where edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION = 6 And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION = 6).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
 
 
         If General IsNot Nothing Then
