@@ -42,9 +42,13 @@
 
 
         ConfigView.ShowDialog()
-        Dim ModModel As New ModModel(Context.IdAgujero, Context.IdUsuario)
+        'Dim ModModel As New ModModel(Context.IdAgujero, Context.IdUsuario)
 
-        Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+        If ConfigView.ContextConfig.IsSaved Then
+            Context.IdModPozo = ConfigView.ContextConfig.IdModPozo 'Revisar para que no haya doble consulta en VWGeneral
+            Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+        End If
+
 
     End Sub
 
@@ -68,7 +72,7 @@
     Private Sub OnExpanded(sender As Object, e As Telerik.Windows.RadRoutedEventArgs)
 
 
-        GrdMain.Visibility = Visibility.Collapsed
+        'GrdMain.Visibility = Visibility.Collapsed
         Context.Panel = "| Panel de Estabilidad"
 
 
@@ -76,7 +80,7 @@
 
     Private Sub OnCollapsed(sender As Object, e As Telerik.Windows.RadRoutedEventArgs)
 
-        GrdMain.Visibility = Visibility.Visible
+        'GrdMain.Visibility = Visibility.Visible
         Context.Panel = "| Panel de Modelos"
     End Sub
 End Class

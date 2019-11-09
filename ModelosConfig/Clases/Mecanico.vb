@@ -20,10 +20,10 @@ Public Class Mecanico
 
 
     Sub New(ByVal VwTrs As List(Of VW_TR), ByVal VwTps As List(Of VW_TP), Optional ByVal Err As Boolean = True)
-
-        If Err And (VwTrs.Count = 0 Or VwTps.Count = 0) Then
-            Throw New Exception("Tuberia incompleta, debes revisar Trs o Tps para continuar con el proceso")
-        End If
+        'Depreciado temporalmente talvez no sea necesario, marca error al cargar los datos iniciales del ViewModel
+        'If Err And (VwTrs.Count = 0 Or VwTps.Count = 0) Then
+        '    Throw New Exception("Tuberia incompleta, debes revisar Trs o Tps para continuar con el proceso")
+        'End If
 
         MaxTp = (From tp In VwTps Where tp.COMPONENTE.Contains("CAPSULA") Select tp).Max(Function(m) m.PROFUNDIDAD).GetValueOrDefault()
 
@@ -160,7 +160,7 @@ Public Class Mecanico
 
         Next
 
-        If Emr = False Then
+        If VwTps.Count > 0 And Emr = False Then
             Tuberias.Add(New Tuberia() With {.Label = "E.M.R.", .MD = 0, .CIDIAM = 0, .CIROUG = 0, .TIDIAM = 0, .TIROUG = 0, .TODIAM = 0, .TOROUG = 0, .Type = 0})
         End If
 
@@ -218,7 +218,12 @@ Public Class Mecanico
     End Sub
 
     Function GetTuberias() As List(Of Tuberia)
-        Return Me.Tuberias.OrderBy(Function(o) o.MD).ToList()
+
+        If Me.Tuberias.Count > 0 Then
+            Return Me.Tuberias.OrderBy(Function(o) o.MD).ToList()
+        Else
+            Return New List(Of Tuberia)
+        End If
     End Function
 
     'Sub New(ByVal db As Entities_ModeloCI, ByVal IdAgujero As String)

@@ -27,6 +27,7 @@
         <Setter Property="Background" Value="#dff0d8"/>
         <Setter Property="BorderBrush" Value="#d6e9c6"/>
         <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="TextBlock.Foreground" Value="#3c763d"></Setter>
     </Style>
 
     <Style TargetType="{x:Type Border}" x:Key="alert-info" BasedOn="{StaticResource alert}" >

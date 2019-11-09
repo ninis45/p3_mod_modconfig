@@ -19,7 +19,15 @@
     </UserControl.Resources>
   
     <Grid>
-        
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="../Resources/Notices.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+
+            </ResourceDictionary>
+
+        </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>            
@@ -59,7 +67,7 @@
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button Margin="1 0"   Width="30" Padding="2" Click="ShowCond" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Actualizar condiciones de operación">
+                <Button Margin="1 0"   Width="30" Padding="2" Click="ShowCond" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Consultar por condiciones de operación" Visibility="{Binding Condiciones.Count,Converter={StaticResource NumberToVisibilityConverter}}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <telerik:RadGlyph Glyph="&#xe107;" />
@@ -77,89 +85,105 @@
         <!--Termina Menu-->
        
         <!--COMIENZA BODY-->
-        <Grid Grid.Row="1"  Name="GrdMain" >
-            <Grid.Resources>
-                <ResourceDictionary>
-                    <ResourceDictionary.MergedDictionaries>
-                        <ResourceDictionary Source="../Resources/Notices.xaml" />
-                    </ResourceDictionary.MergedDictionaries>
-
-                </ResourceDictionary>
-
-            </Grid.Resources>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"  Visibility="{Binding Estatus,ConverterParameter=0, Converter={StaticResource WRToVisibility}, Mode=TwoWay}">
-                <Label Content="Modelo pendiente" FontSize="30" Foreground="DarkCyan" HorizontalAlignment="Center" ></Label>
-                <Label Content="{Binding Prog}" HorizontalAlignment="Center"></Label>
-
+        <telerik:RadDocking Grid.Row="1">
+            <telerik:RadDocking.DocumentHost>
                 
-                <Border Style="{StaticResource alert-danger}" Width="550" Visibility="{Binding Errors.Count,Converter={StaticResource NumberToVisibilityConverter}}">
-                    <ItemsControl ItemsSource="{Binding Errors}" >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock>- </TextBlock>
-                                    <TextBlock Text="{Binding}"></TextBlock>
-                                </StackPanel>
-
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-
-                <Border Style="{StaticResource alert-warning}" Width="550" Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
-                    <ItemsControl ItemsSource="{Binding Warnings}" >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock>-</TextBlock>
-                                    <TextBlock Text="{Binding Message}" ToolTip="{Binding Message}"></TextBlock>
-                                </StackPanel>
-
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 300 0 300" Visibility="{Binding Estatus,ConverterParameter=1, Converter={StaticResource WRToVisibility}, Mode=TwoWay}">
-                <Label Content="En cola" FontSize="30" Foreground="DarkCyan" ></Label>
-                <Label Content="{Binding Prog}" HorizontalAlignment="Center"></Label>
-            </StackPanel>
-            <Grid  Grid.Row="1" Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}" >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="33*"/>
-                    <ColumnDefinition Width="33*"/>
-
-                    <ColumnDefinition Width="33*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50*"/>
-                    <RowDefinition Height="50*"/>
-
-                </Grid.RowDefinitions>
-                <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
-                <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
-                <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
+                    <Grid Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="33*"/>
+                            <ColumnDefinition Width="33*"/>
+                            <ColumnDefinition Width="33*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                        </Grid.RowDefinitions>
+                        <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
+                        <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
+                        <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
 
 
-                <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
-                <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
-                <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc" Grid.ColumnSpan="2"/>
-            </Grid>
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc"/>
+                    </Grid>
 
-            
+               
+               
+            </telerik:RadDocking.DocumentHost>
+            <telerik:RadSplitContainer InitialPosition="DockedLeft" MinWidth="300">
+                <telerik:RadPaneGroup >
+                    
+                    <telerik:RadPane Header="Mensajes"  CanUserClose="False">
+                        <StackPanel Margin="4">
+                            <Border  Visibility="{Binding Infos.Count,Converter={StaticResource NumberToVisibilityConverter}}">
 
-            
-            
-            
+                                <ItemsControl ItemsSource="{Binding Infos}" >
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource alert-info}">
+                                                <StackPanel Orientation="Vertical">
 
-            <!--GRAFICAS GENERADAS-->
+                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <Border  Visibility="{Binding Success.Count,Converter={StaticResource NumberToVisibilityConverter}}">
 
-            
-            
+                                <ItemsControl ItemsSource="{Binding Success}" >
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource alert-success}">
+                                                <StackPanel Orientation="Vertical">
 
-        </Grid>
+                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            <Border  Visibility="{Binding Errors.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                                
+                                <ItemsControl ItemsSource="{Binding Errors}" >
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource alert-danger}">
+                                                <StackPanel Orientation="Vertical">
+                                                    
+                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                            
+                            
+                            <Border  Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                                <ItemsControl ItemsSource="{Binding Warnings}" >
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource alert-warning}">
+                                                <StackPanel Orientation="Vertical" Height="auto">
+                                                    
+                                                    <TextBlock Text="{Binding}" ToolTip="{Binding Message}" TextWrapping="Wrap" ></TextBlock>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
+                        </StackPanel>
+                    </telerik:RadPane>
+                </telerik:RadPaneGroup>
+            </telerik:RadSplitContainer>
+        </telerik:RadDocking>
+        
+
         <!--Termina Body-->
         
 

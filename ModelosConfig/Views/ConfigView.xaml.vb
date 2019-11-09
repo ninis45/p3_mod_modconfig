@@ -22,15 +22,15 @@ Public Class ConfigView
         Me.Close()
 
     End Sub
+    'Depreciar talvez no se necesite
+    ''Shadows Sub Closing(ByVal ContextMain As MainViewModel, ByVal ContextConfig As ConfigViewModel)
+    ''    Dim db As New Entities_ModeloCI()
 
-    Shadows Sub Closing(ByVal ContextMain As MainViewModel, ByVal ContextConfig As ConfigViewModel)
-        Dim db As New Entities_ModeloCI()
 
 
+    ''    ContextMain.IdModPozo = ContextConfig.IdModPozo
 
-        ContextMain.IdModPozo = ContextConfig.IdModPozo
-
-    End Sub
+    ''End Sub
 
 
     Private Sub DeleteFile(sender As Object, e As RoutedEventArgs)

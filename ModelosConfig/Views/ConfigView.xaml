@@ -73,6 +73,7 @@
         <local:NumToBool x:Key="WRNumToBool"></local:NumToBool>
         <local:ToVisibility x:Key="WRVisibility"></local:ToVisibility>
         <local:NullToBolean x:Key="RWNullToBoolean"></local:NullToBolean>
+        <local:InverseBoolean x:Key="WRInverseBoolean"></local:InverseBoolean>
         <!--<local:Translation x:Key="WRTranslation"></local:Translation>-->
         <CollectionViewSource Source="{Binding Bombas}" x:Key="CVSBombas">
             <!--<CollectionViewSource.SortDescriptions>
@@ -92,15 +93,13 @@
         </Style>
     </Window.Resources>
 
-    <Grid  Background="#FFE5E5E5">
+    <Grid Background="#FFE5E5E5">
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="../Resources/Notices.xaml" />
                 </ResourceDictionary.MergedDictionaries>
-
             </ResourceDictionary>
-
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -321,7 +320,7 @@
                             <TextBox Text="{Binding Comenta}" Grid.Column="1" Grid.Row="0" ></TextBox>
 
 
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0"   >
+                            <!--<StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Margin="0 10 0 0"   >
 
                                 <CheckBox Content="Actualizar Edo. Mecánico" IsChecked="{Binding DelMecanico}"></CheckBox>
 
@@ -329,7 +328,7 @@
 
                                 <CheckBox Content="Actualizar temperatura" IsChecked="{Binding DelTemperatura}"></CheckBox>
 
-                            </StackPanel>
+                            </StackPanel>-->
                         </Grid>
 
 
@@ -352,19 +351,20 @@
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="26"></RowDefinition>
-                            <RowDefinition Height="24"></RowDefinition>
-                            <RowDefinition Height="10"></RowDefinition>
+                            <RowDefinition Height="26"></RowDefinition>
+                            <RowDefinition Height="36"></RowDefinition>
                         </Grid.RowDefinitions>
 
-                        <Label Content="Archivo PVT(.out)" Grid.Row="0" Grid.ColumnSpan="3"></Label>
+                        <Label Content="Archivo PVT(.out)" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"></Label>
 
                         <TextBox IsReadOnly="True" Grid.Column="0" Grid.Row="1" Text="{Binding NewArchivoPvt}" Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}"></TextBox>
-                        <TextBlock Grid.Column="0" Background="#EFEFEF" Grid.Row="1" Text="{Binding ArchivoPvt}" Visibility="{Binding ArchivoPvt,Converter={StaticResource NullToVisibilityConverter}}" Name="txtFileName"></TextBlock>
+                        <TextBlock Padding="4 2" Grid.Column="0" Background="#EFEFEF" Grid.Row="1" Text="{Binding ArchivoPvt}" Visibility="{Binding ArchivoPvt,Converter={StaticResource NullToVisibilityConverter}}" Name="txtFileName"></TextBlock>
                         <Button Grid.Column="1"  Grid.Row="1" Background="DarkCyan" BorderThickness="0" Content="Examinar" Click="SelectFile" Foreground="White" Margin="1 0" Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}"></Button>
                         <Button Grid.Column="2"  Grid.Row="1" Background="Gray"  BorderThickness="0" Content="Eliminar" Click="DeleteFile" Foreground="White" Margin="1 0" Visibility="{Binding ArchivoPvt,Converter={StaticResource NullToVisibilityConverter}}"></Button>
 
                         <Button Grid.Column="2"  Grid.Row="1" Background="Gray"  BorderThickness="0" Content="Borrar" Click="ClearFile" Foreground="White" Margin="1 0" Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}"></Button>
 
+                        <CheckBox IsEnabled="{Binding EnabledPvt,Converter={StaticResource WRInverseBoolean}}" Name="chkEquipment" IsChecked="{Binding EnabledEquip}" Grid.Row="2" Grid.ColumnSpan="2" Content="Actualizar equipamiento(Edo. Mecanico, Trayectorias y Temperaturas)" Margin="0 10"></CheckBox>
                     </Grid>
                     <Separator></Separator>
                     <Grid IsEnabled="{Binding EnabledPvt}">
@@ -446,137 +446,140 @@
 
             </telerik:RadTabItem>
             <telerik:RadTabItem Name="ItemYacimiento" Header="Yacimiento" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="*"/>
+                <ScrollViewer>
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
 
-                    </Grid.ColumnDefinitions>
+                        </Grid.ColumnDefinitions>
 
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="10"/>
-                        <RowDefinition Height="30"/>
-                    </Grid.RowDefinitions>
-
-
-
-                    <Label Grid.Column="0" Grid.Row="0" Content="{x:Static lang:Resources.IPRMETHOD}"/>
-                    <ComboBox SelectedIndex="{Binding ModGeneral.IPRMETHOD,Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Height="22"  Name="ddlIPRMethod">
-                        <ComboBoxItem Content="Entrada IP"></ComboBoxItem>
-                        <ComboBoxItem Content="Vogel"></ComboBoxItem>
-                        <ComboBoxItem Content="Compuesto" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Darcy"></ComboBoxItem>
-                        <ComboBoxItem Content="Fetkovich" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="MultiRate Fetkovich" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Jones" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Jones Tasa Múltiple" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Transitorio" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Fracturamiento Hidráulico" IsEnabled="False"></ComboBoxItem>
-                        <ComboBoxItem Content="Pozo Horizontal - Sin flujo en frontera" IsEnabled="False"></ComboBoxItem>
-                    </ComboBox>
-
-                    <Separator Grid.Row="1" Grid.ColumnSpan="2"></Separator>
-
-                    <Label Grid.Column="0" Grid.Row="2" Content="{x:Static lang:Resources.COMPACT}"/>
-                    <ComboBox SelectedIndex="{Binding ModGeneral.COMPACT}" Grid.Column="2" Grid.Row="2" Height="22" >
-                        <ComboBoxItem Content="No"></ComboBoxItem>
-                        <ComboBoxItem Content="Si"></ComboBoxItem>
-                    </ComboBox>
-
-                    <Label Grid.Column="0" Grid.Row="3" Content="{x:Static lang:Resources.IRELK}"/>
-                    <ComboBox SelectedIndex="{Binding ModGeneral.IRElK}" Grid.Column="1" Grid.Row="3" Height="22" >
-                        <ComboBoxItem Content="No"></ComboBoxItem>
-                        <ComboBoxItem Content="Si"></ComboBoxItem>
-                    </ComboBox>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="10"/>
+                            <RowDefinition Height="30"/>
+                        </Grid.RowDefinitions>
 
 
 
+                        <Label Grid.Column="0" Grid.Row="0" Content="{x:Static lang:Resources.IPRMETHOD}"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.IPRMETHOD,Mode=TwoWay}" Grid.Column="1" Grid.Row="0" Height="22"  Name="ddlIPRMethod">
+                            <ComboBoxItem Content="Entrada IP"></ComboBoxItem>
+                            <ComboBoxItem Content="Vogel"></ComboBoxItem>
+                            <ComboBoxItem Content="Compuesto" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Darcy"></ComboBoxItem>
+                            <ComboBoxItem Content="Fetkovich" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="MultiRate Fetkovich" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Jones" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Jones Tasa Múltiple" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Transitorio" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Fracturamiento Hidráulico" IsEnabled="False"></ComboBoxItem>
+                            <ComboBoxItem Content="Pozo Horizontal - Sin flujo en frontera" IsEnabled="False"></ComboBoxItem>
+                        </ComboBox>
 
-                    <Label Grid.Column="0" Grid.Row="4" Content="{x:Static lang:Resources.MGSKINMETHOD}"/>
-                    <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMETHOD}" Grid.Column="2" Grid.Row="4" Height="22" >
-                        <ComboBoxItem Content="Agregar Daño Manualmente"></ComboBoxItem>
-                        <ComboBoxItem Content="Loke"></ComboBoxItem>
-                        <ComboBoxItem Content="MacLeod"></ComboBoxItem>
-                        <ComboBoxItem Content="Karakas - Tariq"></ComboBoxItem>
-                    </ComboBox>
+                        <Separator Grid.Row="1" Grid.ColumnSpan="2"></Separator>
 
+                        <Label Grid.Column="0" Grid.Row="2" Content="{x:Static lang:Resources.COMPACT}"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.COMPACT}" Grid.Column="2" Grid.Row="2" Height="22" >
+                            <ComboBoxItem Content="No"></ComboBoxItem>
+                            <ComboBoxItem Content="Si"></ComboBoxItem>
+                        </ComboBox>
 
-                    <Label Grid.Column="0" Grid.Row="5" Content="{x:Static lang:Resources.MGSKINMODEL}"/>
-                    <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMODEL}" Grid.Column="1" Grid.Row="5" Height="22">
-                        <ComboBoxItem Content="Cinco / Martín-Bronz"></ComboBoxItem>
-                        <ComboBoxItem Content="Wong-Cliford"></ComboBoxItem>
-                        <ComboBoxItem Content="Cinco (2) / Martín-Bronz"></ComboBoxItem>
-                    </ComboBox>
-                    <Separator Grid.Row="6" Grid.ColumnSpan="2"></Separator>
-                    <Label Grid.Column="0" Grid.Row="7" Content="{x:Static lang:Resources.PRES}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PRES}" Grid.Row="7" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="8" Content="{x:Static lang:Resources.TRES}"/>
-                    <telerik:RadNumericUpDown Grid.Column="2" Value="{Binding ModGeneral.TRES}" Grid.Row="8" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="9" Content="{x:Static lang:Resources.WC}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.WC}" Grid.Row="9" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-
-                    <Label Grid.Column="0" Grid.Row="10" Content="{x:Static lang:Resources.TOTGOR}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.TOTGOR}" Grid.Row="10" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Separator Grid.Row="11" Grid.ColumnSpan="2"></Separator>
-
-                    <Label Grid.Column="0" Grid.Row="12" Content="{x:Static lang:Resources.PI}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PI}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=0 }" Grid.Row="12" Height="22" ShowButtons="False" ></telerik:RadNumericUpDown>
-                    <Separator Grid.Row="13" Grid.ColumnSpan="2"></Separator>
-                    <Label Grid.Column="0" Grid.Row="14" Content="{x:Static lang:Resources.QTEST}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.QTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="14" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="15" Content="{x:Static lang:Resources.PTEST}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="15" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Separator Grid.Row="16" Grid.ColumnSpan="2"></Separator>
-
-                    <Label Grid.Column="0" Grid.Row="17" Content="{x:Static lang:Resources.RESPERM}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.RESPERM}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="17" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="18" Content="{x:Static lang:Resources.THICKNESS}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.THICKNESS}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="18" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="19" Content="{x:Static lang:Resources.DRAINAGE}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.DRAINAGE}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="19" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-
-
-                    <Label Grid.Column="0" Grid.Row="20" Content="{x:Static lang:Resources.DIETZ}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.DIETZ}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="20" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-
-                    <Label Grid.Column="0" Grid.Row="21" Content="{x:Static lang:Resources.WBR}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.WBR}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="21" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-                    <Label Grid.Column="0" Grid.Row="22" Content="{x:Static lang:Resources.RDRAINAGE}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="22" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
-
-                    <Separator Grid.Row="23" Grid.ColumnSpan="2"></Separator>
-                    <Label Grid.Column="0" Grid.Row="25" Content="{x:Static lang:Resources.SKIN}"/>
-                    <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" Grid.Row="25" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="3" Content="{x:Static lang:Resources.IRELK}"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.IRElK}" Grid.Column="1" Grid.Row="3" Height="22" >
+                            <ComboBoxItem Content="No"></ComboBoxItem>
+                            <ComboBoxItem Content="Si"></ComboBoxItem>
+                        </ComboBox>
 
 
 
 
-                    
+                        <Label Grid.Column="0" Grid.Row="4" Content="{x:Static lang:Resources.MGSKINMETHOD}"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMETHOD}" Grid.Column="2" Grid.Row="4" Height="22" >
+                            <ComboBoxItem Content="Agregar Daño Manualmente"></ComboBoxItem>
+                            <ComboBoxItem Content="Loke"></ComboBoxItem>
+                            <ComboBoxItem Content="MacLeod"></ComboBoxItem>
+                            <ComboBoxItem Content="Karakas - Tariq"></ComboBoxItem>
+                        </ComboBox>
 
-                </Grid>
+
+                        <Label Grid.Column="0" Grid.Row="5" Content="{x:Static lang:Resources.MGSKINMODEL}"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMODEL}" Grid.Column="1" Grid.Row="5" Height="22">
+                            <ComboBoxItem Content="Cinco / Martín-Bronz"></ComboBoxItem>
+                            <ComboBoxItem Content="Wong-Cliford"></ComboBoxItem>
+                            <ComboBoxItem Content="Cinco (2) / Martín-Bronz"></ComboBoxItem>
+                        </ComboBox>
+                        <Separator Grid.Row="6" Grid.ColumnSpan="2"></Separator>
+                        <Label Grid.Column="0" Grid.Row="7" Content="{x:Static lang:Resources.PRES}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PRES}" Grid.Row="7" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="8" Content="{x:Static lang:Resources.TRES}"/>
+                        <telerik:RadNumericUpDown Grid.Column="2" Value="{Binding ModGeneral.TRES}" Grid.Row="8" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="9" Content="{x:Static lang:Resources.WC}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.WC}" Grid.Row="9" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+
+                        <Label Grid.Column="0" Grid.Row="10" Content="{x:Static lang:Resources.TOTGOR}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.TOTGOR}" Grid.Row="10" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Separator Grid.Row="11" Grid.ColumnSpan="2"></Separator>
+
+                        <Label Grid.Column="0" Grid.Row="12" Content="{x:Static lang:Resources.PI}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PI}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=0 }" Grid.Row="12" Height="22" ShowButtons="False" ></telerik:RadNumericUpDown>
+                        <Separator Grid.Row="13" Grid.ColumnSpan="2"></Separator>
+                        <Label Grid.Column="0" Grid.Row="14" Content="{x:Static lang:Resources.QTEST}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.QTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="14" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="15" Content="{x:Static lang:Resources.PTEST}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="15" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Separator Grid.Row="16" Grid.ColumnSpan="2"></Separator>
+
+                        <Label Grid.Column="0" Grid.Row="17" Content="{x:Static lang:Resources.RESPERM}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.RESPERM}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="17" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="18" Content="{x:Static lang:Resources.THICKNESS}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.THICKNESS}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="18" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="19" Content="{x:Static lang:Resources.DRAINAGE}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.DRAINAGE}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="19" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+
+
+                        <Label Grid.Column="0" Grid.Row="20" Content="{x:Static lang:Resources.DIETZ}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.DIETZ}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="20" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+
+                        <Label Grid.Column="0" Grid.Row="21" Content="{x:Static lang:Resources.WBR}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.WBR}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="21" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <Label Grid.Column="0" Grid.Row="22" Content="{x:Static lang:Resources.RDRAINAGE}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }" Grid.Row="22" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+
+                        <Separator Grid.Row="23" Grid.ColumnSpan="2"></Separator>
+                        <Label Grid.Column="0" Grid.Row="25" Content="{x:Static lang:Resources.SKIN}"/>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" Grid.Row="25" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+
+
+
+
+
+
+                    </Grid>
+
+                </ScrollViewer>
             </telerik:RadTabItem>
             <telerik:RadTabItem x:Name="ItemPozo" Header="Aforos" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927"  >
                 <Grid>
@@ -642,7 +645,7 @@
                     <telerik:RadNumericUpDown Grid.Column="3" Value="{Binding ModGeneral.THTE}" Grid.Row="1" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
                 </Grid>
             </telerik:RadTabItem>
-            <telerik:RadTabItem x:Name="ItemMecs" Header="Edo. Mecánico" Background="#FF7BB085" HeaderForeground="#FF001909" Height="35" FontFamily="Century Gothic" FontSize="14"    >
+            <telerik:RadTabItem x:Name="ItemMecs" Header="Edo. Mecánico" Background="#FF7BB085" HeaderForeground="#FF001909" Height="35" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}"    >
                 <telerik:RadTabItem.Foreground>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="Black" Offset="0"/>
@@ -652,7 +655,7 @@
                 <StackPanel Margin="10">
                     
                     
-                    <Border Style="{StaticResource alert-info}">
+                    <Border Style="{StaticResource alert-info}" Visibility="{Binding Tuberias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
                         <StackPanel Orientation="Vertical">
                             <TextBlock TextWrapping="Wrap"  Text="Listado del estado mecánico para este modelo. Podras restaurar nuevamente la lista del estado mecánico de este modelo por el actual, pulsando el botón Restaurar"></TextBlock>
                             <Button  Width="100" Content="Restaurar" Command="{Binding CommandResetMec}" Background="#EFEFEF" ToolTip="Restaurar los registros del estado mecanico actual"></Button>
@@ -699,32 +702,42 @@
                 
 
             </telerik:RadTabItem>
-            <telerik:RadTabItem x:Name="ItemTray" Header="Trayectorias"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" >
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
+            <telerik:RadTabItem x:Name="ItemTray" Header="Trayectorias"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <Border Style="{StaticResource alert-info}" Visibility="{Binding Tuberias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock TextWrapping="Wrap"  Text="Listado de la trayectoria. Podras restaurar nuevamente la siguiente lista del modelo por el actual, pulsando el botón Restaurar"></TextBlock>
+                            <Button  Width="100" Content="Restaurar" Command="{Binding CommandResetTray}" Background="#EFEFEF" ToolTip="Restaurar los registros de trayectoria por el actual"></Button>
+                        </StackPanel>
+                    </Border>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
 
-                    </Grid.ColumnDefinitions>
+                        </Grid.ColumnDefinitions>
 
-                    <telerik:RadGridView Grid.Column="0" ItemsSource="{Binding ModTrayectorias}" IsReadOnly="True" AutoGenerateColumns="False" Margin="0 0  30 0">
-                        <telerik:RadGridView.Columns >
-                            <telerik:GridViewDataColumn Header="MD" DataMemberBinding="{Binding PROFUNDIDADMD}"  DataFormatString="0.00"/>
-                            <telerik:GridViewDataColumn Header="MV" DataMemberBinding="{Binding PROFUNDIDADMV}" DataFormatString="0.00" />
-                            <telerik:GridViewDataColumn Header="SEVERIDAD" DataMemberBinding="{Binding SEVERIDAD}" DataFormatString="0.00" />
-                            <telerik:GridViewDataColumn Header="DESVIACION" DataMemberBinding="{Binding DESV}" DataFormatString="0.00" />
-                            <telerik:GridViewDataColumn Header="DESPLAZAMIENTO" DataMemberBinding="{Binding DESP}" DataFormatString="0.00" />
+                        <telerik:RadGridView Grid.Column="0" ItemsSource="{Binding ModTrayectorias}" IsReadOnly="True" AutoGenerateColumns="False" Margin="0 0  30 0">
+                            <telerik:RadGridView.Columns >
+                                <telerik:GridViewDataColumn Header="MD" DataMemberBinding="{Binding PROFUNDIDADMD}"  DataFormatString="0.00"/>
+                                <telerik:GridViewDataColumn Header="MV" DataMemberBinding="{Binding PROFUNDIDADMV}" DataFormatString="0.00" />
+                                <telerik:GridViewDataColumn Header="SEVERIDAD" DataMemberBinding="{Binding SEVERIDAD}" DataFormatString="0.00" />
+                                <telerik:GridViewDataColumn Header="DESVIACION" DataMemberBinding="{Binding DESV}" DataFormatString="0.00" />
+                                <telerik:GridViewDataColumn Header="DESPLAZAMIENTO" DataMemberBinding="{Binding DESP}" DataFormatString="0.00" />
 
-                        </telerik:RadGridView.Columns>
-                    </telerik:RadGridView>
-                    <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
-                        <WindowsFormsHost Name="wfhTrayectoria" ></WindowsFormsHost>
-                    </telerik:RadExpander>
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
+                            <WindowsFormsHost Name="wfhTrayectoria" ></WindowsFormsHost>
+                        </telerik:RadExpander>
 
 
-                </Grid>
+                    </Grid>
 
+
+                </StackPanel>
+                
             </telerik:RadTabItem>
-            <telerik:RadTabItem x:Name="ItemTemps" Header="Temperaturas"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14">
+            <telerik:RadTabItem x:Name="ItemTemps" Header="Temperaturas"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"></ColumnDefinition>
@@ -760,8 +773,6 @@
                 </Grid>
 
             </telerik:RadTabItem>
-
-
             <telerik:RadTabItem Header="BNC" IsEnabled="{Binding LiftMethod,Converter={StaticResource WRNumToBool},ConverterParameter=1, Mode=TwoWay}" FontFamily="Century Gothic" FontSize="14" Foreground="#FFBFBFBF" Background="#FF5FB974" HeaderForeground="#FF002B08" OpacityMask="Black">
 
                 <Grid Margin="10" DataContext="{Binding ModBNC}" >
@@ -1015,17 +1026,11 @@
                
 
             </telerik:RadTabItem>
-
         </telerik:RadTabControl>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="6">
             <Button BorderThickness="0" Content="Cancelar" Margin="2"  Background="Gray" Click="CloseConfig" Foreground="White" Padding="2" Width="100" FontFamily="Century Gothic" FontSize="14"/>
             <Button BorderThickness="0" Content="Guardar" Margin="2"  Command="{Binding CommandSave}" IsEnabled="{Binding Errors.Count, Converter={StaticResource WRNumToBool}, ConverterParameter=0}" Background="#FF478373" Foreground="White" Padding="2" Width="100" FontFamily="Century Gothic" FontSize="14"/>
-
         </StackPanel>
-
-
-
-
     </Grid>
 
 </Window>

@@ -29,6 +29,7 @@ Public Class ConfigViewModel
     Public usrPvt As New usrPvt()
     Public Property FormView As ConfigView
     Public Property IdAgujero As String
+    Public Property IsSaved As Boolean
     Private MaxTp As Double
 
 
@@ -54,8 +55,8 @@ Public Class ConfigViewModel
             Me.Comenta = ModModel.Comenta
             Me.ArchivoPvt = ModModel.ArchivoPvt
 
-            ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
-            ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
+            ModTrayectorias = ModModel.ModTrayectorias ' db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+            ModTemperaturas = ModModel.ModTemperaturas 'db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
 
             Me.LiftMethod = ModModel.LiftMethod
 
@@ -146,12 +147,16 @@ Public Class ConfigViewModel
 
         'ESTADO MECANICO OJO HAY QUE REVISAR
         '***********************************************************************************************************************
-        Dim ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
+        'Dim ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
+        'Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), True)
+        Tuberias = ModModel.Tuberias 'Mecanico.GetTuberias()
 
 
 
-        If ModTuberias.Count > 0 Then
-            LoadMecanico(ModTuberias)
+
+
+        If ModModel.ModTuberias.Count > 0 Then
+            LoadMecanico(ModModel.ModTuberias)
         Else
             LoadMecanico()
         End If
@@ -385,6 +390,7 @@ Public Class ConfigViewModel
 
             If _archivo_pvt Is Nothing Then
                 EnabledPvt = True
+                EnabledEquip = False
             Else
                 EnabledPvt = False
             End If
@@ -395,15 +401,19 @@ Public Class ConfigViewModel
     Private _new_archivo_pvt As String
     Public Property NewArchivoPvt As String
         Get
-            If _new_archivo_pvt Is Nothing And ArchivoPvt Is Nothing Then
-                EnabledPvt = True
-            Else
-                EnabledPvt = False
-            End If
+
             Return _new_archivo_pvt
         End Get
         Set(value As String)
             _new_archivo_pvt = value
+
+            If _new_archivo_pvt Is Nothing And ArchivoPvt Is Nothing Then
+                EnabledPvt = True
+                EnabledEquip = False
+            Else
+                EnabledPvt = False
+            End If
+
             RaisePropertyChanged("NewArchivoPvt")
         End Set
     End Property
@@ -1036,6 +1046,17 @@ Public Class ConfigViewModel
         Set(value As Boolean)
             _enabled_pvt = value
             RaisePropertyChanged("EnabledPvt")
+        End Set
+    End Property
+
+    Private _enabled_equip As Boolean
+    Public Property EnabledEquip As Boolean
+        Get
+            Return _enabled_equip
+        End Get
+        Set(value As Boolean)
+            _enabled_equip = value
+            RaisePropertyChanged("EnabledEquip")
         End Set
     End Property
 #End Region
@@ -1709,7 +1730,7 @@ Public Class ConfigViewModel
                 End If
             End If
 
-
+            ModModel.Equipment = EnabledEquip
             ModModel.DelMecas = DelMecanico
             ModModel.DelTrays = DelTrayectoria
             ModModel.DelTemps = DelTemperatura
@@ -1742,7 +1763,7 @@ Public Class ConfigViewModel
             Dim result = ModModel.Save(Comenta)
 
             'Guardado de componentes
-            If result Then
+            If EnabledEquip = False And result Then
 
                 ModModel.Mecanicos = New List(Of MOD_POZO_TUBERIA)
 
@@ -1768,8 +1789,8 @@ Public Class ConfigViewModel
 
 
             MsgBox("Configuración guardada")
-            FormView.Close()
-
+            'FormView.Close()'Depreciado temporalmente hasta verificar que se realize en el Main 
+            IsSaved = True
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.Critical)
         End Try
@@ -1883,9 +1904,8 @@ Public Class ConfigViewModel
     ''' </summary>
     Private Sub LoadMecanico()
         Try
-            Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), True)
 
-            Tuberias = Mecanico.GetTuberias()
+
             If ModMecanicos IsNot Nothing Then
                 ModMecanicos.Clear()
             End If

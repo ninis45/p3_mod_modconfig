@@ -68,8 +68,12 @@ Public Class MainViewModel
     End Function
     Sub LoadAgujero()
         Estatus = 0
-        Prog = "Nueva configuración"
+        Prog = ""
         Intentos = Nothing
+        'Resteamos mensajes
+        '===============================================
+        Infos.Clear()
+        Success.Clear()
 
         'Consultamos el Agujero
         '============================================
@@ -78,11 +82,14 @@ Public Class MainViewModel
         LiftMethod = AgujeroModel.LiftMethod
         Pozo = "Modelo del Pozo: " + AgujeroModel.Pozo
         Configuraciones = New List(Of CONFIGURACION)
+        'Buscar modelos realizados correctamente y por condiciones de operacion
+        '==================================================================================================================================================
         Modelos = db.VW_MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.ESTATUS = 3 And w.FUNCION = 6).OrderBy(Function(o) o.FECHAMODELO).ToList()
+        Condiciones = db.VW_MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.ESTATUS = 3 And w.FUNCION = 2).OrderBy(Function(o) o.FECHAMODELO).ToList()
 
 
-        Mecanicos = AgujeroModel.Mecanicos ' db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
-        Dim MecanicoModel As New MecanicoModel()
+        'Mecanicos = AgujeroModel.Mecanicos ' db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
+        ' Dim MecanicoModel As New MecanicoModel()
 
 
         Dim SAPs = db.CAT_SAP.Where(Function(w) w.PROSPER IsNot Nothing).ToDictionary(Function(d) d.PROSPER, Function(d) d.NOMBRE)
@@ -94,12 +101,13 @@ Public Class MainViewModel
         If AgujeroModel.VWGeneral IsNot Nothing Then
 
             IdModPozo = AgujeroModel.VWGeneral.IDMODPOZO
-            Me.VwGeneral = AgujeroModel.VWGeneral
+            'Me.VwGeneral = AgujeroModel.VWGeneral 'Se duplicaba la consulta
 
 
 
         Else
             IdModPozo = Nothing
+            Infos.Add("Pozo sin modelo, para agregar uno, pulsa el botón [+] para abrir el formulario de captura.")
         End If
 
 
@@ -113,7 +121,28 @@ Public Class MainViewModel
         End Get
         Set(value As List(Of VW_MOD_POZO))
             _modelos = value
+
+            If _modelos IsNot Nothing AndAlso _modelos.Count > 0 Then
+                Infos.Add("Actualmente existen modelos ejecutados correctamente, puedes consultarlo a través de la lista de lado derecho de este panel.")
+            End If
+
             RaisePropertyChanged("Modelos")
+        End Set
+    End Property
+
+    Private _condiciones As List(Of VW_MOD_POZO)
+    Property Condiciones As List(Of VW_MOD_POZO)
+        Get
+            Return _condiciones
+        End Get
+        Set(value As List(Of VW_MOD_POZO))
+            _condiciones = value
+
+            If _condiciones IsNot Nothing AndAlso _modelos.Count > 0 Then
+                Infos.Add("Actualmente existen modelos ejecutados por condiciones de operación, puedes consultarlo en este panel.")
+            End If
+
+            RaisePropertyChanged("Condiciones")
         End Set
     End Property
 
@@ -135,10 +164,10 @@ Public Class MainViewModel
         Set(value As String)
             _id_agujero = value
             If _id_agujero Is Nothing Then
-                FlashData = New ModelosEstabilidad.FlashData() With {
-                    .Estatus = "info",
-                    .Message = "Selecciona el agujero para cargar los datos"
-                }
+                'FlashData = New ModelosEstabilidad.FlashData() With {
+                '    .Estatus = "info",
+                '    .Message = "Selecciona el agujero para cargar los datos"
+                '}
 
             Else
                 LoadAgujero()
@@ -161,20 +190,7 @@ Public Class MainViewModel
 
                 VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = _id_mod_pozo).SingleOrDefault()
 
-                ' Dim mod_general = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = _id_mod_pozo).SingleOrDefault()
 
-
-
-                'If Estatus = 3 Then
-                '    LoadCharts(mod_general)
-                'End If
-
-                'If Estatus = 0 Then
-                '    Prog = "Última configuración: " + mod_general.FECHAMODELO
-                'End If
-
-                'Configuraciones de estabilidad, revisar si esta depreciado
-                'Configuraciones = db.CONFIGURACION.Where(Function(w) w.IDMODPOZO = _id_mod_pozo And w.ESTATUS = 2).ToList()
 
 
 
@@ -304,18 +320,33 @@ Public Class MainViewModel
     End Property
 
 
-    Private _mensajes As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
-    Public Property Mensajes As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+    Private _infos As ObjectModel.ObservableCollection(Of String)
+    Public Property Infos As ObjectModel.ObservableCollection(Of String)
         Get
-            If _mensajes Is Nothing Then
-                _mensajes = New ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+            If _infos Is Nothing Then
+                _infos = New ObjectModel.ObservableCollection(Of String)
             End If
-            Return _mensajes
+            Return _infos
         End Get
-        Set(value As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData))
-            _mensajes = value
+        Set(value As ObjectModel.ObservableCollection(Of String))
+            _infos = value
 
-            RaisePropertyChanged("Mensajes")
+            RaisePropertyChanged("Infos")
+        End Set
+    End Property
+
+    Private _success As ObjectModel.ObservableCollection(Of String)
+    Public Property Success As ObjectModel.ObservableCollection(Of String)
+        Get
+            If _success Is Nothing Then
+                _success = New ObjectModel.ObservableCollection(Of String)
+            End If
+            Return _success
+        End Get
+        Set(value As ObjectModel.ObservableCollection(Of String))
+            _success = value
+
+            RaisePropertyChanged("Success")
         End Set
     End Property
 
@@ -358,27 +389,12 @@ Public Class MainViewModel
         Set(value As VW_EDO_GENERAL)
             _vw_general = value
             Intentos = Nothing
+            Infos.Clear()
+            Success.Clear()
+
             If _vw_general IsNot Nothing Then
 
-                ' Intentos = Nothing
-                'IdModPozo = _vw_general.IDMODPOZO
-                '''Revisar hoy 11 / 07 / 2019
-                '''Estatus = IIf(_vw_general.ESTATUS.GetValueOrDefault() > 0, _vw_general.ESTATUS.GetValueOrDefault(), 0)
-                ''If _vw_general.ESTATUS.GetValueOrDefault() = 0 Or _vw_general.ESTATUS.GetValueOrDefault() = -1 Then
-                ''    Prog = "Última configuración: " + _vw_general.FECHAMODELO
-                ''    IdModPozo = Nothing
-                ''End If
 
-                '''Terminar revision
-
-                'Dim Configuracion = db.CONFIGURACION_ADMINISTRADOR.Where(Function(w) w.IDMODPOZO = _vw_general.IDMODPOZO).SingleOrDefault()
-
-                'If Configuracion IsNot Nothing Then
-                '    If _vw_general.ESTATUS = 1 Then
-                '        Prog = "Programado: " + AgujeroModel.Configuracion.FECHA_PROGRAMACION
-                '    End If
-                '    Intentos = db.EJECUCION_PROCESOS.Where(Function(w) w.IDCONFIGURACION = Configuracion.IDCONFIGURACION).ToList()
-                'End If
 
                 If _vw_general IsNot Nothing Then
                     Estatus = _vw_general.ESTATUS.GetValueOrDefault()
@@ -396,8 +412,9 @@ Public Class MainViewModel
                         Prog = "En ejecución: " + _vw_general.FECHAMODELO
                     Case 3
                         LoadCharts(_vw_general)
+                        Success.Add("Modelo ejecutado correctamente")
                 End Select
-
+                If Prog <> "" Then Infos.Add(Prog)
 
             End If
 
@@ -419,22 +436,22 @@ Public Class MainViewModel
                 Warnings.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = i.ERRORS})
             Next
         End If
-
-        If Mecanicos.Count = 0 Then
-            Errors.Add("No hay estado mecánico para el Modelo, se recomienda revisar el módulo de Estado Mecanico a fin de generar un nuevo listado para el dicho modelo")
-        End If
+        'Se podria extraer al momento de crear el modelo - Posible depreciacion
+        'If Mecanicos.Count = 0 Then
+        '    Errors.Add("No hay estado mecánico para el Modelo, se recomienda revisar el módulo de Estado Mecanico a fin de generar un nuevo listado para el dicho modelo")
+        'End If
 
 
         If Aforos = 0 Then
-            Errors.Add("No hay registros de aforo")
+            Errors.Add("No hay registros de Aforo.")
         End If
 
         If Pvts = 0 Then
-            Errors.Add("No hay registro de Pvts")
+            Errors.Add("No hay registros de Pvt.")
         End If
 
         If Trays = 0 Then
-            Errors.Add("No hay registros de Trayectoria")
+            Errors.Add("No hay registros de Trayectoria.")
         End If
 
 
@@ -560,8 +577,8 @@ Public Class MainViewModel
 
 
 
-                PrfTest1(0) = AgujeroModel.Mecanicos(AgujeroModel.Mecanicos.Count - 1).MD 'nivel medio de disparo
-                PrfTest1(1) = AgujeroModel.Mecanicos(AgujeroModel.Mecanicos.Count - 1).MD '100'.NivMedDisp.Val
+                PrfTest1(0) = AgujeroModel.ModTuberias(AgujeroModel.ModTuberias.Count - 1).MD 'nivel medio de disparo
+                PrfTest1(1) = AgujeroModel.ModTuberias(AgujeroModel.ModTuberias.Count - 1).MD '100'.NivMedDisp.Val
 
 
                 PTest1(0) = 0

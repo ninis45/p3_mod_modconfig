@@ -18,6 +18,12 @@ Public Class ModModel
     Property Formacion As VW_FORMACION
     Property Mecanicos As List(Of MOD_POZO_TUBERIA)
 
+    Property ModTuberias As List(Of MOD_POZO_TUBERIA)
+    Property Tuberias As List(Of Tuberia)
+    Property ModTrayectorias As List(Of MOD_POZO_TRAYEC)
+    Property Trayectorias As List(Of VW_TRAYECTORIA)
+    Property ModTemperaturas As List(Of MOD_POZO_TEMP)
+
     Property DelTemps As Boolean = False
     Property DelTrays As Boolean = False
     Property DelMecas As Boolean = False
@@ -31,6 +37,8 @@ Public Class ModModel
     Property ArchivoPvt As String
 
     Property IdPvt As String
+
+    Property Equipment As Boolean
 
     Private objconsulta As New BaseDatos("SERVER=10.85.35.136\CI_DESARROLLO;User=sa;Password=Sql2016; Database=CI;")
     Public Sub New(ByVal IdAgujero As String, ByVal IdUsuario As String)
@@ -51,10 +59,21 @@ Public Class ModModel
 
         Me.IdUsuario = IdUsuario
         Me.LiftMethod = LiftMethod
+        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
+        Me.Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
+
+
+        'Buscamos Edo Mecanico
+        '***************************************************
+        Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), False)
+        Tuberias = Mecanico.GetTuberias()
+
         Me.VwGeneral = GetModelo()
+
         If Me.VwGeneral IsNot Nothing Then
             'Posiblemente depreciado
             ArchivoProsper = (From f In db.ARCHIVOS_PROSPER Where f.idModPozo = Me.VwGeneral.IDMODPOZO And f.fecha = (db.ARCHIVOS_PROSPER.Where(Function(w) w.idModPozo = Me.VwGeneral.IDMODPOZO).Max(Function(m) m.fecha))).SingleOrDefault() ' db.ARCHIVOS_PROSPER.Where(Function(w) w.idModPozo = General.IDMODPOZO).SingleOrDefault()
+
 
         End If
 
@@ -63,8 +82,6 @@ Public Class ModModel
 
         If Agujero IsNot Nothing Then
             Me.IdPozo = Agujero.IDPOZO
-
-
         End If
         If IdUsuario Is Nothing Then
             Throw New Exception("Falta definir el usuario para las acciones necesarias")
@@ -87,10 +104,21 @@ Public Class ModModel
             CreatedOn = General.FECHAMODELO
             Pozo = VwGeneral.NOMBRE
 
-            If VwGeneral.ARCHIVO IsNot Nothing Then
-                ArchivoPvt = Pozo + ".Out"
-            End If
 
+            Me.ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
+            Me.ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+
+
+            If VwGeneral.ARCHIVO IsNot Nothing Then
+
+                If ArchivoProsper IsNot Nothing Then
+
+                    Me.ArchivoPvt = ArchivoProsper.nombreArchivo
+                Else
+                    ArchivoPvt = Pozo + ".Out"
+                End If
+
+            End If
 
 
         End If
@@ -99,12 +127,6 @@ Public Class ModModel
     End Function
 
     Public Sub Reset()
-
-
-
-
-
-
         Dim Configuracion = db.CONFIGURACION_ADMINISTRADOR.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
 
 
@@ -137,6 +159,7 @@ Public Class ModModel
     Public Function Save(ByVal Comenta As String) As Boolean
         Try
             Dim ModPozo As MOD_POZO
+            Dim Fil As Byte()
             If Estatus = 3 Or IdModPozo Is Nothing Then
 
                 ModPozo = New MOD_POZO() With {
@@ -146,6 +169,11 @@ Public Class ModModel
                     .FUNCION = 6,
                     .FECHAMODELO = DateTime.Now
                 }
+
+                'If ArchivoProsper IsNot Nothing And ArchivoPvt Is Nothing Then
+                '    ModPozo.ARCHIVO = Nothing
+                'End If
+
                 db.MOD_POZO.Add(ModPozo)
                 IdModPozo = ModPozo.IDMODPOZO
 
@@ -156,9 +184,9 @@ Public Class ModModel
                 ModPozo.OBSERVACIONES = Comenta
                 ModPozo.FECHAMODELO = DateTime.Now
 
-                If ArchivoPvt Is Nothing Then
-                    ModPozo.ARCHIVO = Nothing
-                End If
+                'If ArchivoPvt Is Nothing Then
+                '    ModPozo.ARCHIVO = Nothing
+                'End If
 
                 db.Entry(ModPozo).State = System.Data.Entity.EntityState.Modified
             End If
@@ -169,8 +197,9 @@ Public Class ModModel
             '===================================================
             'Dim FileExists As ARCHIVOS_PROSPER = db.ARCHIVOS_PROSPER.Where(Function(w) w.idModPozo = IdModPozo).SingleOrDefault()
 
+
             If NewArchivoPvt IsNot Nothing And File.Exists(NewArchivoPvt) Then
-                Dim Fil = File.ReadAllBytes(NewArchivoPvt)
+                Fil = File.ReadAllBytes(NewArchivoPvt)
 
                 'Guardamos una copia en el historial de archivos
                 '============================================================
@@ -178,49 +207,24 @@ Public Class ModModel
                     .idModPozo = ModPozo.IDMODPOZO,
                     .fecha = DateTime.Now,
                     .nombreArchivo = NewArchivoPvt,
-                    .archivo = System.Convert.ToBase64String(Fil),
+                    .archivo = Fil,
                     .idUsuario = IdUsuario
                 })
 
+            Else
+                If ArchivoPvt IsNot Nothing And ArchivoProsper IsNot Nothing Then
+                    Fil = ArchivoProsper.archivo
+                End If
+            End If
 
-
+            If Fil IsNot Nothing Then
                 ModPozo.ARCHIVO = Fil
                 db.Entry(ModPozo).State = Entity.EntityState.Modified
                 db.SaveChanges()
-
             End If
 
-            'If FilePath IsNot Nothing AndAlso FilePath <> "" Then
-
-            '    Dim Fil = File.ReadAllBytes(FilePath)
 
 
-            '    If FileExists Is Nothing Then
-
-            '        FileExists = New ARCHIVOS_PROSPER() With {
-            '            .archivo = System.Convert.ToBase64String(Fil),
-            '            .nombreArchivo = FilePath,
-            '            .fecha = DateTime.Now,
-            '            .idModPozo = ModPozo.IDMODPOZO,
-            '            .idUsuario = IdUsuario
-            '        }
-            '        db.ARCHIVOS_PROSPER.Add(FileExists)
-
-            '    Else
-            '        FileExists.archivo = System.Convert.ToBase64String(Fil)
-            '        FileExists.nombreArchivo = FilePath
-
-            '        db.Entry(FileExists).State = Entity.EntityState.Modified
-            '    End If
-
-            '    db.SaveChanges()
-            'Else
-
-            '    If ArchivoProsper Is Nothing And FileExists IsNot Nothing Then
-            '        db.ARCHIVOS_PROSPER.Remove(FileExists)
-            '        db.SaveChanges()
-            '    End If
-            'End If
 
 
             Reset()
@@ -599,4 +603,10 @@ Public Class ModModel
         'Next
         Return result
     End Function
+
+
+    ''Function ResetTuberias() As List(Of MecanicoModel)
+    ''    Dim MecanicoModel As New MecanicoModel(Tuberias)
+    ''    Return MecanicoModel.GetList()
+    ''End Function
 End Class
