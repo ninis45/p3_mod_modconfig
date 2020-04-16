@@ -18,5 +18,18 @@
         ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
 
     End Sub
+    Sub New(ByVal IdModPozo As String)
+
+        ' Esta llamada es exigida por el diseñador.
+        InitializeComponent()
+
+        ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
+
+        ContextCond = New CondViewModel(IdModPozo)
+
+
+
+        Me.DataContext = ContextCond
+    End Sub
 
 End Class

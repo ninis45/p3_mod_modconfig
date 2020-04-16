@@ -3,10 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ModelosConfig"
+        xmlns:local="clr-namespace:ModelosConfig"        
+        xmlns:lang="clr-namespace:ModelosConfig.My.Resources"
         mc:Ignorable="d"
         Title="{Binding Titulo}" Height="540" Width="1200" WindowState="Normal" ResizeMode="NoResize">
     <Window.Resources>
+        <telerik:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></telerik:BooleanToVisibilityConverter>
         <telerik:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <local:ToVisibility x:Key="WRToVisibility"></local:ToVisibility>
         <Style x:Key="Addon" TargetType="{x:Type Label}">
@@ -48,36 +50,72 @@
                             <telerik:LinearAxis  Title="Metros verticales" LabelFitMode="Rotate" IsInverse="True" />
                         </telerik:RadCartesianChart.VerticalAxis>
                         <telerik:RadCartesianChart.Series>
-                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[0]}"/>
-                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#00cc00" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[1]}"/>
-                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff3399" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[2]}">
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff6600" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[0]}" Visibility="{Binding SelectQuick[0],Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#00cc00" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[1]}" Visibility="{Binding SelectQuick[1],Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff3399" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[2]}" Visibility="{Binding SelectQuick[2],Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <telerik:ScatterLineSeries.HorizontalAxis>
                                     <telerik:LinearAxis  Title="Temperatura" VerticalLocation="Top" ></telerik:LinearAxis>
                                 </telerik:ScatterLineSeries.HorizontalAxis>
 
 
                             </telerik:ScatterLineSeries>
-                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#0066ff" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[3]}">
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#0066ff" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[3]}" Visibility="{Binding SelectQuick[3],Converter={StaticResource BooleanToVisibilityConverter}}">
                                
                             </telerik:ScatterLineSeries>
-                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff0000" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[4]}">
+                            <telerik:ScatterLineSeries   XValueBinding="Xaux" YValueBinding="Yaux" Stroke="#ff0000" ToolTip="Diametro del estrangulador" ItemsSource="{Binding QuickLook[4]}" Visibility="{Binding SelectQuick[4],Converter={StaticResource BooleanToVisibilityConverter}}">
                                
 
                             </telerik:ScatterLineSeries>
                         </telerik:RadCartesianChart.Series>
                     </telerik:RadCartesianChart>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,20,10">
-                        <Rectangle Fill="#ff6600" Height="3" Width="15" Margin="5,0" />
-                        <TextBlock Text="Abajo - Arriba" Margin="0,0,9,0" />
-                        <Rectangle Fill="#00cc00" Height="3" Width="15" Margin="0,0,5,0" />
-                        <TextBlock Text="Arriba - Abajo" />
-                        <Rectangle Fill="#ff3399" Height="3" Width="15" Margin="0,0,5,0" />
-                        <TextBlock Text="Ptr. Medida" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
-                        <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}"/>
-                        <Rectangle Fill="#0066ff" Height="3" Width="15" Margin="0,0,5,0" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
-                        <TextBlock Text="Ptr. Teórica" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
-                        <Rectangle Fill="#ff0000" Height="3" Width="15" Margin="0,0,5,0" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
-                        <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="6 10">
+
+                        <CheckBox Margin="5 0" IsChecked="{Binding SelectQuick[0]}">
+                            <CheckBox.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="#ff6600" Height="3" Width="12"  />
+                                    <TextBlock Text="Abajo - Arriba" Margin="4 0" />
+                                </StackPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+
+                        <CheckBox Margin="5 0" IsChecked="{Binding SelectQuick[1]}">
+                            <CheckBox.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="#00cc00" Height="3" Width="15" Margin="4 0" />
+                                    <TextBlock Text="Arriba - Abajo" />
+                                </StackPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+
+                        <CheckBox Margin="5 0" IsChecked="{Binding SelectQuick[2]}">
+                            <CheckBox.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="#ff3399" Height="3" Width="15" Margin="4 0" />
+                                    <TextBlock Text="Ptr. Medida" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                                    <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}"/>
+                                </StackPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+
+                        <CheckBox Margin="5 0" IsChecked="{Binding SelectQuick[3]}" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+                            <CheckBox.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="#0066ff" Height="3" Width="15" Margin="4 0" />
+                                    <TextBlock Text="Ptr. Teórica" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                                </StackPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+
+                        <CheckBox Margin="5 0" IsChecked="{Binding SelectQuick[4]}" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+                            <CheckBox.Content>
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Fill="#ff0000" Height="3" Width="15" Margin="4 0" />
+                                    <TextBlock Text="Temperatura" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}"/>
+                                </StackPanel>
+                            </CheckBox.Content>
+                        </CheckBox>
+                        
                         
                         
                     </StackPanel>
@@ -176,7 +214,46 @@
                
             </TabItem>
         </TabControl>
-        <Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+
+        <telerik:RadPropertyGrid x:Name="PropertyGrid1" AutoGeneratePropertyDefinitions="False" Grid.Column="1" IsReadOnly="True" Item="{Binding ModPozoQuick}" telerik:StyleManager.Theme="Office_Black" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
+            <telerik:RadPropertyGrid.PropertyDefinitions>
+                <telerik:PropertyDefinition Binding="{Binding ModPozoQuick.PBF}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.PBF}">
+                   
+                </telerik:PropertyDefinition>
+                <telerik:PropertyDefinition Binding="{Binding PBE}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.PBE}"/>
+                <telerik:PropertyDefinition Binding="{Binding PVAL}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.PVAL}"/>
+                <telerik:PropertyDefinition Binding="{Binding PCA}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.PCA}"/>
+                <telerik:PropertyDefinition Binding="{Binding TVAL}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.TVAL}"/>
+                <telerik:PropertyDefinition Binding="{Binding GOR}" Description="m3/m3" DisplayName="{x:Static lang:Resources.GOR}"/>
+                <telerik:PropertyDefinition Binding="{Binding GORFREE}" Description="m3/m3" DisplayName="{x:Static lang:Resources.GORFREE}"/>
+                <telerik:PropertyDefinition Binding="{Binding DPVAL}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.DPVAL}"/>
+                <telerik:PropertyDefinition Binding="{Binding PTRTEO}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.PTRTEO}"/>
+                <telerik:PropertyDefinition Binding="{Binding DPYAC}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.DPYAC}"/>
+                <telerik:PropertyDefinition Binding="{Binding IP}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.IP}"/>
+                <telerik:PropertyDefinition Binding="{Binding TFCAL}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.TFCAL}"/>
+                <telerik:PropertyDefinition Binding="{Binding TFPER}" Description="Km/cm2 g" DisplayName="{x:Static lang:Resources.TFPER}"/>
+                
+
+
+            </telerik:RadPropertyGrid.PropertyDefinitions>
+
+        </telerik:RadPropertyGrid>
+        <telerik:RadPropertyGrid x:Name="PropertyGrid2" AutoGeneratePropertyDefinitions="False" Item="{Binding ModPozoQuick}" Grid.Column="1" IsReadOnly="True" telerik:StyleManager.Theme="Office_Black" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}">
+            <telerik:RadPropertyGrid.PropertyDefinitions>
+                <telerik:PropertyDefinition Binding="{Binding BC_PPR,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_PPR}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_SVOLT,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_SVOLT}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_PINPRES,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_PINPRES}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_PDPRES,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_PDPRES}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_DRATE,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_DRATE}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_GASFREE,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_GASFREE}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_DACRP,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_DACRP}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_PRATE,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_PRATE}"/>
+                <telerik:PropertyDefinition Binding="{Binding BC_PHEAD,Mode=TwoWay}" Description="Sin descripción" DisplayName="{x:Static lang:Resources.BC_PHEAD}"/>
+                
+            </telerik:RadPropertyGrid.PropertyDefinitions>
+        </telerik:RadPropertyGrid>
+
+        <!--<Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=1}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -252,8 +329,8 @@
             <Label Content="{Binding ModPozoQuick.TFPER}" Grid.Column="1" Grid.Row="12" Style="{StaticResource Box}"></Label>
             <Label Content="Km/cm2 g" Grid.Column="2" Grid.Row="12" Style="{StaticResource Addon}" ></Label>
 
-        </Grid>
-        <Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}">
+        </Grid-->
+        <!--Grid Grid.Row="1" Grid.Column="1" Margin="10" Visibility="{Binding LiftMethod,Converter={StaticResource WRToVisibility},ConverterParameter=2}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -312,7 +389,7 @@
             <Label Content="BC_PHEAD" FontWeight="Bold" Grid.Row="8" Grid.Column="0" Style="{StaticResource Addon}"></Label>
             <Label Content="{Binding ModPozoQuick.BC_PHEAD}" Grid.Column="1" Grid.Row="8" Style="{StaticResource Box}"></Label>
             <Label Content="m3/m3" Grid.Column="2" Grid.Row="8" Style="{StaticResource Addon}" ></Label>
-        </Grid>
+        </>-->
 
     </Grid>
 </Window>

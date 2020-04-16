@@ -189,6 +189,7 @@ Partial Class usrAforo
         Me.TChart1.Axes.Top.Labels.Font.Size = 9
         Me.TChart1.Axes.Top.Labels.Font.SizeFloat = 9.0!
         Me.TChart1.CurrentTheme = Steema.TeeChart.ThemeType.Report
+        Me.TChart1.Cursor = System.Windows.Forms.Cursors.Default
         Me.TChart1.Dock = System.Windows.Forms.DockStyle.Fill
         '
         '
@@ -234,7 +235,7 @@ Partial Class usrAforo
         '
         '
         Me.TChart1.Panel.Brush.Gradient.Visible = False
-        Me.TChart1.Panel.MarginLeft = 20.0R
+        Me.TChart1.Panel.MarginLeft = 21.0R
         Me.TChart1.Panel.MarginRight = 16.0R
         Me.TChart1.Series.Add(Me.Points1)
         Me.TChart1.Series.Add(Me.Points2)
@@ -270,8 +271,12 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Axis1.Labels.CustomSize = 19
+        Me.Axis1.Labels.CustomSize = 29
         Me.Axis1.OtherSide = False
+        '
+        '
+        '
+        Me.Axis1.Ticks.Length = 0
         '
         '
         '
@@ -289,9 +294,13 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Axis2.Labels.CustomSize = 20
+        Me.Axis2.Labels.CustomSize = 38
         Me.Axis2.OtherSide = False
-        Me.Axis2.RelativePosition = -10.0R
+        Me.Axis2.RelativePosition = -11.0R
+        '
+        '
+        '
+        Me.Axis2.Ticks.Length = 0
         '
         '
         '
@@ -309,7 +318,7 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Axis3.Labels.CustomSize = 21
+        Me.Axis3.Labels.CustomSize = 41
         Me.Axis3.OtherSide = True
         Me.Axis3.RelativePosition = -1.0R
         '
@@ -332,7 +341,7 @@ Partial Class usrAforo
         '
         Me.Axis4.Labels.CustomSize = 21
         Me.Axis4.OtherSide = True
-        Me.Axis4.RelativePosition = -12.0R
+        Me.Axis4.RelativePosition = -16.0R
         '
         '
         '
@@ -351,9 +360,14 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Axis5.Labels.CustomSize = 17
+        Me.Axis5.Labels.CustomSize = 18
+        Me.Axis5.Labels.Separation = 12
+        '
+        '
+        '
+        Me.Axis5.MinorTicks.Length = 3
         Me.Axis5.OtherSide = False
-        Me.Axis5.RelativePosition = -22.0R
+        Me.Axis5.RelativePosition = -24.0R
         '
         '
         '
@@ -409,7 +423,7 @@ Partial Class usrAforo
         Me.Points1.Marks.TailParams.PointerHeight = 5.0R
         Me.Points1.Marks.TailParams.PointerWidth = 8.0R
         Me.Points1.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Points1.OriginalCursor = Nothing
+        Me.Points1.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -428,7 +442,7 @@ Partial Class usrAforo
         Me.Points1.Pointer.SizeDouble = 0R
         Me.Points1.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points1.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points1.Title = "PRODLIQ"
+        Me.Points1.Title = "Ql (bd)"
         Me.Points1.UseExtendedNumRange = False
         Me.Points1.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -490,7 +504,7 @@ Partial Class usrAforo
         Me.Points2.Marks.TailParams.PointerHeight = 5.0R
         Me.Points2.Marks.TailParams.PointerWidth = 8.0R
         Me.Points2.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Points2.OriginalCursor = Nothing
+        Me.Points2.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -509,7 +523,7 @@ Partial Class usrAforo
         Me.Points2.Pointer.SizeDouble = 0R
         Me.Points2.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points2.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points2.Title = "PRODGASFORM"
+        Me.Points2.Title = "Qgf (MMpcd)"
         Me.Points2.UseExtendedNumRange = False
         Me.Points2.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -571,7 +585,7 @@ Partial Class usrAforo
         Me.Points3.Marks.TailParams.PointerHeight = 5.0R
         Me.Points3.Marks.TailParams.PointerWidth = 8.0R
         Me.Points3.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Points3.OriginalCursor = Nothing
+        Me.Points3.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -590,7 +604,7 @@ Partial Class usrAforo
         Me.Points3.Pointer.SizeDouble = 0R
         Me.Points3.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points3.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points3.Title = "VOLGASINY"
+        Me.Points3.Title = "Qgi (MMpcd)"
         Me.Points3.UseExtendedNumRange = False
         Me.Points3.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -652,7 +666,7 @@ Partial Class usrAforo
         Me.Points4.Marks.TailParams.PointerHeight = 5.0R
         Me.Points4.Marks.TailParams.PointerWidth = 8.0R
         Me.Points4.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Points4.OriginalCursor = Nothing
+        Me.Points4.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -671,7 +685,7 @@ Partial Class usrAforo
         Me.Points4.Pointer.SizeDouble = 0R
         Me.Points4.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points4.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points4.Title = "FRACAGUA"
+        Me.Points4.Title = "Corte Agua (%)"
         Me.Points4.UseExtendedNumRange = False
         Me.Points4.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -733,7 +747,7 @@ Partial Class usrAforo
         Me.Points5.Marks.TailParams.PointerHeight = 5.0R
         Me.Points5.Marks.TailParams.PointerWidth = 8.0R
         Me.Points5.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Points5.OriginalCursor = Nothing
+        Me.Points5.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -752,7 +766,7 @@ Partial Class usrAforo
         Me.Points5.Pointer.SizeDouble = 0R
         Me.Points5.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points5.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points5.Title = "TEMP"
+        Me.Points5.Title = "T (°C)"
         Me.Points5.UseExtendedNumRange = False
         Me.Points5.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -805,7 +819,7 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Line1.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(72, Byte), Integer), CType(CType(157, Byte), Integer), CType(CType(135, Byte), Integer))
+        Me.Line1.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(115, Byte), Integer), CType(CType(115, Byte), Integer), CType(CType(230, Byte), Integer))
         '
         '
         '
@@ -819,13 +833,13 @@ Partial Class usrAforo
         Me.Line1.Marks.TailParams.PointerHeight = 5.0R
         Me.Line1.Marks.TailParams.PointerWidth = 8.0R
         Me.Line1.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line1.OriginalCursor = Nothing
+        Me.Line1.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
         Me.Line1.Pointer.SizeDouble = 0R
         Me.Line1.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line1.Title = "Media PRODLIQ"
+        Me.Line1.Title = "Promedio Ql (bd)"
         Me.Line1.UseExtendedNumRange = False
         Me.Line1.VertAxis = Steema.TeeChart.Styles.VerticalAxis.Custom
         '
@@ -880,7 +894,7 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Line2.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(207, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(58, Byte), Integer))
+        Me.Line2.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(173, Byte), Integer), CType(CType(115, Byte), Integer))
         '
         '
         '
@@ -894,13 +908,13 @@ Partial Class usrAforo
         Me.Line2.Marks.TailParams.PointerHeight = 5.0R
         Me.Line2.Marks.TailParams.PointerWidth = 8.0R
         Me.Line2.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line2.OriginalCursor = Nothing
+        Me.Line2.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
         Me.Line2.Pointer.SizeDouble = 0R
         Me.Line2.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line2.Title = "Media PRODGASFORM"
+        Me.Line2.Title = "Promedio Qgf (bd)"
         Me.Line2.UseExtendedNumRange = False
         '
         '
@@ -954,7 +968,7 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Line3.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(219, Byte), Integer), CType(CType(130, Byte), Integer))
+        Me.Line3.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(115, Byte), Integer), CType(CType(0, Byte), Integer))
         '
         '
         '
@@ -968,13 +982,13 @@ Partial Class usrAforo
         Me.Line3.Marks.TailParams.PointerHeight = 5.0R
         Me.Line3.Marks.TailParams.PointerWidth = 8.0R
         Me.Line3.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line3.OriginalCursor = Nothing
+        Me.Line3.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
         Me.Line3.Pointer.SizeDouble = 0R
         Me.Line3.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line3.Title = "Media VOLGASINY"
+        Me.Line3.Title = "Promedio Qgi (bd)"
         Me.Line3.UseExtendedNumRange = False
         '
         '
@@ -1042,13 +1056,13 @@ Partial Class usrAforo
         Me.Line4.Marks.TailParams.PointerHeight = 5.0R
         Me.Line4.Marks.TailParams.PointerWidth = 8.0R
         Me.Line4.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line4.OriginalCursor = Nothing
+        Me.Line4.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
         Me.Line4.Pointer.SizeDouble = 0R
         Me.Line4.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line4.Title = "Media FRACAGUA"
+        Me.Line4.Title = "Promedio Corte Agua (%)"
         Me.Line4.UseExtendedNumRange = False
         '
         '
@@ -1102,7 +1116,7 @@ Partial Class usrAforo
         '
         '
         '
-        Me.Line5.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(147, Byte), Integer), CType(CType(147, Byte), Integer), CType(CType(147, Byte), Integer))
+        Me.Line5.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(58, Byte), Integer), CType(CType(75, Byte), Integer), CType(CType(115, Byte), Integer))
         '
         '
         '
@@ -1116,13 +1130,13 @@ Partial Class usrAforo
         Me.Line5.Marks.TailParams.PointerHeight = 5.0R
         Me.Line5.Marks.TailParams.PointerWidth = 8.0R
         Me.Line5.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line5.OriginalCursor = Nothing
+        Me.Line5.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
         Me.Line5.Pointer.SizeDouble = 0R
         Me.Line5.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line5.Title = "Media TEMP"
+        Me.Line5.Title = "Promedio T (°C)"
         Me.Line5.UseExtendedNumRange = False
         '
         '

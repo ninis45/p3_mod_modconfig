@@ -61,6 +61,87 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Delta T a través de la bomba.
+        '''</summary>
+        Public ReadOnly Property BC_DACRP() As String
+            Get
+                Return ResourceManager.GetString("BC_DACRP", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Gasto en el fondo.
+        '''</summary>
+        Public ReadOnly Property BC_DRATE() As String
+            Get
+                Return ResourceManager.GetString("BC_DRATE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Gas libre en la bomba.
+        '''</summary>
+        Public ReadOnly Property BC_GASFREE() As String
+            Get
+                Return ResourceManager.GetString("BC_GASFREE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión de descarga de la bomba.
+        '''</summary>
+        Public ReadOnly Property BC_PDPRES() As String
+            Get
+                Return ResourceManager.GetString("BC_PDPRES", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Altura de bombeo generada.
+        '''</summary>
+        Public ReadOnly Property BC_PHEAD() As String
+            Get
+                Return ResourceManager.GetString("BC_PHEAD", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión de admisión de la bomba.
+        '''</summary>
+        Public ReadOnly Property BC_PINPRES() As String
+            Get
+                Return ResourceManager.GetString("BC_PINPRES", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Requerimiento de potencia de la bomba.
+        '''</summary>
+        Public ReadOnly Property BC_PPR() As String
+            Get
+                Return ResourceManager.GetString("BC_PPR", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Gasto promedio en bomba.
+        '''</summary>
+        Public ReadOnly Property BC_PRATE() As String
+            Get
+                Return ResourceManager.GetString("BC_PRATE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Voltaje en superficie.
+        '''</summary>
+        Public ReadOnly Property BC_SVOLT() As String
+            Get
+                Return ResourceManager.GetString("BC_SVOLT", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a %CO2 (mol).
         '''</summary>
         Public ReadOnly Property CO2() As String
@@ -88,6 +169,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Coeficiente térmico ajustado.
+        '''</summary>
+        Public ReadOnly Property CTCA() As String
+            Get
+                Return ResourceManager.GetString("CTCA", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Fecha.
         '''</summary>
         Public ReadOnly Property DATGENDATE() As String
@@ -106,11 +196,29 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Factor de forma (adim).
+        '''  Busca una cadena traducida similar a Factor de formación (adim).
         '''</summary>
         Public ReadOnly Property DIETZ() As String
             Get
                 Return ResourceManager.GetString("DIETZ", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Diferencial de presión a través de la válvula.
+        '''</summary>
+        Public ReadOnly Property DPVAL() As String
+            Get
+                Return ResourceManager.GetString("DPVAL", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Reducción.
+        '''</summary>
+        Public ReadOnly Property DPYAC() As String
+            Get
+                Return ResourceManager.GetString("DPYAC", resourceCulture)
             End Get
         End Property
         
@@ -120,6 +228,15 @@ Namespace My.Resources
         Public ReadOnly Property DRAINAGE() As String
             Get
                 Return ResourceManager.GetString("DRAINAGE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Efic. de Separador de Gas (%).
+        '''</summary>
+        Public ReadOnly Property EFISEPGAS() As String
+            Get
+                Return ResourceManager.GetString("EFISEPGAS", resourceCulture)
             End Get
         End Property
         
@@ -138,6 +255,15 @@ Namespace My.Resources
         Public ReadOnly Property ENTRY() As String
             Get
                 Return ResourceManager.GetString("ENTRY", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Etapas.
+        '''</summary>
+        Public ReadOnly Property ETAPAS() As String
+            Get
+                Return ResourceManager.GetString("ETAPAS", resourceCulture)
             End Get
         End Property
         
@@ -169,7 +295,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a QGI(MMPie3/Dia).
+        '''  Busca una cadena traducida similar a Qgi (MMpcd).
         '''</summary>
         Public ReadOnly Property GLRATE() As String
             Get
@@ -187,7 +313,25 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Qgi maximo MMpie3/día.
+        '''  Busca una cadena traducida similar a Relación Gas Aceite.
+        '''</summary>
+        Public ReadOnly Property GOR() As String
+            Get
+                Return ResourceManager.GetString("GOR", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Relación Gas Aceite Libre.
+        '''</summary>
+        Public ReadOnly Property GORFREE() As String
+            Get
+                Return ResourceManager.GetString("GORFREE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Qgi maximo (MMpcd).
         '''</summary>
         Public ReadOnly Property GQIMAX() As String
             Get
@@ -250,6 +394,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a IP calculada equivalente.
+        '''</summary>
+        Public ReadOnly Property IP() As String
+            Get
+                Return ResourceManager.GetString("IP", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Correlación de flujo en el yacimiento.
         '''</summary>
         Public ReadOnly Property IPRMETHOD() As String
@@ -282,6 +435,15 @@ Namespace My.Resources
         Public ReadOnly Property LIFTTYPE() As String
             Get
                 Return ResourceManager.GetString("LIFTTYPE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Longitud de Cable (m).
+        '''</summary>
+        Public ReadOnly Property LONGCABLE() As String
+            Get
+                Return ResourceManager.GetString("LONGCABLE", resourceCulture)
             End Get
         End Property
         
@@ -322,6 +484,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Diámetro de la Bomba.
+        '''</summary>
+        Public ReadOnly Property ODMAX() As String
+            Get
+                Return ResourceManager.GetString("ODMAX", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Presión de salida.
         '''</summary>
         Public ReadOnly Property OUTPUTRES() As String
@@ -331,11 +502,56 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Presión en fondo estático.
+        '''</summary>
+        Public ReadOnly Property PBE() As String
+            Get
+                Return ResourceManager.GetString("PBE", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión en fondo fluyendo.
+        '''</summary>
+        Public ReadOnly Property PBF() As String
+            Get
+                Return ResourceManager.GetString("PBF", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión de la TR en la válvula.
+        '''</summary>
+        Public ReadOnly Property PCA() As String
+            Get
+                Return ResourceManager.GetString("PCA", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Índice de productividad (bl/día/kg/cm2).
         '''</summary>
         Public ReadOnly Property PI() As String
             Get
                 Return ResourceManager.GetString("PI", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Potencia del Motor.
+        '''</summary>
+        Public ReadOnly Property POTENCIA() As String
+            Get
+                Return ResourceManager.GetString("POTENCIA", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión de Des. (Kg/cm2).
+        '''</summary>
+        Public ReadOnly Property PREDES() As String
+            Get
+                Return ResourceManager.GetString("PREDES", resourceCulture)
             End Get
         End Property
         
@@ -358,11 +574,38 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Profundidad de la Bomba.
+        '''</summary>
+        Public ReadOnly Property PROF() As String
+            Get
+                Return ResourceManager.GetString("PROF", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Presión de fondo fluyendo (kg/cm2).
         '''</summary>
         Public ReadOnly Property PTEST() As String
             Get
                 Return ResourceManager.GetString("PTEST", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión calculada en la cabeza de la TR.
+        '''</summary>
+        Public ReadOnly Property PTRTEO() As String
+            Get
+                Return ResourceManager.GetString("PTRTEO", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Presión del aparejo en la válvula.
+        '''</summary>
+        Public ReadOnly Property PVAL() As String
+            Get
+                Return ResourceManager.GetString("PVAL", resourceCulture)
             End Get
         End Property
         
@@ -376,7 +619,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Qgi mínimo MMpie3/día.
+        '''  Busca una cadena traducida similar a Qgi mínimo (MMpcd).
         '''</summary>
         Public ReadOnly Property QGIMIN() As String
             Get
@@ -385,7 +628,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Gasto de liquido del aforo (bl/día).
+        '''  Busca una cadena traducida similar a Gasto de líquido del aforo (bl/día).
         '''</summary>
         Public ReadOnly Property QTEST() As String
             Get
@@ -403,7 +646,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Radio del Drene(m).
+        '''  Busca una cadena traducida similar a Radio de Drene(m).
         '''</summary>
         Public ReadOnly Property RDRAINAGE() As String
             Get
@@ -421,7 +664,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a RGA.
+        '''  Busca una cadena traducida similar a RGA (𝑚3/ 𝑚3)..
         '''</summary>
         Public ReadOnly Property RGATOTALAFORO() As String
             Get
@@ -457,6 +700,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Gasto crítico calculado.
+        '''</summary>
+        Public ReadOnly Property TFCAL() As String
+            Get
+                Return ResourceManager.GetString("TFCAL", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Porcentaje del gasto crítico calculado.
+        '''</summary>
+        Public ReadOnly Property TFPER() As String
+            Get
+                Return ResourceManager.GetString("TFPER", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Espesor del yacimiento (m).
         '''</summary>
         Public ReadOnly Property THICKNESS() As String
@@ -466,7 +727,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a PWDIN(km/cm2).
+        '''  Busca una cadena traducida similar a P Cab Dinámica (kg/cm2).
         '''</summary>
         Public ReadOnly Property THPD() As String
             Get
@@ -475,7 +736,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a TWH Dinámico.
+        '''  Busca una cadena traducida similar a Temperatura Dinámica en la Cabeza del Pozo (°C).
         '''</summary>
         Public ReadOnly Property THTD() As String
             Get
@@ -484,7 +745,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a TWH Est.(ºC).
+        '''  Busca una cadena traducida similar a T Cab Estática (ºC).
         '''</summary>
         Public ReadOnly Property THTE() As String
             Get
@@ -502,7 +763,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Temperatura del yacimiento (oC).
+        '''  Busca una cadena traducida similar a Temperatura del yacimiento (°C).
         '''</summary>
         Public ReadOnly Property TRES() As String
             Get
@@ -511,7 +772,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Presión de Inyección del gas de BN (kg/cm2).
+        '''  Busca una cadena traducida similar a Presión Qgi (kg/cm2).
         '''</summary>
         Public ReadOnly Property TRPRES() As String
             Get
@@ -520,7 +781,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Prof. Valv. Inyec..
+        '''  Busca una cadena traducida similar a Temperatura en la válvula.
+        '''</summary>
+        Public ReadOnly Property TVAL() As String
+            Get
+                Return ResourceManager.GetString("TVAL", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Busca una cadena traducida similar a Prof. Valv. Inyec. (m).
         '''</summary>
         Public ReadOnly Property VALVEDEPTH() As String
             Get
@@ -547,6 +817,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Busca una cadena traducida similar a Voltaje Superficie (V).
+        '''</summary>
+        Public ReadOnly Property VOLTSUP() As String
+            Get
+                Return ResourceManager.GetString("VOLTSUP", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Busca una cadena traducida similar a Viscosidad de agua.
         '''</summary>
         Public ReadOnly Property WATVIS() As String
@@ -556,7 +835,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Radio Pozo(in).
+        '''  Busca una cadena traducida similar a Radio de Pozo (in).
         '''</summary>
         Public ReadOnly Property WBR() As String
             Get
@@ -565,7 +844,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Agua(%).
+        '''  Busca una cadena traducida similar a Corte de agua(%).
         '''</summary>
         Public ReadOnly Property WC() As String
             Get

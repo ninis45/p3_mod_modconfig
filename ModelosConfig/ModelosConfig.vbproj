@@ -65,10 +65,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ModeloCI.dll</HintPath>
     </Reference>
-    <Reference Include="ModelosEstabilidad, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\ModelosEstabilidad.dll</HintPath>
-    </Reference>
     <Reference Include="Prism">
       <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.dll</HintPath>
     </Reference>
@@ -101,35 +97,44 @@
     <Reference Include="TeeChart.Xaml.WPF">
       <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.Xaml.WPF.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Chart, Version=2019.1.220.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Windows.Controls, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF40\Telerik.Windows.Controls.Chart.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls.Data">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="Telerik.Windows.Controls.Docking, Version=2019.1.220.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Windows.Controls.Chart, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF40\Telerik.Windows.Controls.Docking.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.Chart.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls.FileDialogs, Version=2019.1.220.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+    <Reference Include="Telerik.Windows.Controls.Data, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R1 2019\Binaries\WPF40\Telerik.Windows.Controls.FileDialogs.dll</HintPath>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls.GridView">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.GridView.dll</HintPath>
+    <Reference Include="Telerik.Windows.Controls.Docking, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.Docking.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls.Input">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Input.dll</HintPath>
+    <Reference Include="Telerik.Windows.Controls.FileDialogs, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.FileDialogs.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Controls.Navigation">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    <Reference Include="Telerik.Windows.Controls.GridView, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.GridView.dll</HintPath>
     </Reference>
-    <Reference Include="Telerik.Windows.Data">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Telerik.Windows.Data.dll</HintPath>
+    <Reference Include="Telerik.Windows.Controls.Input, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Controls.Navigation, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Controls.Navigation.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Windows.Data, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files (x86)\Progress\Telerik UI for WPF R3 2019\Binaries\WPF45\Telerik.Windows.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="UC_EstadoMecanico">
+      <HintPath>..\..\EdoMecanicoForma\UC_EstadoMecanico\bin\Debug\UC_EstadoMecanico.dll</HintPath>
     </Reference>
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
@@ -152,11 +157,6 @@
     <Compile Include="Clases\Inicial.vb" />
     <Compile Include="Clases\Mecanico.vb" />
     <Compile Include="Connected Services\SVDeclinacion\Reference.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Connected Services\SVModel\Reference.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -197,17 +197,25 @@
     <Compile Include="grfWc.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Helpers\EqualVisibility.vb" />
+    <Compile Include="Helpers\EstatusHelper.vb" />
     <Compile Include="Helpers\InverseBoolean.vb" />
     <Compile Include="Helpers\NullToBolean.vb" />
     <Compile Include="Helpers\NumToBool.vb" />
     <Compile Include="Helpers\ToVisibility.vb" />
     <Compile Include="Interfaces\IDeclinacion.vb" />
+    <Compile Include="Interfaces\IModelo.vb" />
     <Compile Include="Libraries\Settings.vb" />
     <Compile Include="Models\AgujeroModel.vb" />
     <Compile Include="Models\BecModel.vb" />
     <Compile Include="Models\BncModel.vb" />
     <Compile Include="Models\MecanicoModel.vb" />
     <Compile Include="Models\ModModel.vb" />
+    <Compile Include="My Project\CondsLang.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CondsLang.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\UsrControls\usrAforo.Designer.vb">
       <DependentUpon>usrAforo.vb</DependentUpon>
     </Compile>
@@ -327,6 +335,11 @@
     <EmbeddedResource Include="grfWc.resx">
       <DependentUpon>grfWc.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="My Project\CondsLang.resx">
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CondsLang.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\licenses.licx" />
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>PublicVbMyResourcesResXFileCodeGenerator</Generator>
@@ -359,16 +372,6 @@
     <None Include="Connected Services\SVDeclinacion\Service12.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Connected Services\SVModel\Estabilidad.wsdl" />
-    <None Include="Connected Services\SVModel\Estabilidad.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\SVModel\Estabilidad1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\SVModel\Estabilidad2.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="My Project\DataSources\ModelosEstabilidad.SVModel.EstabilidadDePozosParametros_Estabilidad.datasource" />
     <None Include="My Project\DataSources\ModelosEstabilidad.SVModel.MapaEstabilidadParametros_Estabilidad.datasource" />
     <None Include="My Project\Settings.settings">
@@ -384,22 +387,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\SVDeclinacion\" />
-    <WCFMetadataStorage Include="Connected Services\SVModel\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\SVModel\Estabilidad.disco" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\SVModel\configuration91.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\SVModel\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Connected Services\SVModel\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.vb</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

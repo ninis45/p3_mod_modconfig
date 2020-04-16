@@ -96,7 +96,7 @@ Partial Class usrTrayectoria
         '
         '
         '
-        Me.TChart1.Axes.Bottom.Title.Caption = "Desplazamiento m"
+        Me.TChart1.Axes.Bottom.Title.Caption = "Desplazamiento (m)"
         '
         '
         '
@@ -106,7 +106,7 @@ Partial Class usrTrayectoria
         Me.TChart1.Axes.Bottom.Title.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.TChart1.Axes.Bottom.Title.Font.Size = 11
         Me.TChart1.Axes.Bottom.Title.Font.SizeFloat = 11.0!
-        Me.TChart1.Axes.Bottom.Title.Lines = New String() {"Desplazamiento m"}
+        Me.TChart1.Axes.Bottom.Title.Lines = New String() {"Desplazamiento (m)"}
         '
         '
         '
@@ -131,7 +131,7 @@ Partial Class usrTrayectoria
         '
         '
         '
-        Me.TChart1.Axes.Left.Title.Caption = "Profundidad MV"
+        Me.TChart1.Axes.Left.Title.Caption = "Profundidad (mV)"
         '
         '
         '
@@ -141,7 +141,7 @@ Partial Class usrTrayectoria
         Me.TChart1.Axes.Left.Title.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
         Me.TChart1.Axes.Left.Title.Font.Size = 11
         Me.TChart1.Axes.Left.Title.Font.SizeFloat = 11.0!
-        Me.TChart1.Axes.Left.Title.Lines = New String() {"Profundidad MV"}
+        Me.TChart1.Axes.Left.Title.Lines = New String() {"Profundidad (mV)"}
         '
         '
         '
@@ -165,13 +165,13 @@ Partial Class usrTrayectoria
         '
         '
         '
-        Me.TChart1.Axes.Right.Title.Caption = "Angulos (grados), Severidad(grados/m)"
+        Me.TChart1.Axes.Right.Title.Caption = "Angulos (°), Severidad (°/m)"
         '
         '
         '
         Me.TChart1.Axes.Right.Title.Font.Size = 11
         Me.TChart1.Axes.Right.Title.Font.SizeFloat = 11.0!
-        Me.TChart1.Axes.Right.Title.Lines = New String() {"Angulos (grados), Severidad(grados/m)"}
+        Me.TChart1.Axes.Right.Title.Lines = New String() {"Angulos (°), Severidad (°/m)"}
         '
         '
         '

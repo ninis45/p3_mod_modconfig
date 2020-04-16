@@ -10,11 +10,19 @@ Public Class CondViewModel
 
 
     Private db As New Entities_ModeloCI()
+    Private Saps = db.CAT_SAP.ToDictionary(Function(d) d.IDCATSAP, Function(d) d.PROSPER)
 
     Sub New(ByVal IdAgujero As String, ByVal LiftMethod As Integer)
 
         Me.LiftMethod = LiftMethod
         QuickLook = New Dictionary(Of Integer, ObjectModel.ObservableCollection(Of Series))
+        SelectQuick = New ObjectModel.ObservableCollection(Of Boolean) From {
+            True,
+            True,
+            True
+        }
+
+
 
         Gas = New Dictionary(Of Integer, ObjectModel.ObservableCollection(Of Series))
 
@@ -22,6 +30,24 @@ Public Class CondViewModel
 
 
 
+
+    End Sub
+    Sub New(ByVal IdModPozo As String)
+        QuickLook = New Dictionary(Of Integer, ObjectModel.ObservableCollection(Of Series))
+        SelectQuick = New ObjectModel.ObservableCollection(Of Boolean) From {
+            True,
+            True,
+            True,
+            True,
+            True
+        }
+
+
+
+        Gas = New Dictionary(Of Integer, ObjectModel.ObservableCollection(Of Series))
+        Dim _VwModPozo = db.VW_MOD_POZO.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+        Me.LiftMethod = Saps(_VwModPozo.IDCATSAP)
+        Me.VwModPozo = _VwModPozo
 
     End Sub
 
@@ -296,6 +322,17 @@ Public Class CondViewModel
         Set(value As String)
             _titulo = value
             OnPropertyChanged("Titulo")
+        End Set
+    End Property
+
+    Private _select_quick As ObjectModel.ObservableCollection(Of Boolean)
+    Public Property SelectQuick As ObjectModel.ObservableCollection(Of Boolean)
+        Get
+            Return _select_quick
+        End Get
+        Set(value As ObjectModel.ObservableCollection(Of Boolean))
+            _select_quick = value
+            OnPropertyChanged("SelectQuick")
         End Set
     End Property
 #End Region

@@ -19,6 +19,6 @@ Public Class ToVisibility
     End Function
 
     Public Function ConvertBack(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.ConvertBack
-        Return False
+        Return parameter
     End Function
 End Class

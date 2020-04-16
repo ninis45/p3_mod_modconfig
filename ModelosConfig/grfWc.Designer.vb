@@ -148,6 +148,7 @@ Partial Class grfWc
         Me.TChart1.Axes.Top.Labels.Font.Size = 9
         Me.TChart1.Axes.Top.Labels.Font.SizeFloat = 9.0!
         Me.TChart1.CurrentTheme = Steema.TeeChart.ThemeType.Report
+        Me.TChart1.Cursor = System.Windows.Forms.Cursors.Default
         Me.TChart1.Dock = System.Windows.Forms.DockStyle.Fill
         '
         '
@@ -164,8 +165,8 @@ Partial Class grfWc
         '
         Me.TChart1.Header.Font.Brush.Color = System.Drawing.Color.Black
         Me.TChart1.Header.Font.Name = "Century Gothic"
-        Me.TChart1.Header.Font.Size = 12
-        Me.TChart1.Header.Font.SizeFloat = 12.0!
+        Me.TChart1.Header.Font.Size = 11
+        Me.TChart1.Header.Font.SizeFloat = 11.0!
         Me.TChart1.Header.TextAlign = System.Drawing.StringAlignment.Center
         '
         '
@@ -284,7 +285,7 @@ Partial Class grfWc
         Me.Line1.Marks.TailParams.PointerHeight = 5.0R
         Me.Line1.Marks.TailParams.PointerWidth = 8.0R
         Me.Line1.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line1.OriginalCursor = Nothing
+        Me.Line1.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -353,7 +354,7 @@ Partial Class grfWc
         Me.Line2.Marks.TailParams.PointerHeight = 5.0R
         Me.Line2.Marks.TailParams.PointerWidth = 8.0R
         Me.Line2.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line2.OriginalCursor = Nothing
+        Me.Line2.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -422,7 +423,7 @@ Partial Class grfWc
         Me.Line3.Marks.TailParams.PointerHeight = 5.0R
         Me.Line3.Marks.TailParams.PointerWidth = 8.0R
         Me.Line3.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line3.OriginalCursor = Nothing
+        Me.Line3.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -491,7 +492,7 @@ Partial Class grfWc
         Me.Line4.Marks.TailParams.PointerHeight = 5.0R
         Me.Line4.Marks.TailParams.PointerWidth = 8.0R
         Me.Line4.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line4.OriginalCursor = Nothing
+        Me.Line4.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -560,7 +561,7 @@ Partial Class grfWc
         Me.Line5.Marks.TailParams.PointerHeight = 5.0R
         Me.Line5.Marks.TailParams.PointerWidth = 8.0R
         Me.Line5.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line5.OriginalCursor = Nothing
+        Me.Line5.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -629,7 +630,7 @@ Partial Class grfWc
         Me.Line6.Marks.TailParams.PointerHeight = 5.0R
         Me.Line6.Marks.TailParams.PointerWidth = 8.0R
         Me.Line6.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line6.OriginalCursor = Nothing
+        Me.Line6.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -698,7 +699,7 @@ Partial Class grfWc
         Me.Line7.Marks.TailParams.PointerHeight = 5.0R
         Me.Line7.Marks.TailParams.PointerWidth = 8.0R
         Me.Line7.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line7.OriginalCursor = Nothing
+        Me.Line7.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -767,7 +768,7 @@ Partial Class grfWc
         Me.Line8.Marks.TailParams.PointerHeight = 5.0R
         Me.Line8.Marks.TailParams.PointerWidth = 8.0R
         Me.Line8.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line8.OriginalCursor = Nothing
+        Me.Line8.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -836,7 +837,7 @@ Partial Class grfWc
         Me.Line9.Marks.TailParams.PointerHeight = 5.0R
         Me.Line9.Marks.TailParams.PointerWidth = 8.0R
         Me.Line9.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line9.OriginalCursor = Nothing
+        Me.Line9.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '
@@ -905,7 +906,7 @@ Partial Class grfWc
         Me.Line10.Marks.TailParams.PointerHeight = 5.0R
         Me.Line10.Marks.TailParams.PointerWidth = 8.0R
         Me.Line10.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line10.OriginalCursor = Nothing
+        Me.Line10.OriginalCursor = System.Windows.Forms.Cursors.Default
         '
         '
         '

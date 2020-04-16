@@ -165,8 +165,8 @@ Partial Class grfProductividad
         '
         Me.TChart1.Header.Font.Brush.Color = System.Drawing.Color.Black
         Me.TChart1.Header.Font.Name = "Century Gothic"
-        Me.TChart1.Header.Font.Size = 12
-        Me.TChart1.Header.Font.SizeFloat = 12.0!
+        Me.TChart1.Header.Font.Size = 11
+        Me.TChart1.Header.Font.SizeFloat = 11.0!
         Me.TChart1.Header.Lines = New String() {"Índice de Productividad", ""}
         '
         '

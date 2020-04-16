@@ -11,13 +11,29 @@
         mc:Ignorable="d" Width="auto" Height="auto" >
     <UserControl.Resources>
         <telerik:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+        <telerik:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
         <telerik:StringToGlyphConverter x:Key="StringToGlyphConverter"/>
         <telerik:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"></telerik:NumberToVisibilityConverter>
         <local:ToVisibility x:Key="WRToVisibility"></local:ToVisibility>
-        <local:NumToBool x:Key="WRNumToBool"></local:NumToBool>  
+        <local:NumToBool x:Key="WRNumToBool"></local:NumToBool>
+        <local:EstatusHelper x:Key="WREstatusHelper"></local:EstatusHelper>
+        <Style TargetType="telerik:RadPane">
+            <Style.Triggers>
+                <Trigger Property="IsPinned"  Value="True">
+                    <Setter Property="Background" Value="#9d2449"  />
+                </Trigger>
 
+            </Style.Triggers>
+
+        </Style>
+        
+        <Style TargetType="{x:Type telerik:PaneHeader}">
+            <Setter Property="Background" Value="#9d2449" />
+            <Setter Property="Foreground" Value="White"></Setter>
+           
+        </Style>
     </UserControl.Resources>
-  
+
     <Grid>
         <Grid.Resources>
             <ResourceDictionary>
@@ -27,13 +43,14 @@
 
             </ResourceDictionary>
 
+
         </Grid.Resources>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="*"/>            
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-       
+
         <!--Comienza Menu-->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -47,9 +64,9 @@
 
                 <TextBlock Text="{Binding SAP}" HorizontalAlignment="Left" FontStyle="Oblique" FontFamily="Century Gothic" FontSize="14" VerticalAlignment="Center"/>
 
-            </StackPanel>            
-            <StackPanel Grid.Row="1"  Orientation="Horizontal" Margin="6" HorizontalAlignment="Right">           
-               
+            </StackPanel>
+            <StackPanel Grid.Row="1"  Orientation="Horizontal" Margin="6" HorizontalAlignment="Right">
+
                 <telerik:RadComboBox 
                 EmptyText="Modelos"
                 ItemsSource="{Binding Modelos,Mode=TwoWay}"              
@@ -59,136 +76,154 @@
                 DisplayMemberPath="FECHAMODELO"
                 Visibility="{Binding Modelos.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14"    >
                 </telerik:RadComboBox >
-                <Button  Margin="1 0"  Width="30" Padding="2" Click="ShowConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Crear nuevo modelo">
+
+                <Button  Margin="1 0"  Width="30" Padding="2" Click="ShowConfig" Background="#CECECE" BorderThickness="0"   HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Datalles del modelo" IsEnabled="{Binding EnabledView}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <telerik:RadGlyph Glyph="&#xe11e;" />
+                            <telerik:RadGlyph Glyph="&#xe13e;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
                 </Button>
-                <Button Margin="1 0"   Width="30" Padding="2" Click="ShowCond" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Consultar por condiciones de operación" Visibility="{Binding Condiciones.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                
+                <Button  Margin="1 0"  Width="30" Padding="2" Click="SetConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Crear / Actualizar nuevo modelo">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
-                            <telerik:RadGlyph Glyph="&#xe107;" />
+                            <telerik:RadGlyph Glyph="&#xe907;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
                 </Button>
+
 
 
 
             </StackPanel>
-            
+
 
         </Grid>
         <!--Termina Menu-->
-       
+
         <!--COMIENZA BODY-->
-        <telerik:RadDocking Grid.Row="1">
+        <telerik:RadDocking Grid.Row="1" telerik:StyleManager.Theme="Windows8Touch">
             <telerik:RadDocking.DocumentHost>
-                
-                    <Grid Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="33*"/>
-                            <ColumnDefinition Width="33*"/>
-                            <ColumnDefinition Width="33*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="50*"/>
-                            <RowDefinition Height="50*"/>
-                        </Grid.RowDefinitions>
-                        <WindowsFormsHost Grid.Column="0" Name="hstProductividad"  />
-                        <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
-                        <WindowsFormsHost Grid.Column="2" Name="hstVpl" />
+
+                <Grid Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="56*"/>
+                        <ColumnDefinition Width="33*"/>
+                        <ColumnDefinition Width="23*"/>
+                        <ColumnDefinition Width="57*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50*"/>
+                        <RowDefinition Height="50*"/>
+                    </Grid.RowDefinitions>
+
+                    <WindowsFormsHost Grid.Column="0" Name="hstProductividad" />
+                    <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" Grid.ColumnSpan="2" />
+                    <WindowsFormsHost Grid.Column="3" Name="hstVpl" />
 
 
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" />
-                        <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc"/>
-                    </Grid>
+                    <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
+                    <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" Grid.ColumnSpan="2" />
+                    <WindowsFormsHost Grid.Row="1" Grid.Column="3" Name="hstWc"/>
 
-               
-               
+
+                </Grid>
+
+
+
             </telerik:RadDocking.DocumentHost>
-            <telerik:RadSplitContainer InitialPosition="DockedLeft" MinWidth="300">
-                <telerik:RadPaneGroup >
-                    
-                    <telerik:RadPane Header="Mensajes"  CanUserClose="False">
-                        <StackPanel Margin="4">
-                            <Border  Visibility="{Binding Infos.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+            <telerik:RadSplitContainer InitialPosition="DockedLeft"    MinWidth="300"   >
+                <telerik:RadPaneGroup>
 
-                                <ItemsControl ItemsSource="{Binding Infos}" >
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Style="{StaticResource alert-info}">
-                                                <StackPanel Orientation="Vertical">
+                    <telerik:RadPane Header="Mensajes" FontSize="14"  CanUserClose="False" IsPinned="False" CanUserPin="False" >
+                        <ScrollViewer>
+                            <StackPanel Margin="4" >
+                                <Border  Visibility="{Binding Infos.Count,Converter={StaticResource NumberToVisibilityConverter}}">
 
-                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Border>
-                            <Border  Visibility="{Binding Success.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                                    <ItemsControl ItemsSource="{Binding Infos}" >
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource alert-info}">
+                                                    <StackPanel Orientation="Vertical">
 
-                                <ItemsControl ItemsSource="{Binding Success}" >
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Style="{StaticResource alert-success}">
-                                                <StackPanel Orientation="Vertical">
+                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12" ></TextBlock>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <Border  Visibility="{Binding Success.Count,Converter={StaticResource NumberToVisibilityConverter}}">
 
-                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Border>
-                            <Border  Visibility="{Binding Errors.Count,Converter={StaticResource NumberToVisibilityConverter}}">
-                                
-                                <ItemsControl ItemsSource="{Binding Errors}" >
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Style="{StaticResource alert-danger}">
-                                                <StackPanel Orientation="Vertical">
-                                                    
-                                                    <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Border>
-                            
-                            
-                            <Border  Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
-                                <ItemsControl ItemsSource="{Binding Warnings}" >
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Style="{StaticResource alert-warning}">
-                                                <StackPanel Orientation="Vertical" Height="auto">
-                                                    
-                                                    <TextBlock Text="{Binding}" ToolTip="{Binding Message}" TextWrapping="Wrap" ></TextBlock>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Border>
-                        </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding Success}" >
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource alert-success}">
+                                                    <StackPanel Orientation="Vertical">
+
+                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12" ></TextBlock>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                                <Border  Visibility="{Binding Errors.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+
+                                    <ItemsControl ItemsSource="{Binding Errors}" >
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource alert-danger}">
+                                                    <StackPanel Orientation="Vertical">
+
+                                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" FontSize="12" ></TextBlock>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+
+                                <Border  Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                                    <ItemsControl ItemsSource="{Binding Warnings}" >
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource alert-warning}">
+                                                    <StackPanel Orientation="Vertical" Height="auto">
+
+                                                        <TextBlock Text="{Binding}" ToolTip="{Binding Message}" TextWrapping="Wrap" ></TextBlock>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </telerik:RadPane>
+                    <telerik:RadPane Header="Condiciones de operación" FontSize="14"  CanUserClose="False" IsPinned="False"  CanUserPin="False"  Visibility="{Binding Condiciones.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                        <telerik:RadGridView IsReadOnly="True" IsFilteringAllowed="False" ShowGroupPanel="False" ItemsSource="{Binding Condiciones}" telerik:StyleManager.Theme="Windows8Touch" AutoGenerateColumns="False" MouseDoubleClick="OpenCond">
+                            <telerik:RadGridView.Columns >
+
+                                <telerik:GridViewDataColumn Header="FECHA" DataMemberBinding="{Binding FECHAMODELO}" DataFormatString="dd/MM/yyyy" />
+                                <telerik:GridViewDataColumn Header="Estatus" DataMemberBinding="{Binding Estatus,Converter={StaticResource WREstatusHelper}}"></telerik:GridViewDataColumn>
+                            </telerik:RadGridView.Columns>
+                        </telerik:RadGridView>
+                        
                     </telerik:RadPane>
                 </telerik:RadPaneGroup>
             </telerik:RadSplitContainer>
         </telerik:RadDocking>
-        
+
 
         <!--Termina Body-->
-        
 
-        
-        
+
+
+
 
 
 

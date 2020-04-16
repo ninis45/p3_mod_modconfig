@@ -38,6 +38,12 @@ Partial Class grfCorrelacion
         Me.Line10 = New Steema.TeeChart.Styles.Line()
         Me.Line11 = New Steema.TeeChart.Styles.Line()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Line12 = New Steema.TeeChart.Styles.Line()
+        Me.Line13 = New Steema.TeeChart.Styles.Line()
+        Me.Line14 = New Steema.TeeChart.Styles.Line()
+        Me.Line15 = New Steema.TeeChart.Styles.Line()
+        Me.Line16 = New Steema.TeeChart.Styles.Line()
+        Me.Line17 = New Steema.TeeChart.Styles.Line()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -185,8 +191,8 @@ Partial Class grfCorrelacion
         '
         Me.TChart1.Header.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.TChart1.Header.Font.Name = "Century Gothic"
-        Me.TChart1.Header.Font.Size = 12
-        Me.TChart1.Header.Font.SizeFloat = 12.0!
+        Me.TChart1.Header.Font.Size = 11
+        Me.TChart1.Header.Font.SizeFloat = 11.0!
         Me.TChart1.Header.Lines = New String() {"Comparación de Correlaciones"}
         Me.TChart1.Header.TextAlign = System.Drawing.StringAlignment.Far
         '
@@ -241,6 +247,12 @@ Partial Class grfCorrelacion
         Me.TChart1.Series.Add(Me.Line9)
         Me.TChart1.Series.Add(Me.Line10)
         Me.TChart1.Series.Add(Me.Line11)
+        Me.TChart1.Series.Add(Me.Line12)
+        Me.TChart1.Series.Add(Me.Line13)
+        Me.TChart1.Series.Add(Me.Line14)
+        Me.TChart1.Series.Add(Me.Line15)
+        Me.TChart1.Series.Add(Me.Line16)
+        Me.TChart1.Series.Add(Me.Line17)
         Me.TChart1.Size = New System.Drawing.Size(540, 405)
         Me.TChart1.TabIndex = 1
         '
@@ -1029,6 +1041,384 @@ Partial Class grfCorrelacion
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(546, 436)
         Me.TableLayoutPanel1.TabIndex = 2
         '
+        'Line12
+        '
+        '
+        '
+        '
+        Me.Line12.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line12.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line12.ColorEach = False
+        '
+        '
+        '
+        Me.Line12.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(92, Byte), Integer), CType(CType(128, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line12.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line12.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line12.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line12.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line12.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line12.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line12.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(107, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(193, Byte), Integer))
+        '
+        '
+        '
+        Me.Line12.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line12.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line12.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos11"), System.Drawing.PointF)
+        Me.Line12.Marks.TailParams.Margin = 0!
+        Me.Line12.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line12.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line12.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line12.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line12.Pointer.SizeDouble = 0R
+        Me.Line12.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line12.Title = "line12"
+        Me.Line12.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line12.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        'Line13
+        '
+        '
+        '
+        '
+        Me.Line13.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(65, Byte), Integer))
+        Me.Line13.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(59, Byte), Integer), CType(CType(65, Byte), Integer))
+        Me.Line13.ColorEach = False
+        '
+        '
+        '
+        Me.Line13.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(138, Byte), Integer), CType(CType(35, Byte), Integer), CType(CType(39, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line13.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line13.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line13.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line13.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line13.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line13.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line13.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(207, Byte), Integer), CType(CType(53, Byte), Integer), CType(CType(58, Byte), Integer))
+        '
+        '
+        '
+        Me.Line13.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line13.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line13.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos12"), System.Drawing.PointF)
+        Me.Line13.Marks.TailParams.Margin = 0!
+        Me.Line13.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line13.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line13.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line13.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line13.Pointer.SizeDouble = 0R
+        Me.Line13.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line13.Title = "line13"
+        Me.Line13.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line13.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        'Line14
+        '
+        '
+        '
+        '
+        Me.Line14.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.Line14.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer))
+        Me.Line14.ColorEach = False
+        '
+        '
+        '
+        Me.Line14.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(153, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(115, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line14.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line14.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line14.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line14.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line14.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line14.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line14.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(230, Byte), Integer), CType(CType(230, Byte), Integer), CType(CType(173, Byte), Integer))
+        '
+        '
+        '
+        Me.Line14.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line14.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line14.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos13"), System.Drawing.PointF)
+        Me.Line14.Marks.TailParams.Margin = 0!
+        Me.Line14.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line14.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line14.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line14.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line14.Pointer.SizeDouble = 0R
+        Me.Line14.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line14.Title = "line14"
+        Me.Line14.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line14.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        'Line15
+        '
+        '
+        '
+        '
+        Me.Line15.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(231, Byte), Integer))
+        Me.Line15.Color = System.Drawing.Color.FromArgb(CType(CType(231, Byte), Integer), CType(CType(231, Byte), Integer), CType(CType(231, Byte), Integer))
+        Me.Line15.ColorEach = False
+        '
+        '
+        '
+        Me.Line15.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(139, Byte), Integer), CType(CType(139, Byte), Integer), CType(CType(139, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line15.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line15.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line15.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line15.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line15.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line15.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line15.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer), CType(CType(208, Byte), Integer))
+        '
+        '
+        '
+        Me.Line15.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line15.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line15.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos14"), System.Drawing.PointF)
+        Me.Line15.Marks.TailParams.Margin = 0!
+        Me.Line15.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line15.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line15.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line15.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line15.Pointer.SizeDouble = 0R
+        Me.Line15.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line15.Title = "line15"
+        Me.Line15.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line15.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        'Line16
+        '
+        '
+        '
+        '
+        Me.Line16.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line16.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line16.ColorEach = False
+        '
+        '
+        '
+        Me.Line16.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(92, Byte), Integer), CType(CType(128, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line16.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line16.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line16.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line16.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line16.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line16.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line16.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(107, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(193, Byte), Integer))
+        '
+        '
+        '
+        Me.Line16.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line16.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line16.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos15"), System.Drawing.PointF)
+        Me.Line16.Marks.TailParams.Margin = 0!
+        Me.Line16.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line16.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line16.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line16.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line16.Pointer.SizeDouble = 0R
+        Me.Line16.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line16.Title = "line16"
+        Me.Line16.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line16.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        'Line17
+        '
+        '
+        '
+        '
+        Me.Line17.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line17.Color = System.Drawing.Color.FromArgb(CType(CType(119, Byte), Integer), CType(CType(153, Byte), Integer), CType(CType(214, Byte), Integer))
+        Me.Line17.ColorEach = False
+        '
+        '
+        '
+        Me.Line17.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(92, Byte), Integer), CType(CType(128, Byte), Integer))
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line17.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        '
+        '
+        '
+        Me.Line17.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
+        Me.Line17.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.Line17.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.Line17.Marks.Brush.Gradient.UseMiddle = True
+        '
+        '
+        '
+        '
+        '
+        '
+        Me.Line17.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
+        '
+        '
+        '
+        Me.Line17.Marks.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(107, Byte), Integer), CType(CType(138, Byte), Integer), CType(CType(193, Byte), Integer))
+        '
+        '
+        '
+        Me.Line17.Marks.Shadow.Visible = False
+        '
+        '
+        '
+        Me.Line17.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
+        Me.Line17.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos16"), System.Drawing.PointF)
+        Me.Line17.Marks.TailParams.Margin = 0!
+        Me.Line17.Marks.TailParams.PointerHeight = 5.0R
+        Me.Line17.Marks.TailParams.PointerWidth = 8.0R
+        Me.Line17.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
+        Me.Line17.OriginalCursor = Nothing
+        '
+        '
+        '
+        Me.Line17.Pointer.SizeDouble = 0R
+        Me.Line17.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
+        Me.Line17.Title = "line17"
+        Me.Line17.UseExtendedNumRange = False
+        '
+        '
+        '
+        Me.Line17.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
         'grfCorrelacion
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1056,4 +1446,10 @@ Partial Class grfCorrelacion
     Friend WithEvents Line10 As Steema.TeeChart.Styles.Line
     Friend WithEvents Line11 As Steema.TeeChart.Styles.Line
     Friend WithEvents TableLayoutPanel1 As Forms.TableLayoutPanel
+    Friend WithEvents Line12 As Steema.TeeChart.Styles.Line
+    Friend WithEvents Line13 As Steema.TeeChart.Styles.Line
+    Friend WithEvents Line14 As Steema.TeeChart.Styles.Line
+    Friend WithEvents Line15 As Steema.TeeChart.Styles.Line
+    Friend WithEvents Line16 As Steema.TeeChart.Styles.Line
+    Friend WithEvents Line17 As Steema.TeeChart.Styles.Line
 End Class

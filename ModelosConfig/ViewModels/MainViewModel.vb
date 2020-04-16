@@ -30,21 +30,6 @@ Public Class MainViewModel
 
         Me.IdUsuario = IdUsuario
 
-        'IDAGUJERO                                    LIFTMETHOD           FECHA P.
-        '55A5DD64-F543-4B5F-874A-8E1C49CDEF4A             1               2016-01-25    
-        '57EB0E3D-1A72-45B3-A3BF-377B504A238B             2               2019-02-19
-        '677069CB-7862-43BD-B3D8-7E41B5895ED1             1               2018-08-10
-        'DDB3A31F-0143-42E3-819B-9B4A4B631D33             2               2019-03-25
-        '24ACEE43-3CC1-4E8E-9535-76D049D2DDCC  
-        '817A460B-3856-4837-98A4-ACF6F622D33F             1               2019-02-11              MAALOB-492
-        '1A9B6D8D-50ED-4719-BA34-37D8337B7A22             1               2018-08-11              BALAM-41
-        '56B74925-CE90-4E2D-8FAC-9933EBC4899D             1               2018-01-02              KU-288
-        'A97B64BE-A958-40BF-80F6-6A4B0B67B87A             1               2018-08-03              RABASA 125
-
-
-
-
-        'Me.Estabilidad = Estabilidad
         Me.IdAgujero = IdAgujero '"56B74925-CE90-4E2D-8FAC-9933EBC4899D"
         FechaPrueba = Fecha ' "2018-01-02"
 
@@ -70,10 +55,12 @@ Public Class MainViewModel
         Estatus = 0
         Prog = ""
         Intentos = Nothing
-        'Resteamos mensajes
-        '===============================================
-        Infos.Clear()
-        Success.Clear()
+
+
+        ''Resteamos mensajes
+        ''===============================================
+        'Infos.Clear()
+        'Success.Clear()
 
         'Consultamos el Agujero
         '============================================
@@ -98,17 +85,13 @@ Public Class MainViewModel
             Pozo += " - " + SAPs(LiftMethod)
         End If
 
-        If AgujeroModel.VWGeneral IsNot Nothing Then
-
-            IdModPozo = AgujeroModel.VWGeneral.IDMODPOZO
-            'Me.VwGeneral = AgujeroModel.VWGeneral 'Se duplicaba la consulta
-
-
-
+        If AgujeroModel.VWModPozo IsNot Nothing Then
+            IdModPozo = AgujeroModel.VWModPozo.IDMODPOZO
         Else
             IdModPozo = Nothing
-            Infos.Add("Pozo sin modelo, para agregar uno, pulsa el botón [+] para abrir el formulario de captura.")
+            'Infos.Add("Pozo sin modelo, para agregar uno, pulsa el botón [+] para abrir el formulario de captura.")
         End If
+
 
 
 
@@ -175,7 +158,7 @@ Public Class MainViewModel
             End If
 
 
-            GetMessages()
+            'GetMessages()
             RaisePropertyChanged("IdAgujero")
         End Set
     End Property
@@ -186,18 +169,21 @@ Public Class MainViewModel
         End Get
         Set(value As String)
             _id_mod_pozo = value
+
             If _id_mod_pozo IsNot Nothing Then
 
-                VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = _id_mod_pozo).SingleOrDefault()
+
+                VwGeneral = AgujeroModel.GetEdoGeneral(_id_mod_pozo) 'db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = _id_mod_pozo).SingleOrDefault()
 
 
 
 
-
+            Else
+                VwGeneral = Nothing
 
             End If
-            'Reviar por depreciacion las configuraciones de estabilidad
-            'Estabilidad.Load(_id_mod_pozo)
+            'Revisar por depreciacion las configuraciones de estabilidad
+
             RaisePropertyChanged("IdModPozo")
 
         End Set
@@ -309,15 +295,15 @@ Public Class MainViewModel
 
 
 
-    Private _flash_data As ModelosEstabilidad.FlashData
-    Public Property FlashData As ModelosEstabilidad.FlashData
-        Get
-            Return _flash_data
-        End Get
-        Set(value As ModelosEstabilidad.FlashData)
-            _flash_data = value
-        End Set
-    End Property
+    'Private _flash_data As ModelosEstabilidad.FlashData
+    'Public Property FlashData As ModelosEstabilidad.FlashData
+    '    Get
+    '        Return _flash_data
+    '    End Get
+    '    Set(value As ModelosEstabilidad.FlashData)
+    '        _flash_data = value
+    '    End Set
+    'End Property
 
 
     Private _infos As ObjectModel.ObservableCollection(Of String)
@@ -350,15 +336,15 @@ Public Class MainViewModel
         End Set
     End Property
 
-    Private _warnings As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
-    Public Property Warnings As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+    Private _warnings As ObjectModel.ObservableCollection(Of String)
+    Public Property Warnings As ObjectModel.ObservableCollection(Of String)
         Get
             If _warnings Is Nothing Then
-                _warnings = New ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData)
+                _warnings = New ObjectModel.ObservableCollection(Of String)
             End If
             Return _warnings
         End Get
-        Set(value As ObjectModel.ObservableCollection(Of ModelosEstabilidad.FlashData))
+        Set(value As ObjectModel.ObservableCollection(Of String))
             _warnings = value
 
             RaisePropertyChanged("Warnings")
@@ -388,9 +374,7 @@ Public Class MainViewModel
         End Get
         Set(value As VW_EDO_GENERAL)
             _vw_general = value
-            Intentos = Nothing
-            Infos.Clear()
-            Success.Clear()
+
 
             If _vw_general IsNot Nothing Then
 
@@ -403,18 +387,8 @@ Public Class MainViewModel
                     End If
                 End If
 
-                Select Case Estatus
-                    Case 0
-                        Prog = "Última configuración: " + _vw_general.FECHAMODELO
-                    Case 1
-                        Prog = "Programado: " + _vw_general.FECHA_PROGRAMACION
-                    Case 2
-                        Prog = "En ejecución: " + _vw_general.FECHAMODELO
-                    Case 3
-                        LoadCharts(_vw_general)
-                        Success.Add("Modelo ejecutado correctamente")
-                End Select
-                If Prog <> "" Then Infos.Add(Prog)
+                If AgujeroModel.Configuracion IsNot Nothing Then Intentos = AgujeroModel.Configuracion.EJECUCION_PROCESOS.Where(Function(w) w.ENDRECORD Is Nothing).OrderByDescending(Function(o) o.FECHA_INICIO).ToList()
+
 
             End If
 
@@ -422,18 +396,58 @@ Public Class MainViewModel
             RaisePropertyChanged("VwGeneral")
         End Set
     End Property
+
+#Region "HABILITADORES / DESHABILITADORES"
+    Private _enabled_view As Boolean
+    Public Property EnabledView As Boolean
+        Get
+            Return _enabled_view
+        End Get
+        Set(value As Boolean)
+            _enabled_view = value
+            RaisePropertyChanged("EnabledView")
+        End Set
+    End Property
+
+#End Region
     Sub GetMessages()
 
         Errors.Clear()
         Warnings.Clear()
+        Infos.Clear()
+        Success.Clear()
+
+
 
         Dim Aforos As Integer = db.VW_AFORO.Where(Function(w) w.IDPOZO = IdPozo).Count()
         Dim Pvts As Integer = db.VW_PVT.Where(Function(w) w.IDAGUJERO = IdAgujero).Count()
         Dim Trays = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = IdAgujero).Count()
 
+        EnabledView = False
+        Select Case Estatus
+            Case 0
+                If VwGeneral IsNot Nothing Then
+                    Infos.Add("Última configuración: " + VwGeneral.FECHAMODELO)
+                Else
+                    Infos.Add("Pozo sin modelo, para agregar uno, pulsa el botón [+] para abrir el formulario de captura.")
+                End If
+            Case 1
+                Warnings.Add("Programado: " + VwGeneral.FECHA_PROGRAMACION)
+            Case 2
+                Warnings.Add("En ejecución: " + VwGeneral.FECHAMODELO)
+            Case 3
+
+
+                LoadCharts(_vw_general)
+                Success.Add("Modelo ejecutado correctamente")
+                EnabledView = True
+        End Select
+
+
         If Intentos IsNot Nothing Then
             For Each i In Intentos
-                Warnings.Add(New ModelosEstabilidad.FlashData() With {.Estatus = "error", .Message = i.ERRORS})
+
+                If i.ESTATUS = -1 Then Errors.Add(i.ERRORS)
             Next
         End If
         'Se podria extraer al momento de crear el modelo - Posible depreciacion
@@ -442,17 +456,17 @@ Public Class MainViewModel
         'End If
 
 
-        If Aforos = 0 Then
-            Errors.Add("No hay registros de Aforo.")
-        End If
+        'If Aforos = 0 Then
+        '    Errors.Add("No hay registros de Aforo.")
+        'End If
 
-        If Pvts = 0 Then
-            Errors.Add("No hay registros de Pvt.")
-        End If
+        'If Pvts = 0 Then
+        '    Warnings.Add("No hay registros de Pvt. Se recomienda habilitar y/o subir el archivo Pvt(.Out)")
+        'End If
 
-        If Trays = 0 Then
-            Errors.Add("No hay registros de Trayectoria.")
-        End If
+        'If Trays = 0 Then
+        '    Errors.Add("No hay registros de Trayectoria.")
+        'End If
 
 
 
@@ -558,6 +572,12 @@ Public Class MainViewModel
         Dim correlaciones = (From correlas In db.VW_CORRELACIONES Where correlas.IDMODPOZO = model.IDMODPOZO Order By correlas.IDCORRELACION, correlas.PROFMD).ToList() 'db.VW_CORRELACIONES.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.IDCORRELACION).OrderBy(Function(o) o.IDCORRELACION).OrderBy(Function(o) o.PROFMD).ToList()
 
 
+        'Ocultar series
+        For i = 0 To cat_correlas.Count - 1
+            grfCorrelacion.TChart1.Series(i + 1).Clear()
+            grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = False
+
+        Next
 
         For Each correlacion In correlaciones
             If xaux.ContainsKey(correlacion.IDCATCORRELACION) = False Then
@@ -604,32 +624,24 @@ Public Class MainViewModel
 
 
 
-        'punto.Add(PrfTest1, PTest1)
-        'grfCorrelacion.TChart1.Series.Add(punto)
-
-        'Dim punto = New Points()
-        'punto.Title = "Punto de operación"
-        'punto.Color = Colors.Red
-        'punto.Pointer.Style = PointerStyles.Circle
-        'punto.Add(PTest1, PrfTest1)
         grfCorrelacion.TChart1.Series(0).Add(PTest1, PrfTest1) 'Revisar el PrfTest1 esta erroneo
         grfCorrelacion.TChart1.Series(0).Legend.Text = "Punto de operación"
 
 
-        ''grfCorrelacion.TChart1.Series(0).Legend.Color = 
-        '' grfCorrelacion.TChart1.Series(0).Legend.Visible = False
+
 
 
 
         For i = 0 To xaux.Count - 1
-
-            grfCorrelacion.TChart1.Series(i + 1).Title = cat_correlas(xaux.Keys(i))
+            grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = True
+            grfCorrelacion.TChart1.Series(i + 1).Title = IIf(cat_correlas.ContainsKey(xaux.Keys(i)), cat_correlas(xaux.Keys(i)), "Sin titulo (" + xaux.Keys(i) + ")")
 
 
 
             Dim x = xaux.Values(i).ToArray(GetType(Double))
             Dim y = yaux.Values(i).ToArray(GetType(Double))
             grfCorrelacion.TChart1.Series(i + 1).Add(x, y)
+
         Next i
 
 
@@ -661,7 +673,11 @@ Public Class MainViewModel
         PTest1(1) = model.PTEST
         PTest1(2) = 0
 
-        grfVpl.TChart1.Series(0).Legend.Visible = False
+        ' grfVpl.TChart1.Series(0).Legend.Visible = False
+        For i = 0 To 10
+            grfVpl.TChart1.Series(i).Clear()
+            grfVpl.TChart1.Series(i).Legend.Visible = False
+        Next
 
 
         Dim NdatAux As Integer
@@ -691,30 +707,22 @@ Public Class MainViewModel
 
         Next
 
+        grfVpl.TChart1.Series(11).Clear()
 
         Select Case model.LIFTMETHOD
             Case 1
-                'line1
-                ' grfVpl.TChart1.Series(0).Add(RTEOTest1, PTest1) 'eliminar de la grafica definitivamente
 
 
 
-                grfVpl.TChart1.Text = "VLP/IPR-Sensibilidad de QgIny"
+
+                grfVpl.TChart1.Text = "VLP/IPR-Sensibilidad de Qgi"
                 grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Fondo Fluyendo [Kg/cm2]"
                 grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
 
-                grfVpl.TChart1.Series(12).Add(model.QTEST, model.PTEST)
-                grfVpl.TChart1.Series(12).Visible = True
-               ' grfVpl.TChart1.Series(12).Title = "Punto de operación"
-                'Dim punto As New Steema.TeeChart.WPF.Styles.Points With {
-                '     .Color = Colors.Black,
-                '     .Title = "Punto de operación"
-                '}
-                'punto.Pointer.HorizSize = 10
-                'punto.Pointer.VertSize = 10
-                'punto.Pointer.Style = PointerStyles.Circle
+                'Punto de operacion
+                grfVpl.TChart1.Series(11).Add(model.QTEST, model.PTEST)
+                grfVpl.TChart1.Series(11).Legend.Visible = True
 
-                'punto.Add(5, 5)
 
 
 
@@ -724,7 +732,7 @@ Public Class MainViewModel
                 grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Descarga [Kg/cm2]"
                 grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
 
-                grfVpl.TChart1.Series(12).Visible = False
+                grfVpl.TChart1.Series(11).Legend.Visible = False
         End Select
 
         Dim titulos As List(Of String) = xaux.Keys.ToList()
@@ -733,8 +741,10 @@ Public Class MainViewModel
 
             Dim x = xaux.Values(i).ToArray(GetType(Double))
             Dim y = yaux.Values(i).ToArray(GetType(Double))
-            grfVpl.TChart1.Series(i + 1).Title = titulos(i) 'xaux.Keys(i)
-            grfVpl.TChart1.Series(i + 1).Add(x, y)
+
+            grfVpl.TChart1.Series(i).Legend.Visible = True
+            grfVpl.TChart1.Series(i).Title = titulos(i)
+            grfVpl.TChart1.Series(i).Add(x, y)
 
         Next i
     End Sub
@@ -769,7 +779,7 @@ Public Class MainViewModel
             Case 1
                 grfGas.TChart1.Text = "Comportamiento del Gas de BN"
                 grfGas.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
-                grfGas.TChart1.Axes.Bottom.Title.Text = "Gasto de Inyección de gas [MMSCFPD]"
+                grfGas.TChart1.Axes.Bottom.Title.Text = "Qgi [MMSCFPD]"
 
                 Dim QgiTest1(1), QliqTest1(1) As Double
                 Dim QgiTest2(1), QliqTest2(1) As Double
@@ -799,7 +809,6 @@ Public Class MainViewModel
                 For i = 3 To 7
                     grfGas.TChart1.Series(i).Legend.Visible = False
                 Next
-
                 grfGas.TChart1.Series(8).Legend.Visible = False
             Case 2
                 grfGas.TChart1.Text = "Carta de la Bomba "
@@ -889,6 +898,12 @@ Public Class MainViewModel
         Dim xaux As New Dictionary(Of String, ArrayList)
         Dim yaux As New Dictionary(Of String, ArrayList)
 
+
+        For i = 0 To 9
+            grfWc.TChart1.Series(i).Legend.Visible = False
+            grfWc.TChart1.Series(i).Clear()
+        Next
+
         For Each prod In productividad
             If xaux.ContainsKey(prod.TITULO.ToString()) = False Then
                 xaux.Add(prod.TITULO.ToString(), New ArrayList())
@@ -901,21 +916,26 @@ Public Class MainViewModel
 
         Select Case model.LIFTMETHOD
             Case 1
-                grfWc.TChart1.Text = "Sen. de Corte de Agua-Gasto de Gas de Inyección"
+                grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Gasto de Qgi"
                 grfWc.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
                 grfWc.TChart1.Axes.Bottom.Title.Text = "Corte de Agua [%]"
                 Dim titulos As List(Of String) = xaux.Keys.ToList()
 
+                If titulos.Count > 0 Then
+                    grfWc.Visible = True
+                    For i = 0 To titulos.Count - 1
+                        grfWc.TChart1.Series(i).Legend.Visible = True
+                        Dim x = xaux.Values(i).ToArray(GetType(Double))
+                        Dim y = yaux.Values(i).ToArray(GetType(Double))
+                        grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
+                        grfWc.TChart1.Series(i).Add(x, y)
 
 
-                For i = 0 To titulos.Count - 1
+                    Next i
+                Else
+                    grfWc.Visible = False
+                End If
 
-                    Dim x = xaux.Values(i).ToArray(GetType(Double))
-                    Dim y = yaux.Values(i).ToArray(GetType(Double))
-                    grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
-                    grfWc.TChart1.Series(i).Add(x, y)
-
-                Next i
             Case 2
 
                 grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Frecuencia de BEC"
@@ -928,7 +948,7 @@ Public Class MainViewModel
 
 
                 For i = 0 To titulos.Count - 1
-
+                    grfWc.TChart1.Series(i).Legend.Visible = True
                     Dim x = xaux.Values(i).ToArray(GetType(Double))
                     Dim y = yaux.Values(i).ToArray(GetType(Double))
                     grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)

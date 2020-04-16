@@ -1,4 +1,16 @@
 ﻿Public Class grfWc
+    Sub New()
+
+        ' Esta llamada es exigida por el diseñador.
+        InitializeComponent()
+
+        ' Agregue cualquier inicialización después de la llamada a InitializeComponent().
+
+
+
+
+
+    End Sub
     Private Sub ShowDetails(sender As Object, e As EventArgs) Handles TChart1.MouseDoubleClick 'Handles MyBase.DoubleClick
         RemoveHandler TChart1.MouseDoubleClick, AddressOf ShowDetails
         Dim details As New GraphView(TableLayoutPanel1, TChart1, ChartController1, Me)

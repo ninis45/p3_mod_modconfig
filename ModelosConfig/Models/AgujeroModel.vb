@@ -12,6 +12,7 @@ Public Class AgujeroModel
     Public Property Estatus As Integer
     Public Property Configuracion As CONFIGURACION_ADMINISTRADOR
     Public Property VWGeneral As VW_EDO_GENERAL
+    Public Property VWModPozo As VW_MOD_POZO
 
     Public Property ModTemperaturas As List(Of MOD_POZO_TEMP)
     Public Property Trayectorias As List(Of VW_TRAYECTORIA)
@@ -78,22 +79,22 @@ Public Class AgujeroModel
         End If
 
 
+        Me.VWModPozo = GetModPozo()
+        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.ORDEN).ToList() 'Mec.GetTuberias() 'db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
 
-        Me.VWGeneral = GetEdoGeneral()
-
-        'Buscamos Edo Mecanico
-        '***************************************************
-        'Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList(), False)
-        'Tuberias = Mecanico.GetTuberias()
-
-
-        ''Dim MecanicoModel As New MecanicoModel(db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList())
-
-        ''Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList() 'Mec.GetTuberias() 'db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
-        ''Me.Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
         Return result
 
 
+
+    End Function
+    Function GetModPozo() As VW_MOD_POZO
+        Dim VWModPozo As List(Of VW_MOD_POZO) = (From mpozo In db.VW_MOD_POZO Where IdAgujero = IdAgujero And mpozo.FUNCION = 6 And mpozo.FECHAMODELO = (db.VW_MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION = 6).Max(Function(m) m.FECHAMODELO)) Select mpozo).ToList()
+
+        If VWModPozo.Count > 0 Then
+            Return VWModPozo(0)
+        Else
+            Return New VW_MOD_POZO()
+        End If
 
     End Function
     'DEPRECIADO TEMPORALMENTE
@@ -103,8 +104,7 @@ Public Class AgujeroModel
 
         If General IsNot Nothing Then
             Configuracion = db.CONFIGURACION_ADMINISTRADOR.Where(Function(w) w.IDMODPOZO = General.IDMODPOZO).SingleOrDefault()
-            'Me.ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = General.IDMODPOZO).ToList()
-            'Me.ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = General.IDMODPOZO).ToList()
+
         End If
 
         Return General
@@ -113,6 +113,17 @@ Public Class AgujeroModel
 
         Dim General = (From edo_general In db.VW_EDO_GENERAL Where edo_general.ESTATUS = Estatus And edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION <> 1 And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION <> 1).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
 
+
+        Return General
+    End Function
+
+    Function GetEdoGeneral(ByVal IdModPozo As String) As VW_EDO_GENERAL
+        Dim General = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault() '(From edo_general In db.VW_EDO_GENERAL Where edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION = 6 And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION = 6).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
+
+
+        If General IsNot Nothing Then
+            Configuracion = db.CONFIGURACION_ADMINISTRADOR.Where(Function(w) w.IDMODPOZO = General.IDMODPOZO).SingleOrDefault()
+        End If
 
         Return General
     End Function

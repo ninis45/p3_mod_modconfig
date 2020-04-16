@@ -3,6 +3,7 @@ Imports Prism.Mvvm
 Imports Telerik.Windows.Controls
 Imports System.Windows.Forms.Integration
 Imports System.ServiceModel
+Imports ModelosConfig.Generales
 Imports System.IO
 Public Class ConfigViewModel
     Inherits BindableBase
@@ -10,9 +11,9 @@ Public Class ConfigViewModel
     Private db As New Entities_ModeloCI()
     'Variables
     Property CreatedOn As DateTime
-    Property ModTrayectorias As List(Of MOD_POZO_TRAYEC)
 
-    Property ModTemperaturas As List(Of MOD_POZO_TEMP)
+
+
 
     Property Tuberias As List(Of Tuberia)
 
@@ -30,22 +31,90 @@ Public Class ConfigViewModel
     Public Property FormView As ConfigView
     Public Property IdAgujero As String
     Public Property IsSaved As Boolean
+
     Private MaxTp As Double
+    Private MaxMd As Double
+
+    Sub New(ByVal IdAgujero As String, ByVal IdModPozo As String, ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal WfhMec As WindowsFormsHost)
+        ModModel = New ModModel(IdAgujero, IdModPozo)
+        WfhTrayectoria.Child = usrTrayectoria
+        WfhTemperatura.Child = usrTemperatura
+        WfhAforo.Child = usrAforo
+        WfhPvt.Child = usrPvt
+
+        Me.IdAgujero = IdAgujero
+        Titulo = "Detalles " + ModModel.VwGeneral.NOMBRE
+
+        Warnings = New ObjectModel.ObservableCollection(Of String)
+        Errors = New ObjectModel.ObservableCollection(Of String)
+
+
+        If ModModel.ModTuberias.Count > 0 Then
+            LoadMecanico(ModModel.ModTuberias)
+        End If
+        Trayectorias = New List(Of VW_TRAYECTORIA)() 'db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+
+        If ModModel.IdModPozo IsNot Nothing Then
+            Me.IdModPozo = ModModel.VwGeneral.IDMODPOZO
+            Me.LiftMethod = ModModel.VwGeneral.LIFTMETHOD
+
+            Me.EnabledEquip = ModModel.Equipment
+
+
+            ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)(ModModel.ModTrayectorias) ' db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+            ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)(ModModel.ModTemperaturas)
+            LoadMecanico(ModModel.ModTuberias)
+            SetData()
+
+        Else
+            Throw New Exception("No hay modelo registrado")
+
+        End If
 
 
 
-    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As String, ByVal IdUsuario As String, ByVal Errors As ObjectModel.ObservableCollection(Of String), ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal FechaPrueba As String)
+        'Listado para los COMBOS
+        '========================================================================================================================
+        Bombas = db.VW_BOMBA.OrderBy(Function(o) o.PROSPER).ToList()
+        Motores = db.MOTORES.OrderBy(Function(o) o.PROSPER).ToList()
+        'AFOROS
+        '************************************************************************************************************************
+        Aforos = db.VW_AFORO.Where(Function(w) w.ENDRECORD Is Nothing And w.IDPOZO = ModModel.IdPozo).OrderByDescending(Function(o) o.FECHA).ToList()
+        Formaciones = db.VW_PVT.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
+
+
+
+        IsReadOnly = True
+        VisibleSave = False
+        EnabledPvt = True
+
+    End Sub
+
+    Sub New(ByVal IdAgujero As String, ByVal LiftMethod As String, ByVal IdUsuario As String, ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal WfhMec As WindowsFormsHost, ByVal FechaPrueba As String)
         ModModel = New ModModel(db, IdAgujero, FechaPrueba, IdUsuario, LiftMethod)
         WfhTrayectoria.Child = usrTrayectoria
         WfhTemperatura.Child = usrTemperatura
         WfhAforo.Child = usrAforo
         WfhPvt.Child = usrPvt
-        Me.Errors = Errors
         Me.IdAgujero = IdAgujero
-
         Titulo = "Nueva configuración"
+        Warnings = New ObjectModel.ObservableCollection(Of String)
+        Errors = New ObjectModel.ObservableCollection(Of String)
+
+        'EQUIPAMIENTO
+        '***********************************************************************************************************************
+
+        Tuberias = ModModel.Tuberias 'Mecanico.GetTuberias() 17 feb 2019
+        If ModModel.ModTuberias.Count > 0 Then
+            LoadMecanico(ModModel.ModTuberias)
+        Else
+            LoadMecanico()
+        End If
+
+        Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
 
 
+        'AndAlso MessageBox.Show("Existe datos de la configuracion anterior.¿Desea usar esos datos para esta nueva configuración?", "Campos inteligente", MessageBoxButton.YesNo) = MessageBoxResult.Yes
 
         If ModModel.IdModPozo IsNot Nothing Then
 
@@ -53,12 +122,16 @@ Public Class ConfigViewModel
             Me.IdModPozo = ModModel.IdModPozo
             Me.IdPozo = ModModel.IdPozo
             Me.Comenta = ModModel.Comenta
-            Me.ArchivoPvt = ModModel.ArchivoPvt
+            Me.ModArchivo = ModModel.ArchivoProsper
+            Me.EnabledEquip = ModModel.Equipment
 
-            ModTrayectorias = ModModel.ModTrayectorias ' db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
-            ModTemperaturas = ModModel.ModTemperaturas 'db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
 
-            Me.LiftMethod = ModModel.LiftMethod
+
+            ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)(ModModel.ModTrayectorias) ' db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+            ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)(ModModel.ModTemperaturas) 'db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
+
+            Me.LiftMethod = LiftMethod 'ModModel.LiftMethod
+
 
 
 
@@ -66,77 +139,29 @@ Public Class ConfigViewModel
             If ModTrayectorias.Count > 0 Then
                 Me.MV = ModTrayectorias(ModTrayectorias.Count - 1).PROFUNDIDADMV
             End If
-
             If LiftMethod <> ModModel.LiftMethod Then
                 Dim q = MsgBox("El Sistema de Producción artificial es diferente.¿Desea cambiarla?", MsgBoxStyle.YesNo)
                 If q = MsgBoxResult.Yes Then
                     Me.LiftMethod = LiftMethod
                 End If
+
             End If
             SetData()
 
         Else
+
             Me.LiftMethod = LiftMethod
-            ModGeneral = New MOD_POZO_GENERAL() With {
-                .CO2 = 0,
-                .COMPACT = 0,
-                .COMPLETION = 0,
-                .DIAMVALBNC = 0,
-                .DIETZ = 0,
-                .DRAINAGE = 0,
-                .EMULSION = 0,
-                .ENTRY = 0,
-                .FLOWTYPE = 0,
-                .FLUID = 0,
-                .GASCONING = 0,
-                .GLRATE = 0,
-                .GLRINY = 0,
-                .GRAVELPACK = 0,
-                .GRAVITY = 0,
-                .H2S = 0,
-                .HTC = 4,
-                .IPRMETHOD = 0,
-                .HYDRATE = 0,
-                .INFLOWTYPE = 0,
-                .IRElK = 0,
-                .LIFTYPE = 0,
-                .METHOD = 0,
-                .MGSKINMETHOD = 0,
-                .MGSKINMODEL = 0,
-                .N2 = 0,
-                .OUTPUTRES = 0,
-                .PREDICT = 0,
-                .PRES = 0,
-                .PTEST = 0,
-                .PVTMODEL = 0,
-                .QGINYMAX = 0,
-                .QGINYMIN = 0,
-                .QTEST = 0,
-                .RESPERM = 0,
-                .RANGESYSTEM = 0,
-                .RGATOTALAFORO = 0,
-                .SEPARATOR = 0,
-                .SKIN = 0,
-                .TEMPMODEL = 0,
-                .THICKNESS = 0,
-                .THPD = 0,
-                .THTE = 0,
-                .THTD = 0,
-                .TOTGOR = 0,
-                .TRES = 0,
-                .TRPRES = 0,
-                .VALVEDEPTH = 0,
-                .VISMOD = 0,
-                .WATVIS = 0,
-                .WBR = 0,
-                .WC = 0,
-                .WELLTYPE = 0,
-                .PI = 0,
-                .DATGENDATE = DateTime.Now
-            }
+            Me.EnabledPvt = True
+            ResetData()
+
 
 
         End If
+
+        If ModTrayectorias.Count = 0 Then
+            LoadTrayectoria()
+        End If
+
         'COMANDOS
         '***********************************************************************************************************************
         CommandSave = New DelegateCommand(AddressOf OnSave)
@@ -144,35 +169,28 @@ Public Class ConfigViewModel
         CommandUp = New DelegateCommand(AddressOf OnUp)
         CommandDown = New DelegateCommand(AddressOf OnDown)
         CommandResetMec = New DelegateCommand(AddressOf OnLoadMecanico)
+        CommandResetTray = New DelegateCommand(AddressOf OnLoadTrayectoria)
 
         'ESTADO MECANICO OJO HAY QUE REVISAR
         '***********************************************************************************************************************
         'Dim ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
         'Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), True)
-        Tuberias = ModModel.Tuberias 'Mecanico.GetTuberias()
 
 
 
 
 
-        If ModModel.ModTuberias.Count > 0 Then
-            LoadMecanico(ModModel.ModTuberias)
-        Else
-            LoadMecanico()
-        End If
 
+
+
+        'Listado para los COMBOS
+        '========================================================================================================================
         Bombas = db.VW_BOMBA.OrderBy(Function(o) o.PROSPER).ToList()
         Motores = db.MOTORES.OrderBy(Function(o) o.PROSPER).ToList()
-
-
-
-
-
         'AFOROS
         '************************************************************************************************************************
         Aforos = db.VW_AFORO.Where(Function(w) w.ENDRECORD Is Nothing And w.IDPOZO = ModModel.IdPozo).OrderByDescending(Function(o) o.FECHA).ToList()
         Formaciones = db.VW_PVT.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
-        'Formacion = Nothing 'db.VW_FORMACION.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
 
 
 
@@ -192,7 +210,11 @@ Public Class ConfigViewModel
         End If
 
 
-        If ModModel.ModPvt IsNot Nothing Then
+        ModPvt = ModModel.ModPvt
+
+        'PROXIMO A REMOVER
+        '=====================================================================================================
+        If ModModel.ModPvt IsNot Nothing AndAlso ModPvt.IDPVTGENERAL <> "NA" Then
             Me.Formacion = db.VW_PVT.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero And w.IDPVTGENERAL = ModModel.ModPvt.IDPVTGENERAL).SingleOrDefault()
         End If
 
@@ -200,8 +222,6 @@ Public Class ConfigViewModel
 
         'CARGA DE GRAFICAS DE LOS COMPONENTES
         '******************************************************************************************************
-        Dim Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).ToList()
-
 
         If Trayectorias.Count > 0 Then
             For i = 0 To Trayectorias.Count - 1
@@ -229,7 +249,71 @@ Public Class ConfigViewModel
         usrTemperatura.TChart1.Series(0).Legend.Visible = False
 
     End Sub
+    Public Sub ResetData()
+        ModGeneral = New MOD_POZO_GENERAL() With {
+            .CO2 = 0,
+            .COMPACT = 0,
+            .COMPLETION = 0,
+            .DIAMVALBNC = 0,
+            .DIETZ = 0,
+            .DRAINAGE = 0,
+            .EMULSION = 0,
+            .ENTRY = 0,
+            .FLOWTYPE = 0,
+            .FLUID = 0,
+            .GASCONING = 0,
+            .GLRATE = 0,
+            .GLRINY = 0,
+            .GRAVELPACK = 0,
+            .GRAVITY = 0,
+            .H2S = 0,
+            .HTC = 4,
+            .IPRMETHOD = 0,
+            .HYDRATE = 0,
+            .INFLOWTYPE = 0,
+            .IRElK = 0,
+            .LIFTYPE = 0,
+            .METHOD = 0,
+            .MGSKINMETHOD = 0,
+            .MGSKINMODEL = 0,
+            .N2 = 0,
+            .OUTPUTRES = 0,
+            .PREDICT = 0,
+            .PRES = 0,
+            .PTEST = 0,
+            .PVTMODEL = 0,
+            .QGINYMAX = 0,
+            .QGINYMIN = 0,
+            .QTEST = 0,
+            .RESPERM = 0,
+            .RANGESYSTEM = 0,
+            .RGATOTALAFORO = 0,
+            .SEPARATOR = 0,
+            .SKIN = 0,
+            .TEMPMODEL = 0,
+            .THICKNESS = 0,
+            .THPD = 0,
+            .THTE = 0,
+            .THTD = 0,
+            .TOTGOR = 0,
+            .TRES = 0,
+            .TRPRES = 0,
+            .VALVEDEPTH = 0,
+            .VISMOD = 0,
+            .WATVIS = 0,
+            .WBR = 0,
+            .WC = 0,
+            .WELLTYPE = 0,
+            .PI = 0,
+            .DATGENDATE = DateTime.Now
+        }
+        ModBNC = New MOD_POZO_BNC()
+        ModBEC = New MOD_POZO_BEC()
 
+        ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
+
+
+    End Sub
 
     Private _mecanico As MecanicoModel
     Public Property Mecanico As MecanicoModel
@@ -249,6 +333,16 @@ Public Class ConfigViewModel
         Set(value As ObjectModel.ObservableCollection(Of String))
             _errors = value
             RaisePropertyChanged("Errors")
+        End Set
+    End Property
+    Private _warnings As ObjectModel.ObservableCollection(Of String)
+    Public Property Warnings As ObjectModel.ObservableCollection(Of String)
+        Get
+            Return _warnings
+        End Get
+        Set(value As ObjectModel.ObservableCollection(Of String))
+            _warnings = value
+            RaisePropertyChanged("Warnings")
         End Set
     End Property
     Private _infos As List(Of String)
@@ -327,8 +421,6 @@ Public Class ConfigViewModel
         End Get
         Set(value As String)
             _id_mod_pozo = value
-            ' LoadCharts(_id_mod_pozo)
-            ' Estabilidad.Load(_id_mod_pozo)
             RaisePropertyChanged("IdModPozo")
         End Set
     End Property
@@ -379,35 +471,26 @@ Public Class ConfigViewModel
             RaisePropertyChanged("ModGeneral")
         End Set
     End Property
-
-    Private _archivo_pvt As String
-    Public Property ArchivoPvt As String
+    Private _mod_pvt As MOD_POZO_PVT
+    Public Property ModPvt As MOD_POZO_PVT
         Get
-            Return _archivo_pvt
+            Return _mod_pvt
         End Get
-        Set(value As String)
-            _archivo_pvt = value
+        Set(value As MOD_POZO_PVT)
+            _mod_pvt = value
 
-            If _archivo_pvt Is Nothing Then
-                EnabledPvt = True
-                EnabledEquip = False
-            Else
-                EnabledPvt = False
-            End If
-            RaisePropertyChanged("ArchivoPvt")
+            'If _mod_pvt Is Nothing Then _mod_pvt = New MOD_POZO_PVT()
+            RaisePropertyChanged("ModPvt")
         End Set
     End Property
-
     Private _new_archivo_pvt As String
     Public Property NewArchivoPvt As String
         Get
-
             Return _new_archivo_pvt
         End Get
         Set(value As String)
             _new_archivo_pvt = value
-
-            If _new_archivo_pvt Is Nothing And ArchivoPvt Is Nothing Then
+            If _new_archivo_pvt Is Nothing And ModArchivo Is Nothing Then
                 EnabledPvt = True
                 EnabledEquip = False
             Else
@@ -417,7 +500,6 @@ Public Class ConfigViewModel
             RaisePropertyChanged("NewArchivoPvt")
         End Set
     End Property
-
     Private _mod_archivo As ARCHIVOS_PROSPER
     Public Property ModArchivo As ARCHIVOS_PROSPER
         Get
@@ -426,11 +508,17 @@ Public Class ConfigViewModel
         Set(value As ARCHIVOS_PROSPER)
             _mod_archivo = value
 
-            ModModel.ArchivoProsper = _mod_archivo
+            If _mod_archivo Is Nothing Then
+                EnabledPvt = True
+                EnabledEquip = False
+            Else
+                EnabledPvt = False
+            End If
+
+            'ModModel.ArchivoProsper = _mod_archivo
             RaisePropertyChanged("ModArchivo")
         End Set
     End Property
-
     Private _titulo As String
     Public Property Titulo As String
         Get
@@ -511,409 +599,7 @@ Public Class ConfigViewModel
             RaisePropertyChanged("LiftMethod")
         End Set
     End Property
-    ''Modelo BNC
-    'Private _mod_bnc As MOD_POZO_BNC
-    'Public Property ModBNC() As MOD_POZO_BNC
-    '    Get
-    '        Return _mod_bnc
-    '    End Get
-    '    Set(value As MOD_POZO_BNC)
-    '        _mod_bnc = value
-    '    End Set
-    'End Property
-    ''Modelo BEC
-    'Private _mod_bec As MOD_POZO_BEC
-    'Public Property ModBEC() As MOD_POZO_BEC
-    '    Get
-    '        Return _mod_bec
-    '    End Get
-    '    Set(value As MOD_POZO_BEC)
-    '        _mod_bec = value
-    '        RaisePropertyChanged("ModBEC")
-    '    End Set
-    'End Property
-    ''Modelo General
-    'Private _mod_general As MOD_POZO_GENERAL
-    'Public Property ModGeneral() As MOD_POZO_GENERAL
-    '    Get
-
-
-    '        Return _mod_general
-    '    End Get
-    '    Set(value As MOD_POZO_GENERAL)
-    '        _mod_general = value
-
-    '        RaisePropertyChanged("ModGeneral")
-    '    End Set
-    'End Property
-
-
-
-    ''VARIABLES GLOBALES
-    'Private _fluid As Double
-    'Public Property Fluid() As Double
-    '    Get
-    '        Return _fluid
-    '    End Get
-    '    Set(value As Double)
-    '        _fluid = value
-    '        RaisePropertyChanged("Fluid")
-    '    End Set
-    'End Property
-    'Private _output_res As Double
-    'Public Property OutputRes() As Double
-    '    Get
-    '        Return _output_res
-    '    End Get
-    '    Set(value As Double)
-    '        _output_res = value
-    '        RaisePropertyChanged("OutputRes")
-    '    End Set
-    'End Property
-    'Private _pvt_model As Double
-    'Public Property PvtModel() As Double
-    '    Get
-    '        Return _pvt_model
-    '    End Get
-    '    Set(value As Double)
-    '        _pvt_model = value
-    '        RaisePropertyChanged("PvtModel")
-    '    End Set
-    'End Property
-    'Private _completion As Double
-    'Public Property Completion() As Double
-    '    Get
-    '        Return _completion
-    '    End Get
-    '    Set(value As Double)
-    '        _completion = value
-    '        RaisePropertyChanged("Completion")
-    '    End Set
-    'End Property
-    'Private _separator As Double
-    'Public Property Separator() As Double
-    '    Get
-    '        Return _separator
-
-    '    End Get
-    '    Set(value As Double)
-    '        _separator = value
-    '        RaisePropertyChanged("Separator")
-    '    End Set
-    'End Property
-    'Private _gravel_pack As Double
-    'Public Property GravelPack() As Double
-    '    Get
-    '        Return _gravel_pack
-    '    End Get
-    '    Set(value As Double)
-    '        _gravel_pack = value
-    '        RaisePropertyChanged("GravelPack")
-    '    End Set
-    'End Property
-    'Private _emulsion As Double
-    'Public Property Emulsion() As Double
-    '    Get
-    '        Return _emulsion
-    '    End Get
-    '    Set(value As Double)
-    '        _emulsion = value
-    '        RaisePropertyChanged("Emulsion")
-    '    End Set
-    'End Property
-    'Private _inflow_type As Double
-    'Public Property InflowType() As Double
-    '    Get
-    '        Return _inflow_type
-    '    End Get
-    '    Set(value As Double)
-    '        _inflow_type = value
-    '        RaisePropertyChanged("InflowType")
-    '    End Set
-    'End Property
-    'Private _hydrate As Double
-    'Public Property Hydrate() As Double
-    '    Get
-    '        Return _hydrate
-    '    End Get
-    '    Set(value As Double)
-    '        _hydrate = value
-    '        RaisePropertyChanged("Hydrate")
-    '    End Set
-    'End Property
-    'Private _gas_coning As Double
-    'Public Property GasConing() As Double
-    '    Get
-    '        Return _gas_coning
-    '    End Get
-    '    Set(value As Double)
-    '        _gas_coning = value
-    '        RaisePropertyChanged("GasConing")
-    '    End Set
-    'End Property
-    'Private _wat_vis As Double
-    'Public Property WatVis() As Double
-    '    Get
-    '        Return _wat_vis
-    '    End Get
-    '    Set(value As Double)
-    '        _wat_vis = value
-    '        RaisePropertyChanged("WatVis")
-    '    End Set
-    'End Property
-    'Private _vis_mod As Double
-    'Public Property VisMod() As Double
-    '    Get
-    '        Return _vis_mod
-    '    End Get
-    '    Set(value As Double)
-    '        _vis_mod = value
-    '        RaisePropertyChanged("VisMod")
-    '    End Set
-    'End Property
-    'Private _ipr_method As Double
-    'Public Property IprMethod() As Double
-    '    Get
-    '        Return _ipr_method
-    '    End Get
-    '    Set(value As Double)
-    '        _ipr_method = value
-    '        RaisePropertyChanged("IprMethod")
-    '    End Set
-    'End Property
-    'Private _flow_type As Double
-    'Public Property FlowType() As Double
-    '    Get
-    '        Return _flow_type
-    '    End Get
-    '    Set(value As Double)
-    '        _flow_type = value
-    '        RaisePropertyChanged("FlowType")
-    '    End Set
-    'End Property
-    'Private _compact As Double
-    'Public Property Compact() As Double
-    '    Get
-    '        Return _compact
-    '    End Get
-    '    Set(value As Double)
-    '        _compact = value
-    '        RaisePropertyChanged("Compact")
-    '    End Set
-    'End Property
-    'Private _well_type As Double
-    'Public Property WellType() As Double
-    '    Get
-    '        Return _well_type
-    '    End Get
-    '    Set(value As Double)
-    '        _well_type = value
-    '        RaisePropertyChanged("WellType")
-    '    End Set
-    'End Property
-    'Private _irelk As Double
-    'Public Property Irelk() As Double
-    '    Get
-    '        Return _irelk
-    '    End Get
-    '    Set(value As Double)
-    '        _irelk = value
-    '        RaisePropertyChanged("Irelk")
-    '    End Set
-    'End Property
-    'Private _lift_method As Double
-    'Public Property LiftMethod() As Double
-    '    Get
-    '        Return _lift_method
-    '    End Get
-    '    Set(value As Double)
-    '        _lift_method = value
-    '        RaisePropertyChanged("LiftMethod")
-    '    End Set
-    'End Property
-    'Private _mg_skin_method As Double
-    'Public Property MgSkinMethod() As Double
-    '    Get
-    '        Return _mg_skin_method
-    '    End Get
-    '    Set(value As Double)
-    '        _mg_skin_method = value
-    '        RaisePropertyChanged("MgSkinMethod")
-    '    End Set
-    'End Property
-    'Private _lift_type As Double
-    'Public Property LiftType() As Double
-    '    Get
-    '        Return _lift_type
-    '    End Get
-    '    Set(value As Double)
-    '        _lift_type = value
-    '        RaisePropertyChanged("LiftType")
-    '    End Set
-    'End Property
-    'Private _mg_skin_model As Double
-    'Public Property MgSkinModel() As Double
-    '    Get
-    '        Return _mg_skin_model
-    '    End Get
-    '    Set(value As Double)
-    '        _mg_skin_model = value
-    '        RaisePropertyChanged("MgSkinModel")
-    '    End Set
-    'End Property
-    'Private _predict As Double
-    'Public Property Predict() As Double
-    '    Get
-    '        Return _predict
-    '    End Get
-    '    Set(value As Double)
-    '        _predict = value
-    '        RaisePropertyChanged("Predict")
-    '    End Set
-    'End Property
-    'Private _temp_model As Double
-    'Public Property TempModel() As Double
-    '    Get
-    '        Return _temp_model
-    '    End Get
-    '    Set(value As Double)
-    '        _temp_model = value
-    '        RaisePropertyChanged("TempModel")
-    '    End Set
-    'End Property
-
-
-    ''BNC
-    'Private _entry As Double
-    'Public Property Entry() As Double
-    '    Get
-    '        Return _entry
-    '    End Get
-    '    Set(value As Double)
-    '        _entry = value
-    '        RaisePropertyChanged("Entry")
-    '    End Set
-    'End Property
-    'Private _method As Double
-    'Public Property Method() As Double
-    '    Get
-    '        Return _method
-    '    End Get
-    '    Set(value As Double)
-    '        _method = value
-    '        RaisePropertyChanged("Method")
-    '    End Set
-    'End Property
-    'Private _gravity As Double
-    'Public Property Gravity() As Double
-    '    Get
-    '        Return _gravity
-    '    End Get
-    '    Set(value As Double)
-    '        _gravity = value
-    '        RaisePropertyChanged("Gravity")
-    '    End Set
-    'End Property
-    'Private _range_system As Double
-    'Public Property RangeSystem() As Double
-    '    Get
-    '        Return _range_system
-    '    End Get
-    '    Set(value As Double)
-    '        _range_system = value
-    '        RaisePropertyChanged("RangeSystem")
-    '    End Set
-    'End Property
-    'Private _h2s As Double
-    'Public Property H2s() As Double
-    '    Get
-    '        Return _h2s
-    '    End Get
-    '    Set(value As Double)
-    '        _h2s = value
-    '        RaisePropertyChanged("H2s")
-    '    End Set
-    'End Property
-    'Private _co2 As Double
-    'Public Property Co2() As Double
-    '    Get
-    '        Return _co2
-    '    End Get
-    '    Set(value As Double)
-    '        _co2 = value
-    '        RaisePropertyChanged("Co2")
-    '    End Set
-    'End Property
-    'Private _n2 As Double
-    'Public Property N2() As Double
-    '    Get
-    '        Return _n2
-    '    End Get
-    '    Set(value As Double)
-    '        _n2 = value
-    '        RaisePropertyChanged("N2")
-    '    End Set
-    'End Property
-    'Private _glriny As Double
-    'Public Property GlRiny() As Double
-    '    Get
-    '        Return _glriny
-    '    End Get
-    '    Set(value As Double)
-    '        _glriny = value
-    '        RaisePropertyChanged("GlRiny")
-    '    End Set
-    'End Property
-    'Private _glrate As Double
-    'Public Property GlRate() As Double
-    '    Get
-    '        Return _glrate
-    '    End Get
-    '    Set(value As Double)
-    '        _glrate = value
-    '        RaisePropertyChanged("GlRate")
-    '    End Set
-    'End Property
-    'Private _valve_depth As Double
-    'Public Property ValveDepth() As Double
-    '    Get
-    '        Return _valve_depth
-    '    End Get
-    '    Set(value As Double)
-    '        _valve_depth = value
-    '        RaisePropertyChanged("ValveDepth")
-    '    End Set
-    'End Property
-    'Private _diam_val As Double
-    'Public Property DiamVal() As Double
-    '    Get
-    '        Return _diam_val
-    '    End Get
-    '    Set(value As Double)
-    '        _diam_val = value
-    '        RaisePropertyChanged("DiamVal")
-    '    End Set
-    'End Property
-    'Private _qgi_min As Double
-    'Public Property QgiMin() As Double
-    '    Get
-    '        Return _qgi_min
-    '    End Get
-    '    Set(value As Double)
-    '        _qgi_min = value
-    '        RaisePropertyChanged("QgiMin")
-    '    End Set
-    'End Property
-    'Private _qgi_max As Double
-    'Public Property QgiMax() As Double
-    '    Get
-    '        Return _qgi_max
-    '    End Get
-    '    Set(value As Double)
-    '        _qgi_max = value
-    '        RaisePropertyChanged("QgiMax")
-    '    End Set
-    'End Property
+ 
 
 
     'Comandos
@@ -959,14 +645,43 @@ Public Class ConfigViewModel
         Set(value As VW_PVT)
             _formacion = value
 
-            If _formacion IsNot Nothing Then
-                Pvts = db.VW_PVT_GRAFICA.Where(Function(w) w.IDPVTGENERAL = _formacion.IDPVTGENERAL And w.TEMPERATURA = _formacion.TEMP).OrderBy(Function(o) o.PPRUEBA).ToList()
-                ModModel.IdPvt = _formacion.IDPVTGENERAL
-                ' ModGeneral.IDPVT = _formacion.IDPVTGENERAL
+            If _formacion Is Nothing Then _formacion = New VW_PVT()
 
+
+
+            If ModPvt IsNot Nothing Then
+                If ModPvt.IDPVTGENERAL <> _formacion.IDPVTGENERAL AndAlso MessageBox.Show("Se van a perder los datos de esta sección: Pvt.¿Desea continuar?", "Campos Inteligentes", MessageBoxButton.YesNo) = MessageBoxResult.No Then
+                    Return
+                End If
+
+                ModPvt.API = _formacion.API
+                ModPvt.CO2 = _formacion.CO2
+                ModPvt.DRG = _formacion.DRG
+                ModPvt.GOR = _formacion.GOR
+                ModPvt.H2S = _formacion.H2S
+                ModPvt.N2 = _formacion.N2
+                ModPvt.WSAL = _formacion.SALINIDAD
+                ModPvt.IDPVTGENERAL = _formacion.IDPVTGENERAL
             Else
+                ModPvt = New MOD_POZO_PVT() With {
+                    .API = _formacion.API,
+                    .CO2 = _formacion.CO2,
+                    .DRG = _formacion.DRG,
+                    .GOR = _formacion.GOR,
+                    .H2S = _formacion.H2S,
+                    .N2 = _formacion.N2,
+                    .WSAL = _formacion.SALINIDAD,
+                    .IDPVTGENERAL = _formacion.IDPVTGENERAL
+                }
 
             End If
+
+
+
+
+
+            Pvts = db.VW_PVT_GRAFICA.Where(Function(w) w.IDPVTGENERAL = _formacion.IDPVTGENERAL And w.TEMPERATURA = _formacion.TEMP).OrderBy(Function(o) o.PPRUEBA).ToList()
+
 
             RaisePropertyChanged("Formacion")
         End Set
@@ -992,14 +707,36 @@ Public Class ConfigViewModel
         End Set
     End Property
 
-    Private _messages_pvt As ModelosEstabilidad.FlashData
-    Public Property MessagesPVT As ModelosEstabilidad.FlashData
+    'Private _messages_pvt As ModelosEstabilidad.FlashData
+    'Public Property MessagesPVT As ModelosEstabilidad.FlashData
+    '    Get
+    '        Return _messages_pvt
+    '    End Get
+    '    Set(value As ModelosEstabilidad.FlashData)
+    '        _messages_pvt = value
+    '        RaisePropertyChanged("MessagesPVT")
+    '    End Set
+    'End Property
+
+    Private _mod_temperaturas As ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
+    Property ModTemperaturas As ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
         Get
-            Return _messages_pvt
+            Return _mod_temperaturas
         End Get
-        Set(value As ModelosEstabilidad.FlashData)
-            _messages_pvt = value
-            RaisePropertyChanged("MessagesPVT")
+        Set(value As ObjectModel.ObservableCollection(Of MOD_POZO_TEMP))
+            _mod_temperaturas = value
+            RaisePropertyChanged("ModTemperaturas")
+        End Set
+    End Property
+
+    Private _mod_trayectorias As ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
+    Public Property ModTrayectorias As ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
+        Get
+            Return _mod_trayectorias
+        End Get
+        Set(value As ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC))
+            _mod_trayectorias = value
+            RaisePropertyChanged("ModTrayectorias")
         End Set
     End Property
 
@@ -1037,7 +774,21 @@ Public Class ConfigViewModel
         End Set
     End Property
 
-#Region "Deshabilitadores"
+    Private _trayectorias As List(Of VW_TRAYECTORIA)
+    Public Property Trayectorias As List(Of VW_TRAYECTORIA)
+        Get
+            Return _trayectorias
+        End Get
+        Set(value As List(Of VW_TRAYECTORIA))
+            _trayectorias = value
+            RaisePropertyChanged("Trayectorias")
+        End Set
+    End Property
+
+
+#Region "Deshabilitadores / Habilitadores"
+
+
     Private _enabled_pvt As Boolean
     Public Property EnabledPvt As Boolean
         Get
@@ -1059,10 +810,65 @@ Public Class ConfigViewModel
             RaisePropertyChanged("EnabledEquip")
         End Set
     End Property
+
+    Private _tab As Integer
+    Public Property Tab As Integer
+        Get
+            Return _tab
+        End Get
+        Set(value As Integer)
+            _tab = value
+
+            If IsReadOnly = False Then
+
+                If Tab > 8 Then
+                    VisibleSave = True
+                    GetErrors()
+                Else
+                    VisibleSave = False
+                End If
+            End If
+
+
+            RaisePropertyChanged("Tab")
+        End Set
+    End Property
+    Private _visible_save As Boolean
+    Public Property VisibleSave As Boolean
+        Get
+            Return _visible_save
+        End Get
+        Set(value As Boolean)
+            _visible_save = value
+            RaisePropertyChanged("VisibleSave")
+
+        End Set
+    End Property
+    Private _is_read_only As Boolean
+    Public Property IsReadOnly As Boolean
+        Get
+            Return _is_read_only
+        End Get
+        Set(value As Boolean)
+            _is_read_only = value
+            RaisePropertyChanged("IsReadOnly")
+        End Set
+    End Property
+    Private _is_busy As Boolean
+    Public Property IsBusy As Boolean
+        Get
+            Return _is_busy
+        End Get
+        Set(value As Boolean)
+            _is_busy = value
+            RaisePropertyChanged("IsBusy")
+        End Set
+    End Property
 #End Region
 
 #Region "Comandos"
     Public Property CommandResetMec As ICommand
+    Public Property CommandResetTray As ICommand
     Public Property CommandUp As ICommand
     Public Property CommandDown As ICommand
     Public Property CommandSave As ICommand
@@ -1095,186 +901,7 @@ Public Class ConfigViewModel
     Private _list_mecanicos As List(Of VW_EDO_MECANICO)
 
 
-    Private _pres As Double
-    Public Property Pres As Double
-        Get
-            Return _pres
-        End Get
-        Set(value As Double)
-            _pres = value
 
-            RaisePropertyChanged("Pres")
-
-        End Set
-    End Property
-    Private _tres As Double
-    Public Property Tres As Double
-        Get
-            Return _tres
-        End Get
-        Set(value As Double)
-            _tres = value
-            RaisePropertyChanged("Tres")
-
-        End Set
-    End Property
-    'Depreciado temporalmente, se encuentra en ModGeneral.Wc
-    Private _wc As Double
-    Public Property Wc As Double
-        Get
-            Return _wc
-        End Get
-        Set(value As Double)
-            _wc = value
-            RaisePropertyChanged("Wc")
-
-        End Set
-    End Property
-    Private _totgor As Double
-    Public Property Totgor As Double
-        Get
-            Return _totgor
-        End Get
-        Set(value As Double)
-            _totgor = value
-            RaisePropertyChanged("Totgor")
-
-        End Set
-    End Property
-    Private _qtest As Double
-    Public Property Qtest As Double
-        Get
-            Return _qtest
-        End Get
-        Set(value As Double)
-            _qtest = value
-            RaisePropertyChanged("Qtest")
-
-        End Set
-    End Property
-    Private _ptest As Double
-    Public Property Ptest As Double
-        Get
-            Return _ptest
-        End Get
-        Set(value As Double)
-            _ptest = value
-            RaisePropertyChanged("Ptest")
-
-        End Set
-    End Property
-    Private _resperm As Double
-    Public Property Resperm As Double
-        Get
-            Return _resperm
-        End Get
-        Set(value As Double)
-            _resperm = value
-            RaisePropertyChanged("Resperm")
-
-        End Set
-    End Property
-    Private _thickness As Double
-    Public Property Thickness As Double
-        Get
-            Return _thickness
-        End Get
-        Set(value As Double)
-            _thickness = value
-            RaisePropertyChanged("Thickness")
-
-        End Set
-    End Property
-    Private _drainage As Double
-    Public Property Drainage As Double
-        Get
-            Return _drainage
-        End Get
-        Set(value As Double)
-            _drainage = value
-            RaisePropertyChanged("Drainage")
-        End Set
-    End Property
-    Private _dietz As Double
-    Public Property Dietz As Double
-        Get
-            Return _dietz
-        End Get
-        Set(value As Double)
-            _dietz = value
-            RaisePropertyChanged("Dietz")
-        End Set
-    End Property
-    Private _wbr As Double
-    Public Property Wbr As Double
-        Get
-            Return _wbr
-        End Get
-        Set(value As Double)
-            _wbr = value
-            RaisePropertyChanged("Wbr")
-        End Set
-    End Property
-    Private _skin As Double
-    Public Property Skin As Double
-        Get
-            Return _skin
-        End Get
-        Set(value As Double)
-            _skin = value
-            RaisePropertyChanged("Skin")
-        End Set
-    End Property
-    Private _htc As Double
-    Public Property Htc As Double
-        Get
-            Return _htc
-        End Get
-        Set(value As Double)
-            _htc = value
-            RaisePropertyChanged("Htc")
-        End Set
-    End Property
-    Private _thpd As Double
-    Public Property Thpd As Double
-        Get
-            Return _thpd
-        End Get
-        Set(value As Double)
-            _thpd = value
-            RaisePropertyChanged("Thpd")
-        End Set
-    End Property
-    Private _thtd As Double
-    Public Property Thtd As Double
-        Get
-            Return _thtd
-        End Get
-        Set(value As Double)
-            _thtd = value
-            RaisePropertyChanged("Thtd")
-        End Set
-    End Property
-    Private _trpres As Double
-    Public Property Trpres As Double
-        Get
-            Return _trpres
-        End Get
-        Set(value As Double)
-            _trpres = value
-            RaisePropertyChanged("Trpres")
-        End Set
-    End Property
-    Private _rgatotalaforo As Double
-    Public Property RgaTotalAforo As Double
-        Get
-            Return _rgatotalaforo
-        End Get
-        Set(value As Double)
-            _rgatotalaforo = value
-            RaisePropertyChanged("RgaTotalAforo")
-        End Set
-    End Property
 
 
     Private _comenta As String
@@ -1287,250 +914,10 @@ Public Class ConfigViewModel
             RaisePropertyChanged("Comenta")
         End Set
     End Property
-    Private _fluid As Double
-    Public Property Fluid() As Double
-        Get
-            Return _fluid
-        End Get
-        Set(value As Double)
-            _fluid = value
-            RaisePropertyChanged("Fluid")
-        End Set
-    End Property
-    Private _output_res As Double
-    Public Property OutputRes() As Double
-        Get
-            Return _output_res
-        End Get
-        Set(value As Double)
-            _output_res = value
-            RaisePropertyChanged("OutputRes")
-        End Set
-    End Property
-    Private _pvt_model As Double
-    Public Property PvtModel() As Double
-        Get
-            Return _pvt_model
-        End Get
-        Set(value As Double)
-            _pvt_model = value
-            RaisePropertyChanged("PvtModel")
-        End Set
-    End Property
-    Private _completion As Double
-    Public Property Completion() As Double
-        Get
-            Return _completion
-        End Get
-        Set(value As Double)
-            _completion = value
-            RaisePropertyChanged("Completion")
-        End Set
-    End Property
-    Private _separator As Double
-    Public Property Separator() As Double
-        Get
-            Return _separator
-
-        End Get
-        Set(value As Double)
-            _separator = value
-            RaisePropertyChanged("Separator")
-        End Set
-    End Property
-    Private _gravel_pack As Double
-    Public Property GravelPack() As Double
-        Get
-            Return _gravel_pack
-        End Get
-        Set(value As Double)
-            _gravel_pack = value
-            RaisePropertyChanged("GravelPack")
-        End Set
-    End Property
-    Private _emulsion As Double
-    Public Property Emulsion() As Double
-        Get
-            Return _emulsion
-        End Get
-        Set(value As Double)
-            _emulsion = value
-            RaisePropertyChanged("Emulsion")
-        End Set
-    End Property
-    Private _inflow_type As Double
-    Public Property InflowType() As Double
-        Get
-            Return _inflow_type
-        End Get
-        Set(value As Double)
-            _inflow_type = value
-            RaisePropertyChanged("InflowType")
-        End Set
-    End Property
-    Private _hydrate As Double
-    Public Property Hydrate() As Double
-        Get
-            Return _hydrate
-        End Get
-        Set(value As Double)
-            _hydrate = value
-            RaisePropertyChanged("Hydrate")
-        End Set
-    End Property
-    Private _gas_coning As Double
-    Public Property GasConing() As Double
-        Get
-            Return _gas_coning
-        End Get
-        Set(value As Double)
-            _gas_coning = value
-            RaisePropertyChanged("GasConing")
-        End Set
-    End Property
-    Private _wat_vis As Double
-    Public Property WatVis() As Double
-        Get
-            Return _wat_vis
-        End Get
-        Set(value As Double)
-            _wat_vis = value
-            RaisePropertyChanged("WatVis")
-        End Set
-    End Property
-    Private _vis_mod As Double
-    Public Property VisMod() As Double
-        Get
-            Return _vis_mod
-        End Get
-        Set(value As Double)
-            _vis_mod = value
-            RaisePropertyChanged("VisMod")
-        End Set
-    End Property
-    Private _ipr_method As Double
-    Public Property IprMethod As Double
-        Get
-            Return _ipr_method
-        End Get
-        Set(value As Double)
-            _ipr_method = value
-            RaisePropertyChanged("IprMethod")
-        End Set
-    End Property
-    Private _flow_type As Double
-    Public Property FlowType() As Double
-        Get
-            Return _flow_type
-        End Get
-        Set(value As Double)
-            _flow_type = value
-            RaisePropertyChanged("FlowType")
-        End Set
-    End Property
-    Private _compact As Double
-    Public Property Compact() As Double
-        Get
-            Return _compact
-        End Get
-        Set(value As Double)
-            _compact = value
-            RaisePropertyChanged("Compact")
-        End Set
-    End Property
-    Private _well_type As Double
-    Public Property WellType() As Double
-        Get
-            Return _well_type
-        End Get
-        Set(value As Double)
-            _well_type = value
-            RaisePropertyChanged("WellType")
-        End Set
-    End Property
-    Private _irelk As Double
-    Public Property Irelk() As Double
-        Get
-            Return _irelk
-        End Get
-        Set(value As Double)
-            _irelk = value
-            RaisePropertyChanged("Irelk")
-        End Set
-    End Property
-    'Private _lift_method As Double
-    'Public Property LiftMethod() As Double
-    '    Get
-    '        Return _lift_method
-    '    End Get
-    '    Set(value As Double)
-    '        _lift_method = value
-    '        RaisePropertyChanged("LiftMethod")
-    '    End Set
-    'End Property
-    Private _mg_skin_method As Double
-    Public Property MgSkinMethod() As Double
-        Get
-            Return _mg_skin_method
-        End Get
-        Set(value As Double)
-            _mg_skin_method = value
-            RaisePropertyChanged("MgSkinMethod")
-        End Set
-    End Property
-    Private _lift_type As Double
-    Public Property LiftType() As Double
-        Get
-            Return _lift_type
-        End Get
-        Set(value As Double)
-            _lift_type = value
-            RaisePropertyChanged("LiftType")
-        End Set
-    End Property
-    Private _mg_skin_model As Double
-    Public Property MgSkinModel() As Double
-        Get
-            Return _mg_skin_model
-        End Get
-        Set(value As Double)
-            _mg_skin_model = value
-            RaisePropertyChanged("MgSkinModel")
-        End Set
-    End Property
-    Private _predict As Double
-    Public Property Predict() As Double
-        Get
-            Return _predict
-        End Get
-        Set(value As Double)
-            _predict = value
-            RaisePropertyChanged("Predict")
-        End Set
-    End Property
-    Private _temp_model As Double
-    Public Property TempModel() As Double
-        Get
-            Return _temp_model
-        End Get
-        Set(value As Double)
-            _temp_model = value
-            RaisePropertyChanged("TempModel")
-        End Set
-    End Property
-    Private _datgendate As DateTime
-    Public Property Datgendate() As DateTime
-        Get
-            Return _datgendate
-        End Get
-        Set(value As DateTime)
-            _datgendate = value
-            RaisePropertyChanged("Datgendate")
-        End Set
-    End Property
 
 
-    'BNC
+
+    '''BNC
     Private _entry As Double
     Public Property Entry() As Double
         Get
@@ -1551,126 +938,7 @@ Public Class ConfigViewModel
             RaisePropertyChanged("Method")
         End Set
     End Property
-    Private _gravity As Double
-    Public Property Gravity() As Double
-        Get
-            Return _gravity
-        End Get
-        Set(value As Double)
-            _gravity = value
-            RaisePropertyChanged("Gravity")
-        End Set
-    End Property
-    Private _range_system As Double
-    Public Property RangeSystem() As Double
-        Get
-            Return _range_system
-        End Get
-        Set(value As Double)
-            _range_system = value
-            RaisePropertyChanged("RangeSystem")
-        End Set
-    End Property
-    Private _h2s As Double
-    Public Property H2s() As Double
-        Get
-            Return _h2s
-        End Get
-        Set(value As Double)
-            _h2s = value
-            RaisePropertyChanged("H2s")
-        End Set
-    End Property
-    Private _co2 As Double
-    Public Property Co2() As Double
-        Get
-            Return _co2
-        End Get
-        Set(value As Double)
-            _co2 = value
-            RaisePropertyChanged("Co2")
-        End Set
-    End Property
-    Private _n2 As Double
-    Public Property N2() As Double
-        Get
-            Return _n2
-        End Get
-        Set(value As Double)
-            _n2 = value
-            RaisePropertyChanged("N2")
-        End Set
-    End Property
-    Private _glriny As Double
-    Public Property GlRiny() As Double
-        Get
-            Return _glriny
-        End Get
-        Set(value As Double)
-            _glriny = value
-            RaisePropertyChanged("GlRiny")
-        End Set
-    End Property
-    Private _glrate As Double
-    Public Property GlRate() As Double
-        Get
-            Return _glrate
-        End Get
-        Set(value As Double)
-            _glrate = value
-            RaisePropertyChanged("GlRate")
-        End Set
-    End Property
-    Private _valve_depth As Double
-    Public Property ValveDepth() As Double
-        Get
-            Return _valve_depth
-        End Get
-        Set(value As Double)
-            _valve_depth = value
-            RaisePropertyChanged("ValveDepth")
-        End Set
-    End Property
-    Private _diam_val As Double
-    Public Property DiamVal() As Double
-        Get
-            Return _diam_val
-        End Get
-        Set(value As Double)
-            _diam_val = value
-            RaisePropertyChanged("DiamVal")
-        End Set
-    End Property
-    Private _qgi_min As Double
-    Public Property QgiMin() As Double
-        Get
-            Return _qgi_min
-        End Get
-        Set(value As Double)
-            _qgi_min = value
-            RaisePropertyChanged("QgiMin")
-        End Set
-    End Property
-    Private _qgi_max As Double
-    Public Property QgiMax() As Double
-        Get
-            Return _qgi_max
-        End Get
-        Set(value As Double)
-            _qgi_max = value
-            RaisePropertyChanged("QgiMax")
-        End Set
-    End Property
-    Private _thte As Double
-    Public Property Thte() As Double
-        Get
-            Return _thte
-        End Get
-        Set(value As Double)
-            _thte = value
-            RaisePropertyChanged("Thte")
-        End Set
-    End Property
+
 
 
 #End Region
@@ -1703,11 +971,13 @@ Public Class ConfigViewModel
 
         End If
     End Sub
-
     Private Sub OnSave()
 
         Try
-            If Valid() = False Then
+
+            Dim confirm_action = MessageBox.Show("¿Desea guardar los datos del siguiente modelo?", "Campos Inteligentes", MessageBoxButton.YesNo)
+
+            If Valid() = False AndAlso confirm_action = MessageBoxResult.No Then
                 Exit Sub
             End If
             'Revisamos nuevamente que el modelo no haya cambiado a último momento
@@ -1730,7 +1000,11 @@ Public Class ConfigViewModel
                 End If
             End If
 
-            ModModel.Equipment = EnabledEquip
+            ''If ArchivoPvt Is Nothing Then
+            ''    ModModel.ArchivoProsper = Nothing
+            ''End If
+
+            'ModModel.Equipment = EnabledEquip
             ModModel.DelMecas = DelMecanico
             ModModel.DelTrays = DelTrayectoria
             ModModel.DelTemps = DelTemperatura
@@ -1746,8 +1020,11 @@ Public Class ConfigViewModel
             ModGeneral.LIFTMETHOD = Me.LiftMethod
             ModModel.ModGeneral = ModGeneral
             ModModel.NewArchivoPvt = NewArchivoPvt
-            ModModel.ArchivoPvt = ArchivoPvt
-            ' ModModel.Formacion = Formacion
+            ModModel.ArchivoProsper = ModArchivo
+            ModModel.Equipment = EnabledEquip
+            ModModel.ModPvt = ModPvt
+            'ModModel.ArchivoPvt = ArchivoPvt
+            'ModModel.Formacion = Formacion
 
 
 
@@ -1767,21 +1044,30 @@ Public Class ConfigViewModel
 
                 ModModel.Mecanicos = New List(Of MOD_POZO_TUBERIA)
 
-                For i = 0 To ModMecanicos.Count - 1
-                    ModModel.Mecanicos.Add(ModMecanicos(i).ModPozoTuberia)
-                Next
+                If ModMecanicos IsNot Nothing Then
+                    For i = 0 To ModMecanicos.Count - 1
+                        ModModel.Mecanicos.Add(ModMecanicos(i).ModPozoTuberia)
+                    Next
+                    ModModel.SaveMecanico()
 
+                    'If ModModel.SaveMecanico() > 0 Then
+                    '    MaxMd = db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).Max(Function(m) m.MD)
 
-                If ModModel.SaveMecanico() > 0 Then
-                    MaxMd = db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).Max(Function(m) m.MD)
+                    '    If MaxMd > 0 Then
+                    '        Dim puntos = ModModel.SaveTrayectorias(MaxMd)
+                    '        ModModel.SaveTemperatura(puntos)
 
-                    If MaxMd > 0 Then
-                        Dim puntos = ModModel.SaveTrayectorias(MaxMd)
-                        ModModel.SaveTemperatura(puntos)
+                    '    End If
 
-                    End If
-
+                    'End If
                 End If
+                If ModTrayectorias.Count > 0 Then
+                    ModModel.SaveTrayectorias(ModTrayectorias.ToList())
+                End If
+                If ModTemperaturas.Count > 0 Then
+                    ModModel.SaveTemperatura(ModTemperaturas.ToList())
+                End If
+
             End If
             'Termina componentes
 
@@ -1801,17 +1087,10 @@ Public Class ConfigViewModel
     Public Sub LoadDeclinacion(ByVal Fecha As DateTime)
         'Consultamos la informacion de presion
         Try
-            Dim SCDeclinacion As New SVDeclinacion.Service1Client()
+
             Dim EndPointDeclina As EndpointAddress = New EndpointAddress(Settings.GetBy("point_declina"))
 
-            SCDeclinacion.Endpoint.Address = EndPointDeclina
 
-            'Dim RPresion = SCDeclinacion.GethastPreTemModelo(Fecha, ModModel.IdAgujero, MV)
-
-
-            'ModGeneral.THTE = RPresion("TemCabeza_Modelo")
-            'ModGeneral.TRES = RPresion("temNMD_modelo")
-            'ModGeneral.PRES = RPresion("presionNMD_modelo")
 
 
             Dim factory = New ChannelFactory(Of Interfaces.IDeclinacion)(New BasicHttpBinding(), EndPointDeclina)
@@ -1822,7 +1101,6 @@ Public Class ConfigViewModel
             ModGeneral.THTE = RPresion("TemCabeza_Modelo")
             ModGeneral.TRES = RPresion("temNMD_modelo")
             ModGeneral.PRES = RPresion("presionNMD_modelo")
-
         Catch ex As Exception
             Throw New Exception(ex.Message)
         End Try
@@ -1836,7 +1114,7 @@ Public Class ConfigViewModel
             Exit Sub
         End If
 
-        Dim result = MessageBox.Show("¿Desea cargar los datos del aforo con fecha " + aforo.FECHA + " a la configuración?", "Confirmar datos", MessageBoxButton.YesNoCancel)
+        Dim result = MessageBox.Show("¿Desea cargar los datos del aforo con fecha " + aforo.FECHA + " a la configuración?", "Confirmar datos", MessageBoxButton.YesNo)
 
         Try
             If result = MessageBoxResult.Yes Then
@@ -1849,9 +1127,10 @@ Public Class ConfigViewModel
                 ModGeneral.THPD = aforo.PTP1 'Thpd = aforo.PTP1
                 ModBNC.TRPRES = aforo.PTR1 'Trpres = aforo.PTR1
 
-                ModGeneral.THTD = IIf(aforo.TEMP > 0, aforo.TEMP, ModGeneral.THTD) 'Thtd = aforo.TEMP
+                ModGeneral.THTD = IIf(aforo.TEMP.GetValueOrDefault() > 0, aforo.TEMP, ModGeneral.THTD) 'Thtd = aforo.TEMP
 
                 LoadDeclinacion(aforo.FECHA)
+                ModGeneral.IDAFORO = aforo.IDAFORO
                 ModGeneral = ModGeneral
 
 
@@ -1863,8 +1142,6 @@ Public Class ConfigViewModel
 
 
     End Sub
-
-
     Private Function Valid() As Boolean
 
         If ModBNC.QGIMIN > 0 AndAlso ModBNC.QGIMIN > ModBNC.QGIMAX Then
@@ -1872,26 +1149,37 @@ Public Class ConfigViewModel
             Return False
         End If
 
-        If Formacion Is Nothing Then
-            MsgBox("PVT: Selecciona el registro de PVT para continuar y guardar los datos", MsgBoxStyle.Critical, "Error")
-            Return False
-        End If
+
 
         Return True
     End Function
     Private Sub OnLoadMecanico()
 
-        Dim result = MessageBox.Show("Los datos del estado mecánico para este modelo se van a eliminar y reiniciar con otros valores nuevos.¿Desea continuar con esta acción? ", "Campos inteligentes", MessageBoxButton.YesNo)
+        Dim result = MessageBox.Show("Los datos del estado mecánico para este modelo se van a eliminar y reiniciar con nuevos valores.¿Desea continuar con esta acción? ", "Campos inteligentes", MessageBoxButton.YesNo)
 
         If result = MessageBoxResult.Yes Then
             LoadMecanico()
         End If
 
     End Sub
+    Private Sub OnLoadTrayectoria()
+
+        Dim result = MessageBox.Show("Los datos de trayectoria para este modelo se van a eliminar y reiniciar con nuevos valores.¿Desea continuar con esta acción? ", "Campos inteligentes", MessageBoxButton.YesNo)
+
+        If result = MessageBoxResult.Yes Then
+            ModTrayectorias.Clear()
+            LoadTrayectoria()
+        End If
+    End Sub
+    ''' <summary>
+    ''' Recarga el estado mecanico por defecto y asigna los otros valores
+    ''' </summary>
+    ''' <param name="ModTuberias"></param>
     Private Sub LoadMecanico(ByVal ModTuberias As List(Of MOD_POZO_TUBERIA))
         Dim MecanicoModel As New MecanicoModel(ModTuberias)
         ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)(MecanicoModel.GetList().OrderBy(Function(o) o.Orden))
         MaxTp = MecanicoModel.GetMaxTp()
+        MaxMd = ModMecanicos.Max(Function(m) m.ModPozoTuberia.MD)
 
 
         If ModBEC.PROF_BEC = 0 And MaxTp > 0 Then
@@ -1924,6 +1212,169 @@ Public Class ConfigViewModel
         End Try
 
     End Sub
+
+    Private Sub LoadTrayectoria()
+        Dim result(17, 4) As Double
+
+        Dim mds(Trayectorias.Count - 1), mvs(Trayectorias.Count - 1), sevs(Trayectorias.Count - 1), dezps(Trayectorias.Count - 1), desvs(Trayectorias.Count - 1) As Double
+        Dim tmp_trayectorias As New List(Of VW_TRAYECTORIA)
+
+
+
+
+
+
+
+        If Trayectorias.Count > 0 And MaxMd > 0 Then
+            'Indice 0 obligatorio inicialiar PMD a 0
+            result(0, 0) = Trayectorias(0).PROFUNDIDADMD 'dt.Rows(0).Item(0)
+            result(0, 1) = Trayectorias(0).PROFMV 'dt.Rows(0).Item(1)
+            result(0, 2) = Trayectorias(0).SEVERIDAD
+            result(0, 3) = Trayectorias(0).DESPLAZAMIENTO
+            result(0, 4) = Trayectorias(0).DESVIACION
+            Dim finMD As Double = MaxMd
+
+
+
+            For i = 0 To Trayectorias.Count - 1
+                mds(i) = Trayectorias(i).PROFUNDIDADMD
+                mvs(i) = Trayectorias(i).PROFMV
+                sevs(i) = Trayectorias(i).SEVERIDAD
+                dezps(i) = Trayectorias(i).DESPLAZAMIENTO
+                desvs(i) = Trayectorias(i).DESVIACION
+                If Trayectorias(i).PROFUNDIDADMD <= MaxMd Then
+                    tmp_trayectorias.Add(Trayectorias(i))
+                End If
+
+            Next i
+            'Interpolaciones
+            Dim finMV As Double = Analisis.InterpolarProfundidadesVertical(mds, mvs, MaxMd)
+            Dim finSV As Double = Analisis.InterpolarProfundidadesVertical(mvs, sevs, MaxMd)
+            Dim finDP As Double = Analisis.InterpolarProfundidadesVertical(mvs, dezps, MaxMd)
+            Dim finDV As Double = Analisis.InterpolarProfundidadesVertical(mvs, desvs, MaxMd)
+
+            tmp_trayectorias = tmp_trayectorias.OrderBy(Function(o) o.SEVERIDAD).ToList()
+
+
+            Dim indice As Integer = 1 '2
+            Dim j As Integer = tmp_trayectorias.Count - 1
+            Do While (indice < 17)
+                result(indice, 0) = tmp_trayectorias(j).PROFUNDIDADMD 'View.Item(i).Item(0)
+                result(indice, 1) = tmp_trayectorias(j).PROFMV 'View.Item(i).Item(1)
+                result(indice, 2) = tmp_trayectorias(j).SEVERIDAD
+                result(indice, 3) = tmp_trayectorias(j).DESPLAZAMIENTO
+                result(indice, 4) = tmp_trayectorias(j).DESVIACION
+
+                indice += 1
+                j -= 1
+            Loop
+
+
+            ReDim Preserve result(indice, 4)
+            result(indice, 0) = finMD
+            result(indice, 1) = finMV 'El Único que se interpola
+            result(indice, 2) = finSV
+            result(indice, 3) = finDP
+            result(indice, 4) = finDV
+            Analisis.ordenarMatriz(result, 0)
+
+
+            'Guardado de la trayectoria a la Base de Datos
+            '====================================================
+            For i = 0 To result.GetUpperBound(0)
+                Dim insert_tray As New MOD_POZO_TRAYEC() With {
+                        .PROFUNDIDADMD = result(i, 0),
+                        .PROFUNDIDADMV = result(i, 1),
+                        .SEVERIDAD = result(i, 2),
+                        .DESP = result(i, 3),
+                        .DESV = result(i, 4)
+                }
+
+                ModTrayectorias.Add(insert_tray)
+
+
+
+            Next i
+
+
+
+            If ModTemperaturas.Count = 0 Then
+                LoadTemperatura(result)
+
+            End If
+
+
+        End If
+    End Sub
+    Private Sub LoadTemperatura(ByVal puntos(,) As Double)
+        Dim tp = ModModel.GetFormacion(FechaPrueba)
+        If tp.Count > 0 Then
+            'Revisar por excepcion
+
+
+            If tp("TEMP") > 0 Then
+                Dim b = IIf(ModGeneral.THTE Is Nothing Or ModGeneral.THTE = 0, 25, ModGeneral.THTE)
+
+
+                Dim a = (tp("TEMP") - b) / tp("PLANOREF") - puntos(0, 1) '((tb.Rows(0).Item(1) - b) / (tb.Rows(0).Item(2) - puntos(0, 1)))
+
+                Dim temperaturas = ModModel.GetTemperatura(puntos, a, b)
+
+                For i = 0 To temperaturas.GetUpperBound(0)
+                    Dim mod_temperatura As New MOD_POZO_TEMP() With {
+                        .PROFUNDIDADMD = temperaturas(i, 0),
+                        .TEMPERATURA = temperaturas(i, 1)
+                    }
+                    ModTemperaturas.Add(mod_temperatura)
+
+                Next
+
+
+
+
+            Else
+                Throw New Exception("Temperatura de la formación debe ser mayor a cero.")
+            End If
+
+        Else
+
+            Throw New Exception("No hay datos en la fecha:" + FechaPrueba)
+        End If
+    End Sub
+    Private Sub GetMessages()
+        Errors = New ObjectModel.ObservableCollection(Of String)
+        If Formaciones.Count = 0 And ModArchivo Is Nothing And NewArchivoPvt = Nothing Then
+
+        End If
+
+    End Sub
+    Public Sub GetErrors()
+        'New ObjectModel.ObservableCollection(Of String)
+
+
+        If Formacion Is Nothing And ModArchivo Is Nothing And (NewArchivoPvt = Nothing Or NewArchivoPvt = "") Then
+            Errors.Add("No hay datos para generar el PVT, debes seleccionar alguna opcion en la pestaña PVT.")
+        End If
+
+        'If Aforos.Count = 0 Then
+        '    Errors.Add("No hay registros de Aforos. Se necesita al menos uno para continuar con el proceso.")
+        'End If
+        If ModBNC.QGIMIN > 0 AndAlso ModBNC.QGIMIN > ModBNC.QGIMAX Then
+            ' MsgBox("BNC: Qgi máximo debe ser mayor que Qgi mínimo", MsgBoxStyle.Critical, "Error")
+            Errors.Add("BNC: Qgi máximo debe ser mayor que Qgi mínimo")
+        End If
+
+        If ModGeneral.IDAFORO Is Nothing Then
+            ' MsgBox("BNC: Qgi máximo debe ser mayor que Qgi mínimo", MsgBoxStyle.Critical, "Error")
+            'Errors.Add("Es necesario seleccionar una fecha del Aforo para continuar con el proceso")
+        End If
+
+
+        'Errors = Errors
+
+    End Sub
+
+
 
 
 End Class

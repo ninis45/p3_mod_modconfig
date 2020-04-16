@@ -26,7 +26,6 @@ Partial Class grfVlp
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(grfVlp))
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
         Me.TChart1 = New Steema.TeeChart.TChart()
-        Me.Line1 = New Steema.TeeChart.Styles.Line()
         Me.Line2 = New Steema.TeeChart.Styles.Line()
         Me.Line3 = New Steema.TeeChart.Styles.Line()
         Me.Line4 = New Steema.TeeChart.Styles.Line()
@@ -181,8 +180,8 @@ Partial Class grfVlp
         '
         Me.TChart1.Header.Font.Brush.Color = System.Drawing.Color.Black
         Me.TChart1.Header.Font.Name = "Century Gothic"
-        Me.TChart1.Header.Font.Size = 12
-        Me.TChart1.Header.Font.SizeFloat = 12.0!
+        Me.TChart1.Header.Font.Size = 11
+        Me.TChart1.Header.Font.SizeFloat = 11.0!
         '
         '
         '
@@ -225,7 +224,6 @@ Partial Class grfVlp
         '
         '
         Me.TChart1.Panel.Brush.Gradient.Visible = False
-        Me.TChart1.Series.Add(Me.Line1)
         Me.TChart1.Series.Add(Me.Line2)
         Me.TChart1.Series.Add(Me.Line3)
         Me.TChart1.Series.Add(Me.Line4)
@@ -251,78 +249,6 @@ Partial Class grfVlp
         '
         Me.TChart1.Walls.Back.Brush.Visible = False
         Me.TChart1.Walls.Back.Visible = False
-        '
-        'Line1
-        '
-        '
-        '
-        '
-        Me.Line1.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Line1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Line1.ColorEach = False
-        '
-        '
-        '
-        Me.Line1.LinePen.Color = System.Drawing.Color.FromArgb(CType(CType(71, Byte), Integer), CType(CType(92, Byte), Integer), CType(CType(128, Byte), Integer))
-        '
-        '
-        '
-        '
-        '
-        '
-        Me.Line1.Marks.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        '
-        '
-        '
-        Me.Line1.Marks.Brush.Gradient.EndColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(255, Byte), Integer))
-        Me.Line1.Marks.Brush.Gradient.MiddleColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.Line1.Marks.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Line1.Marks.Brush.Gradient.UseMiddle = True
-        '
-        '
-        '
-        '
-        '
-        '
-        Me.Line1.Marks.Font.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer), CType(CType(17, Byte), Integer))
-        '
-        '
-        '
-        Me.Line1.Marks.Shadow.Visible = False
-        '
-        '
-        '
-        Me.Line1.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line1.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos"), System.Drawing.PointF)
-        Me.Line1.Marks.TailParams.Margin = 0!
-        Me.Line1.Marks.TailParams.PointerHeight = 5.0R
-        Me.Line1.Marks.TailParams.PointerWidth = 8.0R
-        Me.Line1.Marks.TailStyle = Steema.TeeChart.Styles.MarksTail.WithPointer
-        Me.Line1.OriginalCursor = Nothing
-        '
-        '
-        '
-        Me.Line1.Pointer.HorizSize = 3
-        '
-        '
-        '
-        Me.Line1.Pointer.Pen.Color = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Line1.Pointer.SizeDouble = 0R
-        Me.Line1.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line1.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Line1.Pointer.VertSize = 3
-        Me.Line1.Pointer.Visible = True
-        Me.Line1.Title = "line1"
-        Me.Line1.UseExtendedNumRange = False
-        '
-        '
-        '
-        Me.Line1.XValues.DataMember = "X"
-        Me.Line1.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
-        '
-        '
-        '
-        Me.Line1.YValues.DataMember = "Y"
         '
         'Line2
         '
@@ -365,7 +291,7 @@ Partial Class grfVlp
         '
         '
         Me.Line2.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line2.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos1"), System.Drawing.PointF)
+        Me.Line2.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos"), System.Drawing.PointF)
         Me.Line2.Marks.TailParams.Margin = 0!
         Me.Line2.Marks.TailParams.PointerHeight = 5.0R
         Me.Line2.Marks.TailParams.PointerWidth = 8.0R
@@ -381,9 +307,7 @@ Partial Class grfVlp
         Me.Line2.Pointer.HorizSize = 3
         Me.Line2.Pointer.SizeDouble = 0R
         Me.Line2.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
-        Me.Line2.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
         Me.Line2.Pointer.VertSize = 3
-        Me.Line2.Pointer.Visible = True
         Me.Line2.Title = "line2"
         Me.Line2.UseExtendedNumRange = False
         '
@@ -441,7 +365,7 @@ Partial Class grfVlp
         '
         '
         Me.Line3.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line3.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos2"), System.Drawing.PointF)
+        Me.Line3.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos1"), System.Drawing.PointF)
         Me.Line3.Marks.TailParams.Margin = 0!
         Me.Line3.Marks.TailParams.PointerHeight = 5.0R
         Me.Line3.Marks.TailParams.PointerWidth = 8.0R
@@ -509,7 +433,7 @@ Partial Class grfVlp
         '
         '
         Me.Line4.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line4.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos3"), System.Drawing.PointF)
+        Me.Line4.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos2"), System.Drawing.PointF)
         Me.Line4.Marks.TailParams.Margin = 0!
         Me.Line4.Marks.TailParams.PointerHeight = 5.0R
         Me.Line4.Marks.TailParams.PointerWidth = 8.0R
@@ -577,7 +501,7 @@ Partial Class grfVlp
         '
         '
         Me.Line5.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line5.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos4"), System.Drawing.PointF)
+        Me.Line5.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos3"), System.Drawing.PointF)
         Me.Line5.Marks.TailParams.Margin = 0!
         Me.Line5.Marks.TailParams.PointerHeight = 5.0R
         Me.Line5.Marks.TailParams.PointerWidth = 8.0R
@@ -645,7 +569,7 @@ Partial Class grfVlp
         '
         '
         Me.Line6.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line6.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos5"), System.Drawing.PointF)
+        Me.Line6.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos4"), System.Drawing.PointF)
         Me.Line6.Marks.TailParams.Margin = 0!
         Me.Line6.Marks.TailParams.PointerHeight = 5.0R
         Me.Line6.Marks.TailParams.PointerWidth = 8.0R
@@ -713,7 +637,7 @@ Partial Class grfVlp
         '
         '
         Me.Line7.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line7.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos6"), System.Drawing.PointF)
+        Me.Line7.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos5"), System.Drawing.PointF)
         Me.Line7.Marks.TailParams.Margin = 0!
         Me.Line7.Marks.TailParams.PointerHeight = 5.0R
         Me.Line7.Marks.TailParams.PointerWidth = 8.0R
@@ -781,7 +705,7 @@ Partial Class grfVlp
         '
         '
         Me.Line8.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line8.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos7"), System.Drawing.PointF)
+        Me.Line8.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos6"), System.Drawing.PointF)
         Me.Line8.Marks.TailParams.Margin = 0!
         Me.Line8.Marks.TailParams.PointerHeight = 5.0R
         Me.Line8.Marks.TailParams.PointerWidth = 8.0R
@@ -849,7 +773,7 @@ Partial Class grfVlp
         '
         '
         Me.Line9.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line9.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos8"), System.Drawing.PointF)
+        Me.Line9.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos7"), System.Drawing.PointF)
         Me.Line9.Marks.TailParams.Margin = 0!
         Me.Line9.Marks.TailParams.PointerHeight = 5.0R
         Me.Line9.Marks.TailParams.PointerWidth = 8.0R
@@ -917,7 +841,7 @@ Partial Class grfVlp
         '
         '
         Me.Line10.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line10.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos9"), System.Drawing.PointF)
+        Me.Line10.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos8"), System.Drawing.PointF)
         Me.Line10.Marks.TailParams.Margin = 0!
         Me.Line10.Marks.TailParams.PointerHeight = 5.0R
         Me.Line10.Marks.TailParams.PointerWidth = 8.0R
@@ -985,7 +909,7 @@ Partial Class grfVlp
         '
         '
         Me.Line11.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line11.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos10"), System.Drawing.PointF)
+        Me.Line11.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos9"), System.Drawing.PointF)
         Me.Line11.Marks.TailParams.Margin = 0!
         Me.Line11.Marks.TailParams.PointerHeight = 5.0R
         Me.Line11.Marks.TailParams.PointerWidth = 8.0R
@@ -1053,7 +977,7 @@ Partial Class grfVlp
         '
         '
         Me.Line12.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Line12.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos11"), System.Drawing.PointF)
+        Me.Line12.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos10"), System.Drawing.PointF)
         Me.Line12.Marks.TailParams.Margin = 0!
         Me.Line12.Marks.TailParams.PointerHeight = 5.0R
         Me.Line12.Marks.TailParams.PointerWidth = 8.0R
@@ -1118,7 +1042,7 @@ Partial Class grfVlp
         '
         '
         Me.Points1.Marks.TailParams.Align = Steema.TeeChart.Styles.TailAlignment.[Auto]
-        Me.Points1.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos12"), System.Drawing.PointF)
+        Me.Points1.Marks.TailParams.CustomPointPos = CType(resources.GetObject("resource.CustomPointPos11"), System.Drawing.PointF)
         Me.Points1.Marks.TailParams.Margin = 0!
         Me.Points1.Marks.TailParams.PointerHeight = 5.0R
         Me.Points1.Marks.TailParams.PointerWidth = 8.0R
@@ -1147,7 +1071,12 @@ Partial Class grfVlp
         '
         '
         '
+        Me.Points1.XValues.DataMember = "X"
         Me.Points1.XValues.Order = Steema.TeeChart.Styles.ValueListOrder.Ascending
+        '
+        '
+        '
+        Me.Points1.YValues.DataMember = "Y"
         '
         'ChartController1
         '
@@ -1176,7 +1105,6 @@ Partial Class grfVlp
     Friend WithEvents TableLayoutPanel1 As Forms.TableLayoutPanel
     Friend WithEvents TChart1 As Steema.TeeChart.TChart
     Friend WithEvents ChartController1 As Steema.TeeChart.ChartController
-    Friend WithEvents Line1 As Steema.TeeChart.Styles.Line
     Friend WithEvents Line2 As Steema.TeeChart.Styles.Line
     Friend WithEvents Line3 As Steema.TeeChart.Styles.Line
     Friend WithEvents Line4 As Steema.TeeChart.Styles.Line

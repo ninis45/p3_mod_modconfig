@@ -117,6 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BC_DACRP" xml:space="preserve">
+    <value>Delta T a través de la bomba</value>
+  </data>
+  <data name="BC_DRATE" xml:space="preserve">
+    <value>Gasto en el fondo</value>
+  </data>
+  <data name="BC_GASFREE" xml:space="preserve">
+    <value>Gas libre en la bomba</value>
+  </data>
+  <data name="BC_PDPRES" xml:space="preserve">
+    <value>Presión de descarga de la bomba</value>
+  </data>
+  <data name="BC_PHEAD" xml:space="preserve">
+    <value>Altura de bombeo generada</value>
+  </data>
+  <data name="BC_PINPRES" xml:space="preserve">
+    <value>Presión de admisión de la bomba</value>
+  </data>
+  <data name="BC_PPR" xml:space="preserve">
+    <value>Requerimiento de potencia de la bomba</value>
+  </data>
+  <data name="BC_PRATE" xml:space="preserve">
+    <value>Gasto promedio en bomba</value>
+  </data>
+  <data name="BC_SVOLT" xml:space="preserve">
+    <value>Voltaje en superficie</value>
+  </data>
   <data name="CO2" xml:space="preserve">
     <value>%CO2 (mol)</value>
   </data>
@@ -126,6 +153,9 @@
   <data name="COMPLETION" xml:space="preserve">
     <value>Terminación</value>
   </data>
+  <data name="CTCA" xml:space="preserve">
+    <value>Coeficiente térmico ajustado</value>
+  </data>
   <data name="DATGENDATE" xml:space="preserve">
     <value>Fecha</value>
   </data>
@@ -133,16 +163,28 @@
     <value>Diam válvula de BN (64 avos pg)</value>
   </data>
   <data name="DIETZ" xml:space="preserve">
-    <value>Factor de forma (adim)</value>
+    <value>Factor de formación (adim)</value>
+  </data>
+  <data name="DPVAL" xml:space="preserve">
+    <value>Diferencial de presión a través de la válvula</value>
+  </data>
+  <data name="DPYAC" xml:space="preserve">
+    <value>Reducción</value>
   </data>
   <data name="DRAINAGE" xml:space="preserve">
     <value>Área de drene (m2)</value>
+  </data>
+  <data name="EFISEPGAS" xml:space="preserve">
+    <value>Efic. de Separador de Gas (%)</value>
   </data>
   <data name="EMULSION" xml:space="preserve">
     <value>Emulsión</value>
   </data>
   <data name="ENTRY" xml:space="preserve">
     <value>Usar RGIL o Qgi</value>
+  </data>
+  <data name="ETAPAS" xml:space="preserve">
+    <value>Etapas</value>
   </data>
   <data name="FLOWTYPE" xml:space="preserve">
     <value>Tipo de flujo</value>
@@ -154,13 +196,19 @@
     <value>Coni. de Gas</value>
   </data>
   <data name="GLRATE" xml:space="preserve">
-    <value>QGI(MMPie3/Dia)</value>
+    <value>Qgi (MMpcd)</value>
   </data>
   <data name="GLRINY" xml:space="preserve">
     <value>RGIL(m3/m3)</value>
   </data>
+  <data name="GOR" xml:space="preserve">
+    <value>Relación Gas Aceite</value>
+  </data>
+  <data name="GORFREE" xml:space="preserve">
+    <value>Relación Gas Aceite Libre</value>
+  </data>
   <data name="GQIMAX" xml:space="preserve">
-    <value>Qgi maximo MMpie3/día</value>
+    <value>Qgi maximo (MMpcd)</value>
   </data>
   <data name="GRAVELPACK" xml:space="preserve">
     <value>Ctrl. de Arenas</value>
@@ -180,6 +228,9 @@
   <data name="INFLOWTYPE" xml:space="preserve">
     <value>Tipo de Afluencia</value>
   </data>
+  <data name="IP" xml:space="preserve">
+    <value>IP calculada equivalente</value>
+  </data>
   <data name="IPRMETHOD" xml:space="preserve">
     <value>Correlación de flujo en el yacimiento</value>
   </data>
@@ -191,6 +242,9 @@
   </data>
   <data name="LIFTTYPE" xml:space="preserve">
     <value>Tipo SAP</value>
+  </data>
+  <data name="LONGCABLE" xml:space="preserve">
+    <value>Longitud de Cable (m)</value>
   </data>
   <data name="METHOD" xml:space="preserve">
     <value>Método de BN</value>
@@ -204,11 +258,29 @@
   <data name="N2" xml:space="preserve">
     <value>%N2 (mol)</value>
   </data>
+  <data name="ODMAX" xml:space="preserve">
+    <value>Diámetro de la Bomba</value>
+  </data>
   <data name="OUTPUTRES" xml:space="preserve">
     <value>Presión de salida</value>
   </data>
+  <data name="PBE" xml:space="preserve">
+    <value>Presión en fondo estático</value>
+  </data>
+  <data name="PBF" xml:space="preserve">
+    <value>Presión en fondo fluyendo</value>
+  </data>
+  <data name="PCA" xml:space="preserve">
+    <value>Presión de la TR en la válvula</value>
+  </data>
   <data name="PI" xml:space="preserve">
     <value>Índice de productividad (bl/día/kg/cm2)</value>
+  </data>
+  <data name="POTENCIA" xml:space="preserve">
+    <value>Potencia del Motor</value>
+  </data>
+  <data name="PREDES" xml:space="preserve">
+    <value>Presión de Des. (Kg/cm2)</value>
   </data>
   <data name="PREDICT" xml:space="preserve">
     <value>Predicción</value>
@@ -216,29 +288,38 @@
   <data name="PRES" xml:space="preserve">
     <value>Presión del yacimiento (kg/cm2)</value>
   </data>
+  <data name="PROF" xml:space="preserve">
+    <value>Profundidad de la Bomba</value>
+  </data>
   <data name="PTEST" xml:space="preserve">
     <value>Presión de fondo fluyendo (kg/cm2)</value>
+  </data>
+  <data name="PTRTEO" xml:space="preserve">
+    <value>Presión calculada en la cabeza de la TR</value>
+  </data>
+  <data name="PVAL" xml:space="preserve">
+    <value>Presión del aparejo en la válvula</value>
   </data>
   <data name="PVTMODEL" xml:space="preserve">
     <value>Modelo PVT</value>
   </data>
   <data name="QGIMIN" xml:space="preserve">
-    <value>Qgi mínimo MMpie3/día</value>
+    <value>Qgi mínimo (MMpcd)</value>
   </data>
   <data name="QTEST" xml:space="preserve">
-    <value>Gasto de liquido del aforo (bl/día)</value>
+    <value>Gasto de líquido del aforo (bl/día)</value>
   </data>
   <data name="RANGESYSTEM" xml:space="preserve">
     <value>Rango</value>
   </data>
   <data name="RDRAINAGE" xml:space="preserve">
-    <value>Radio del Drene(m)</value>
+    <value>Radio de Drene(m)</value>
   </data>
   <data name="RESPERM" xml:space="preserve">
     <value>Permeabilidad del yacimiento (md)</value>
   </data>
   <data name="RGATOTALAFORO" xml:space="preserve">
-    <value>RGA</value>
+    <value>RGA (𝑚3/ 𝑚3).</value>
   </data>
   <data name="SEPARATOR" xml:space="preserve">
     <value>Separador</value>
@@ -249,29 +330,38 @@
   <data name="TEMPMODEL" xml:space="preserve">
     <value>Modelo Temp.</value>
   </data>
+  <data name="TFCAL" xml:space="preserve">
+    <value>Gasto crítico calculado</value>
+  </data>
+  <data name="TFPER" xml:space="preserve">
+    <value>Porcentaje del gasto crítico calculado</value>
+  </data>
   <data name="THICKNESS" xml:space="preserve">
     <value>Espesor del yacimiento (m)</value>
   </data>
   <data name="THPD" xml:space="preserve">
-    <value>PWDIN(km/cm2)</value>
+    <value>P Cab Dinámica (kg/cm2)</value>
   </data>
   <data name="THTD" xml:space="preserve">
-    <value>TWH Dinámico</value>
+    <value>Temperatura Dinámica en la Cabeza del Pozo (°C)</value>
   </data>
   <data name="THTE" xml:space="preserve">
-    <value>TWH Est.(ºC)</value>
+    <value>T Cab Estática (ºC)</value>
   </data>
   <data name="TOTGOR" xml:space="preserve">
     <value>RGA Total(m3/m3)</value>
   </data>
   <data name="TRES" xml:space="preserve">
-    <value>Temperatura del yacimiento (oC)</value>
+    <value>Temperatura del yacimiento (°C)</value>
   </data>
   <data name="TRPRES" xml:space="preserve">
-    <value>Presión de Inyección del gas de BN (kg/cm2)</value>
+    <value>Presión Qgi (kg/cm2)</value>
+  </data>
+  <data name="TVAL" xml:space="preserve">
+    <value>Temperatura en la válvula</value>
   </data>
   <data name="VALVEDEPTH" xml:space="preserve">
-    <value>Prof. Valv. Inyec.</value>
+    <value>Prof. Valv. Inyec. (m)</value>
   </data>
   <data name="VISMOD" xml:space="preserve">
     <value>Modelo de viscosidad</value>
@@ -279,14 +369,17 @@
   <data name="VOLGASINY" xml:space="preserve">
     <value>Volumen de Gas Inyeccion</value>
   </data>
+  <data name="VOLTSUP" xml:space="preserve">
+    <value>Voltaje Superficie (V)</value>
+  </data>
   <data name="WATVIS" xml:space="preserve">
     <value>Viscosidad de agua</value>
   </data>
   <data name="WBR" xml:space="preserve">
-    <value>Radio Pozo(in)</value>
+    <value>Radio de Pozo (in)</value>
   </data>
   <data name="WC" xml:space="preserve">
-    <value>Agua(%)</value>
+    <value>Corte de agua(%)</value>
   </data>
   <data name="WELLTYPE" xml:space="preserve">
     <value>Tipo de pozo</value>

@@ -20,9 +20,9 @@ Public Class MecanicoModel
     ''' <param name="Tuberia">Lista de tuberias extraidas por discriminación del Estado Mecanico completo</param>
     Sub New(ByVal Tuberia As List(Of Tuberia))
 
-        If Tuberia.Count = 0 Then
-            Throw New Exception("No hay tuberías para el estado mecánico.")
-        End If
+        'If Tuberia.Count = 0 Then
+        '    Throw New Exception("No hay tuberías para el estado mecánico.")
+        'End If
 
         Me.ModPozoTuberias = New List(Of MOD_POZO_TUBERIA)
 
