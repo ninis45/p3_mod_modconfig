@@ -158,19 +158,19 @@ Public Class ConfigView
         ContextConfig.NewArchivoPvt = Nothing
     End Sub
     Private Sub SelectFile(sender As Object, e As RoutedEventArgs)
-        Dim Dialog As New RadOpenFileDialog()
+        Dim Dialog As New System.Windows.Forms.OpenFileDialog()
 
         Dialog.Filter = "All files (*.Out)|*.Out"
-        Dialog.ShowDialog()
-        If Dialog.DialogResult = True Then
+        'Dialog.ShowDialog()
+        If Dialog.ShowDialog() = Forms.DialogResult.OK Then
             ContextConfig.NewArchivoPvt = Dialog.FileName
 
             If File.Exists(ContextConfig.NewArchivoPvt) Then
                 ContextConfig.IsBusy = True
 
                 Try
-                    Dim factory = New ChannelFactory(Of Interfaces.IModelo)(New BasicHttpBinding() With {.SendTimeout = TimeSpan.Parse("0:15:00")}, EndPointModelo)
-                    Dim server As Interfaces.IModelo = factory.CreateChannel()
+                    ' Dim factory = New ChannelFactory(Of Interfaces.IModelo)(New BasicHttpBinding() With {.SendTimeout = TimeSpan.Parse("0:30:00"), .MaxBufferSize = 20000000, .MaxReceivedMessageSize = 20000000}, EndPointModelo)
+                    'Dim server As Interfaces.IModelo = factory.CreateChannel()
 
                     'Dim result = server.Monitor("OpenServer")
                     'Dim Errors As List(Of String)
@@ -181,7 +181,7 @@ Public Class ConfigView
                                                                                      Dim Errors = r.Result
                                                                                      If Errors.Count > 0 Then
                                                                                          Dim StrErrors As String = ""
-                                                                                         For i = 0 To Errors.Count
+                                                                                         For i = 0 To Errors.Count - 1
                                                                                              'ContextConfig.Errors.Add(Errors(i))
                                                                                              StrErrors += " - " + Errors(i) & Chr(13)
                                                                                          Next
@@ -204,7 +204,7 @@ Public Class ConfigView
                     'Dim result = server.Reading(File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
                 Catch ex As Exception
                     ContextConfig.IsBusy = False
-                    MessageBox.Show(ex.Message, "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Error)
+                    MessageBox.Show(ex.Message, "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
                 End Try
 
             End If
@@ -215,9 +215,10 @@ Public Class ConfigView
         Dim factory = New ChannelFactory(Of Interfaces.IModelo)(New BasicHttpBinding() With {.SendTimeout = TimeSpan.Parse("0:15:00")}, EndPointModelo)
         Dim server As Interfaces.IModelo = factory.CreateChannel()
         Try
+            ''Dim BytesSend = File.RewArchiadAllBytes(ContextConfig.NevoPvt)
             Return server.Reading(File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
         Catch ex As Exception
-            MessageBox.Show(ex.Message & Chr(13) & "El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Error)
+            MessageBox.Show(ex.Message & Chr(13) & "El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
             'MessageBox.Show("El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
             'Return New List(Of String) From {ex.Message}
         End Try

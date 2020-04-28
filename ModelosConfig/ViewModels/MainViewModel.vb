@@ -522,41 +522,42 @@ Public Class MainViewModel
 
 
         Dim vlp = db.VLP_IPR.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO And w.ENDRECORD Is Nothing).SingleOrDefault()
-        Dim vlp_detalles = db.VLP_IPR_DETALLE.Where(Function(w) w.IDVLPIPR = vlp.IDVLPIPR And w.ENDRECORD Is Nothing).OrderBy(Function(o) o.IPR_RTEL).ToList()
+        If vlp IsNot Nothing Then
+            Dim vlp_detalles = db.VLP_IPR_DETALLE.Where(Function(w) w.IDVLPIPR = vlp.IDVLPIPR And w.ENDRECORD Is Nothing).OrderBy(Function(o) o.IPR_RTEL).ToList()
 
 
-        Dim IPR_RTEL(vlp_detalles.Count - 1) As Double
-        Dim IPR_WPF(vlp_detalles.Count - 1) As Double
+            Dim IPR_RTEL(vlp_detalles.Count - 1) As Double
+            Dim IPR_WPF(vlp_detalles.Count - 1) As Double
 
-        Dim NdatAux As Integer
-        NdatAux = 19
-        Dim Xaux(vlp_detalles.Count - 1), Yaux(vlp_detalles.Count - 1) As Double
+            Dim NdatAux As Integer
+            NdatAux = 19
+            Dim Xaux(vlp_detalles.Count - 1), Yaux(vlp_detalles.Count - 1) As Double
 
-        For i = 0 To vlp_detalles.Count - 1
-            IPR_RTEL(i) = vlp_detalles(i).IPR_RTEL
-            IPR_WPF(i) = vlp_detalles(i).IPR_PWF
-
-
-            Xaux(i) = vlp_detalles(i).VLP_RTEL
-            Yaux(i) = vlp_detalles(i).VLP_PWF
-        Next i
-
-        'line1
-        grfProductividad.TChart1.Series(0).Title = vlp.TITULO2 'IPR
-        grfProductividad.TChart1.Series(0).Add(IPR_RTEL, IPR_WPF)
-
-        'line2
-        grfProductividad.TChart1.Series(1).Add(RTEOTest1, PTest1)
-        grfProductividad.TChart1.Series(1).Legend.Visible = False
-
-        'line3
-        grfProductividad.TChart1.Series(2).Add(Xaux, Yaux)
-        grfProductividad.TChart1.Series(2).Title = vlp.TITULO1
+            For i = 0 To vlp_detalles.Count - 1
+                IPR_RTEL(i) = vlp_detalles(i).IPR_RTEL
+                IPR_WPF(i) = vlp_detalles(i).IPR_PWF
 
 
+                Xaux(i) = vlp_detalles(i).VLP_RTEL
+                Yaux(i) = vlp_detalles(i).VLP_PWF
+            Next i
+
+            'line1
+            grfProductividad.TChart1.Series(0).Title = vlp.TITULO2 'IPR
+            grfProductividad.TChart1.Series(0).Add(IPR_RTEL, IPR_WPF)
+
+            'line2
+            grfProductividad.TChart1.Series(1).Add(RTEOTest1, PTest1)
+            grfProductividad.TChart1.Series(1).Legend.Visible = False
+
+            'line3
+            grfProductividad.TChart1.Series(2).Add(Xaux, Yaux)
+            grfProductividad.TChart1.Series(2).Title = vlp.TITULO1
 
 
 
+
+        End If
 
 
     End Sub
@@ -829,7 +830,10 @@ Public Class MainViewModel
                 Next i
 
                 grfGas.TChart1.Series(7).Legend.Visible = False
-                'grfGas.TChart1.Series(8).Add(model.Qpromedio.GetValueOrDefault(), model.General.GetValueOrDefault())REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
+
+                Dim bec = db.MOD_POZO_BEC.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO).SingleOrDefault()
+
+                grfGas.TChart1.Series(8).Add(bec.Qpromedio.GetValueOrDefault(), bec.General.GetValueOrDefault()) 'REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
 
         End Select
     End Sub

@@ -796,7 +796,7 @@ Partial Class grfGas
         '
         'Points1
         '
-        Me.Points1.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(144, Byte), Integer))
+        Me.Points1.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.Points1.ColorEach = False
         '
         '
@@ -848,16 +848,16 @@ Partial Class grfGas
         '
         '
         '
-        Me.Points1.Pointer.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(144, Byte), Integer))
+        Me.Points1.Pointer.Brush.Color = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer))
         '
         '
         '
         Me.Points1.Pointer.Brush.Gradient.StartColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(243, Byte), Integer), CType(CType(144, Byte), Integer))
-        Me.Points1.Pointer.HorizSize = 5
+        Me.Points1.Pointer.HorizSize = 3
         Me.Points1.Pointer.SizeDouble = 0R
         Me.Points1.Pointer.SizeUnits = Steema.TeeChart.Styles.PointerSizeUnits.Pixels
         Me.Points1.Pointer.Style = Steema.TeeChart.Styles.PointerStyles.Circle
-        Me.Points1.Pointer.VertSize = 5
+        Me.Points1.Pointer.VertSize = 3
         Me.Points1.Title = "Punto de operación"
         Me.Points1.UseExtendedNumRange = False
         '

@@ -35,6 +35,7 @@ Public Class ConfigViewModel
     Private MaxTp As Double
     Private MaxMd As Double
 
+
     Sub New(ByVal IdAgujero As String, ByVal IdModPozo As String, ByVal WfhTrayectoria As WindowsFormsHost, ByVal WfhTemperatura As WindowsFormsHost, ByVal WfhAforo As WindowsFormsHost, ByVal WfhPvt As WindowsFormsHost, ByVal WfhMec As WindowsFormsHost)
         ModModel = New ModModel(IdAgujero, IdModPozo)
         WfhTrayectoria.Child = usrTrayectoria
@@ -97,6 +98,7 @@ Public Class ConfigViewModel
         WfhAforo.Child = usrAforo
         WfhPvt.Child = usrPvt
         Me.IdAgujero = IdAgujero
+        Me.FechaPrueba = FechaPrueba
         Titulo = "Nueva configuración"
         Warnings = New ObjectModel.ObservableCollection(Of String)
         Errors = New ObjectModel.ObservableCollection(Of String)
@@ -171,11 +173,6 @@ Public Class ConfigViewModel
         CommandResetMec = New DelegateCommand(AddressOf OnLoadMecanico)
         CommandResetTray = New DelegateCommand(AddressOf OnLoadTrayectoria)
 
-        'ESTADO MECANICO OJO HAY QUE REVISAR
-        '***********************************************************************************************************************
-        'Dim ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
-        'Dim Mecanico As New Mecanico(db.VW_TR.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(o) o.PROFUNDIDADINICIO).ToList(), db.VW_TP.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderByDescending(Function(w) w.PROFUNDIDAD).ToList(), True)
-
 
 
 
@@ -195,7 +192,7 @@ Public Class ConfigViewModel
 
 
 
-
+        Titulo += " | " + Settings.GetBy("prosper_version")
 
 
 
@@ -311,7 +308,7 @@ Public Class ConfigViewModel
         ModBEC = New MOD_POZO_BEC()
 
         ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
-
+        ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
 
     End Sub
 
@@ -807,6 +804,8 @@ Public Class ConfigViewModel
         End Get
         Set(value As Boolean)
             _enabled_equip = value
+
+
             RaisePropertyChanged("EnabledEquip")
         End Set
     End Property
@@ -1074,7 +1073,7 @@ Public Class ConfigViewModel
             IdModPozo = ModModel.IdModPozo
 
 
-            MsgBox("Configuración guardada")
+            MsgBox("Configuración guardada", MsgBoxStyle.Information)
             'FormView.Close()'Depreciado temporalmente hasta verificar que se realize en el Main 
             IsSaved = True
         Catch ex As Exception
@@ -1307,39 +1306,44 @@ Public Class ConfigViewModel
         End If
     End Sub
     Private Sub LoadTemperatura(ByVal puntos(,) As Double)
-        Dim tp = ModModel.GetFormacion(FechaPrueba)
-        If tp.Count > 0 Then
-            'Revisar por excepcion
+        Try
+            Dim tp = ModModel.GetFormacion()
+            If tp.Count > 0 Then
+                'Revisar por excepcion
 
 
-            If tp("TEMP") > 0 Then
-                Dim b = IIf(ModGeneral.THTE Is Nothing Or ModGeneral.THTE = 0, 25, ModGeneral.THTE)
+                If tp("TEMP") > 0 Then
+                    Dim b = IIf(ModGeneral.THTE Is Nothing Or ModGeneral.THTE = 0, 25, ModGeneral.THTE)
 
 
-                Dim a = (tp("TEMP") - b) / tp("PLANOREF") - puntos(0, 1) '((tb.Rows(0).Item(1) - b) / (tb.Rows(0).Item(2) - puntos(0, 1)))
+                    Dim a = (tp("TEMP") - b) / tp("PLANOREF") - puntos(0, 1) '((tb.Rows(0).Item(1) - b) / (tb.Rows(0).Item(2) - puntos(0, 1)))
 
-                Dim temperaturas = ModModel.GetTemperatura(puntos, a, b)
+                    Dim temperaturas = ModModel.GetTemperatura(puntos, a, b)
 
-                For i = 0 To temperaturas.GetUpperBound(0)
-                    Dim mod_temperatura As New MOD_POZO_TEMP() With {
-                        .PROFUNDIDADMD = temperaturas(i, 0),
-                        .TEMPERATURA = temperaturas(i, 1)
-                    }
-                    ModTemperaturas.Add(mod_temperatura)
+                    For i = 0 To temperaturas.GetUpperBound(0)
+                        Dim mod_temperatura As New MOD_POZO_TEMP() With {
+                            .PROFUNDIDADMD = temperaturas(i, 0),
+                            .TEMPERATURA = temperaturas(i, 1)
+                        }
+                        ModTemperaturas.Add(mod_temperatura)
 
-                Next
+                    Next
 
 
 
+
+                Else
+                    Throw New Exception("Temperatura de la formación debe ser mayor a cero.")
+                End If
 
             Else
-                Throw New Exception("Temperatura de la formación debe ser mayor a cero.")
+
+                Throw New Exception("No hay datos en la fecha:" + FechaPrueba)
             End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Temperatura", MessageBoxButton.OK, MessageBoxImage.Error)
+        End Try
 
-        Else
-
-            Throw New Exception("No hay datos en la fecha:" + FechaPrueba)
-        End If
     End Sub
     Private Sub GetMessages()
         Errors = New ObjectModel.ObservableCollection(Of String)

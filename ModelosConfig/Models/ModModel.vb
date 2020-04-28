@@ -40,7 +40,7 @@ Public Class ModModel
 
     Property Equipment As Boolean
 
-    Private objconsulta As New BaseDatos("SERVER=192.168.0.136\CI_DESARROLLO;User=sa;Password=Sql2016; Database=CI;")
+    ' Private objconsulta As New BaseDatos("SERVER=192.168.0.136\CI_DESARROLLO;User=sa;Password=Sql2016; Database=CI;")
     'Public Sub New(ByVal IdAgujero As String, ByVal IdUsuario As String)
     '    Me.IdAgujero = IdAgujero
     '    Me.db = New Entities_ModeloCI()
@@ -742,14 +742,14 @@ Public Class ModModel
         'Next
         Return result
     End Function
-    Public Function GetFormacion(ByVal Fecha As String) As Dictionary(Of String, Double)
+    Public Function GetFormacion() As Dictionary(Of String, Double)
         Dim result As New Dictionary(Of String, Double)
-        Dim dt = DateTime.Parse(Fecha)
+        Dim dt = DateTime.Parse(FechaPrueba)
 
         Dim disparos = (From di In db.VW_DISPAROS Join fo In db.VW_FORMACION On fo.IDAGUJERO Equals di.IDAGUJERO Where di.CIMAMD >= fo.CIMAREAL And di.BASEMD <= fo.BASECG And di.IDAGUJERO = IdAgujero And di.FECHAAPERTURA <= dt And di.FECHACIERRE >= dt).ToList() 'db.VW_DISPAROS.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FECHAAPERTURA <= dt And w.FECHACIERRE >= dt).ToList()
 
         If disparos.Count = 0 Then
-            Throw New Exception("No hay disparos para esta fecha: " + Fecha)
+            Throw New Exception("No hay disparos para esta fecha: " + FechaPrueba)
         End If
 
 

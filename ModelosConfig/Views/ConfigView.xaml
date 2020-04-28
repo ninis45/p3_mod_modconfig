@@ -7,7 +7,7 @@
         xmlns:lang="clr-namespace:ModelosConfig.My.Resources"
         xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation" x:Class="ConfigView"
         mc:Ignorable="d"
-        Title="{Binding Titulo}" Height="820" Width="880" WindowState="Normal" ResizeMode="NoResize"   >
+        Title="{Binding Titulo}" Height="820" Width="880" WindowState="Normal"   >
 
     <Window.Resources>
 
@@ -135,7 +135,7 @@
                                     <RowDefinition Height="36"></RowDefinition>
                                 </Grid.RowDefinitions>
 
-                                <Label Content="Archivo PVT(.out)" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"></Label>
+                                <Label Content="Archivo (.Out)" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"></Label>
 
                                 <TextBox IsReadOnly="True" Grid.Column="0" Grid.Row="1" Text="{Binding NewArchivoPvt}" Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}" Name="txtPath"></TextBox>
                                 <TextBlock Padding="4 2" Grid.Column="0" Background="#EFEFEF" Grid.Row="1" Text="{Binding ModArchivo.nombreArchivo}" Visibility="{Binding ModArchivo,Converter={StaticResource NullToVisibilityConverter}}" Name="txtFileName"></TextBlock>
@@ -156,7 +156,7 @@
 
                                 <Button Grid.Column="2"  Grid.Row="1" Background="Gray"  BorderThickness="0" Content="Borrar" Click="ClearFile" Foreground="White" Margin="1 0"   Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}"></Button>
 
-                                <CheckBox IsEnabled="{Binding EnabledPvt,Converter={StaticResource WRInverseBoolean}}" Name="chkEquipment" IsChecked="{Binding EnabledEquip}" Grid.Row="2" Grid.ColumnSpan="2" Content="Actualizar datos desde el archivo .Out" Margin="0 10" ToolTip="Actualizar directamente del archivo PVT(.Out) hacia la base de datos"></CheckBox>
+                                <CheckBox IsEnabled="{Binding EnabledPvt,Converter={StaticResource WRInverseBoolean}}" Name="chkEquipment" IsChecked="{Binding EnabledEquip}" Grid.Row="2" Grid.ColumnSpan="2" Content="Extraer datos del  archivo.Out y guardarlo en la Base de Datos." Margin="0 10" ToolTip="Actualizar directamente del archivo PVT(.Out) hacia la base de datos"></CheckBox>
                             </Grid>
                         </telerik:RadBusyIndicator>
                         <Separator ></Separator>
@@ -348,6 +348,51 @@
                         </Grid>
                     </StackPanel>
                 </ScrollViewer>
+            </telerik:RadTabItem>
+            <telerik:RadTabItem x:Name="ItemAforo" Header="Aforos" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927"  IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=4}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                <StackPanel Margin="10">
+                    <Border Style="{StaticResource alert-warning}" Visibility="{Binding Aforos.Count,Converter={StaticResource WREqualVisibility},ConverterParameter=0}" Name="msgAforo">
+                        <TextBlock TextWrapping="Wrap" Text="Actualmente no hay registros de Aforos. Se necesita completar la información inicial en la pestaña Condiciones de Operación."></TextBlock>
+                    </Border>
+                    <Grid Visibility="{Binding Aforos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="600"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
+                            <WindowsFormsHost Name="wfhAforos"></WindowsFormsHost>
+                        </telerik:RadExpander>
+                        <telerik:RadGridView  ItemsSource="{Binding Aforos,Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True"  Grid.Column="0" Margin="0 0  30 0" telerik:StyleManager.Theme="Windows8Touch" ShowGroupPanel="False">
+                            <telerik:RadGridView.Columns >
+
+                                <telerik:GridViewDataColumn Header="FECHA" DataMemberBinding="{Binding FECHA}" DataFormatString="dd/MM/yyyy" />
+                                <telerik:GridViewDataColumn Header="Ql" DataMemberBinding="{Binding PRODLIQ}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Qgf" DataMemberBinding="{Binding PRODGASFORM}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Qgi" DataMemberBinding="{Binding VOLGASINY}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Ptp1" DataMemberBinding="{Binding PTP1}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Ptp2" DataMemberBinding="{Binding PTP2}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Ptr1" DataMemberBinding="{Binding PTR1}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Ptr2" DataMemberBinding="{Binding PTR2}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="% Agua" DataMemberBinding="{Binding FRACAGUA}" IsReadOnly="True"/>
+                                <telerik:GridViewDataColumn Header="Temp" DataMemberBinding="{Binding TEMP}" IsReadOnly="True"/>
+                            </telerik:RadGridView.Columns>
+                            <telerik:EventToCommandBehavior.EventBindings>
+                                <telerik:EventBinding
+                                            Command="{Binding OnLoadAforo}"
+                                            EventName="MouseDoubleClick"
+                                            PassEventArgsToCommand="True"/>
+                            </telerik:EventToCommandBehavior.EventBindings>
+                        </telerik:RadGridView>
+
+
+
+                    </Grid>
+                </StackPanel>
+
+
+
             </telerik:RadTabItem>
             <telerik:RadTabItem Header="PVT" FontFamily="Century Gothic" FontSize="14" BorderBrush="#FF959595" Background="#FF8BA28F" HeaderForeground="#FF022927"  IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=2}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                 <StackPanel Orientation="Vertical" Margin="10" >
@@ -584,7 +629,7 @@
 
                         <Separator Grid.Row="23" Grid.ColumnSpan="2"></Separator>
                         <Label Grid.Column="0" Grid.Row="25" Content="{x:Static lang:Resources.SKIN}"/>
-                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" Grid.Row="25" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.SKIN}" Grid.Row="25" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }"></telerik:RadNumericUpDown>
 
 
 
@@ -595,51 +640,7 @@
 
                 </ScrollViewer>
             </telerik:RadTabItem>
-            <telerik:RadTabItem x:Name="ItemAforo" Header="Aforos" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927"  IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=4}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
-                <StackPanel Margin="10">
-                    <Border Style="{StaticResource alert-warning}" Visibility="{Binding Aforos.Count,Converter={StaticResource WREqualVisibility},ConverterParameter=0}" Name="msgAforo">
-                        <TextBlock TextWrapping="Wrap" Text="Actualmente no hay registros de Aforos. Se necesita completar la información inicial en la pestaña Condiciones de Operación."></TextBlock>
-                    </Border>
-                    <Grid Visibility="{Binding Aforos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="600"></RowDefinition>
-                        </Grid.RowDefinitions>
-                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
-                            <WindowsFormsHost Name="wfhAforos"></WindowsFormsHost>
-                        </telerik:RadExpander>
-                        <telerik:RadGridView  ItemsSource="{Binding Aforos,Mode=TwoWay}" AutoGenerateColumns="False" IsReadOnly="True"  Grid.Column="0" Margin="0 0  30 0" telerik:StyleManager.Theme="Windows8Touch" ShowGroupPanel="False">
-                            <telerik:RadGridView.Columns >
-                               
-                                <telerik:GridViewDataColumn Header="FECHA" DataMemberBinding="{Binding FECHA}" DataFormatString="dd/MM/yyyy" />
-                                <telerik:GridViewDataColumn Header="Ql" DataMemberBinding="{Binding PRODLIQ}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Qgf" DataMemberBinding="{Binding PRODGASFORM}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Qgi" DataMemberBinding="{Binding VOLGASINY}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Ptp1" DataMemberBinding="{Binding PTP1}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Ptp2" DataMemberBinding="{Binding PTP2}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Ptr1" DataMemberBinding="{Binding PTR1}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Ptr2" DataMemberBinding="{Binding PTR2}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="% Agua" DataMemberBinding="{Binding FRACAGUA}" IsReadOnly="True"/>
-                                <telerik:GridViewDataColumn Header="Temp" DataMemberBinding="{Binding TEMP}" IsReadOnly="True"/>
-                            </telerik:RadGridView.Columns>
-                            <telerik:EventToCommandBehavior.EventBindings>
-                                <telerik:EventBinding
-                                            Command="{Binding OnLoadAforo}"
-                                            EventName="MouseDoubleClick"
-                                            PassEventArgsToCommand="True"/>
-                            </telerik:EventToCommandBehavior.EventBindings>
-                        </telerik:RadGridView>
-
-
-
-                    </Grid>
-                </StackPanel>
-               
-
-
-            </telerik:RadTabItem>
+            
             <telerik:RadTabItem Header="Condiciones" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=5}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                 <Grid Margin="10" IsEnabled="{Binding ElementName=pnlEdit,Path=IsVisible}">
                     <Grid.ColumnDefinitions>
@@ -902,13 +903,13 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Column="0" Grid.Row="0" Content="{x:Static lang:Resources.ENTRY}"/>
-                            <ComboBox SelectedIndex="{Binding ENTRY}" Grid.Column="1" Grid.Row="0" Height="22" Grid.ColumnSpan="2" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <ComboBox SelectedIndex="{Binding ENTRY}" Name="ddlEntry" Grid.Column="1" Grid.Row="0" Height="22" Grid.ColumnSpan="2" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                                 <ComboBoxItem Content="Usar RGIL"></ComboBoxItem>
                                 <ComboBoxItem Content="Usar Qgi"></ComboBoxItem>
                             </ComboBox>
 
                             <Label Grid.Column="0" Grid.Row="1" Content="{x:Static lang:Resources.METHOD}"/>
-                            <ComboBox SelectedIndex="{Binding METHOD}" Grid.Column="1" Grid.Row="1" Height="22" Grid.ColumnSpan="2" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <ComboBox SelectedIndex="{Binding METHOD}"  Grid.Column="1" Grid.Row="1" Height="22" Grid.ColumnSpan="2" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                                 <ComboBoxItem Content="Profundidad de Inyección Fija"></ComboBoxItem>
                                 <ComboBoxItem Content="Profundidad de Inyeccion Optima"></ComboBoxItem>
                                 <ComboBoxItem Content="Especificar la profundidad de las valvulas"></ComboBoxItem>
@@ -931,11 +932,11 @@
                             </telerik:RadNumericUpDown>
 
                             <Label Grid.Column="0" Grid.Row="6" Content="{x:Static lang:Resources.GLRINY}"/>
-                            <telerik:RadNumericUpDown Value="{Binding GLRINY}" Grid.Column="1" Grid.Row="6" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <telerik:RadNumericUpDown Value="{Binding GLRINY}" IsEnabled="{Binding ElementName=ddlEntry,Path=SelectedIndex,Converter={StaticResource  WRNumToBool},ConverterParameter=0}" Grid.Column="1" Grid.Row="6" Height="22" ShowButtons="False" >
                             </telerik:RadNumericUpDown>
 
                             <Label Grid.Column="0" Grid.Row="7" Content="{x:Static lang:Resources.GLRATE}"/>
-                            <telerik:RadNumericUpDown Value="{Binding GLRATE}" Grid.Column="1" Grid.Row="7" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <telerik:RadNumericUpDown Value="{Binding GLRATE}" IsEnabled="{Binding ElementName=ddlEntry,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1}" Grid.Column="1" Grid.Row="7" Height="22" ShowButtons="False" >
                             </telerik:RadNumericUpDown>
 
                             <Separator Grid.Row="8" Grid.ColumnSpan="6"></Separator>
@@ -955,11 +956,11 @@
                             <Separator Grid.Row="13" Grid.ColumnSpan="6"></Separator>
 
                             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="14" Content="{x:Static lang:Resources.QGIMIN}"/>
-                            <telerik:RadNumericUpDown Value="{Binding QGIMIN}" Grid.Column="3" Grid.Row="14" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <telerik:RadNumericUpDown Value="{Binding QGIMIN}" Grid.Column="3" Grid.Row="14" Height="22" ShowButtons="False" >
                             </telerik:RadNumericUpDown>
 
                             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="15" Content="{x:Static lang:Resources.GQIMAX}"/>
-                            <telerik:RadNumericUpDown Value="{Binding QGIMAX}" Grid.Column="3" Grid.Row="15" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
+                            <telerik:RadNumericUpDown Value="{Binding QGIMAX}" Grid.Column="3" Grid.Row="15" Height="22" ShowButtons="False">
                             </telerik:RadNumericUpDown>
 
 
@@ -1043,11 +1044,11 @@
                         <Separator Grid.Row="4" Grid.ColumnSpan="6"></Separator>
 
                         <Label Grid.Column="0" Grid.Row="5" Content="Frecuencia Mínimo (Hz)"/>
-                        <telerik:RadNumericUpDown Value="{Binding ModBEC.FRECMIN,Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Height="24" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}"/>
+                        <telerik:RadNumericUpDown Value="{Binding ModBEC.FRECMIN,Mode=TwoWay}" Grid.Column="1" Grid.Row="5" Height="24" ShowButtons="False" />
                         <Label Grid.Column="2" Grid.Row="5" Content="Frecuencia  Máxima (Hz)"/>
-                        <telerik:RadNumericUpDown  Value="{Binding ModBEC.FRECMAX,Mode=TwoWay}" Grid.Column="3" Grid.Row="5" Height="24" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}"/>
+                        <telerik:RadNumericUpDown  Value="{Binding ModBEC.FRECMAX,Mode=TwoWay}" Grid.Column="3" Grid.Row="5" Height="24" ShowButtons="False" />
                         <Label Grid.Column="4" Grid.Row="5" Content="Frecuencia  (Hz)"/>
-                        <telerik:RadNumericUpDown  Value="{Binding ModBEC.FREC_BEC}" Grid.Column="5" Grid.Row="5" Height="24" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}"/>
+                        <telerik:RadNumericUpDown  Value="{Binding ModBEC.FREC_BEC}" Grid.Column="5" Grid.Row="5" Height="24" ShowButtons="False" />
 
                         <Separator Grid.Row="6" Grid.ColumnSpan="6"></Separator>
 

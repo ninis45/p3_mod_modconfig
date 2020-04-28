@@ -20,17 +20,25 @@ namespace Window
         public Form1()
         {
             InitializeComponent();
-
-            modelo = new ModelosConfig.MainWindow("DDB3A31F-0143-42E3-819B-9B4A4B631D33", "2019-03-27", "9FB4F4ED-4D05-421D-B3BF-6DD4A1E3E275");
-            comboBox1.DisplayMember = "NOMBRE";
-            //comboBox1.SelectedValue = "IDPOZO";
+            try
+            {
 
 
-           
-           
-            comboBox1.DataSource = db.POZO.OrderBy(o=>o.NOMBRE).ToList();
+                modelo = new ModelosConfig.MainWindow("56B74925-CE90-4E2D-8FAC-9933EBC4899D", "2018-01-01", "9FB4F4ED-4D05-421D-B3BF-6DD4A1E3E275");
+                comboBox1.DisplayMember = "NOMBRE";
+                //comboBox1.SelectedValue = "IDPOZO";
 
-            elementHost1.Child = modelo;
+
+
+
+                comboBox1.DataSource = db.POZO.OrderBy(o => o.NOMBRE).ToList();
+
+                elementHost1.Child = modelo;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)

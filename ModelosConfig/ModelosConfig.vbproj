@@ -46,33 +46,27 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DBConnection">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\DBConnection.dll</HintPath>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\Dlls\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ModelosEstabilidad\ModelosEstabilidad\bin\Debug\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\Dlls\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Lagrange">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Lagrange.dll</HintPath>
+      <HintPath>..\..\Dlls\Lagrange.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="ModeloCI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ModeloCI">
       <HintPath>..\..\ModeloCI.dll</HintPath>
     </Reference>
     <Reference Include="Prism">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.dll</HintPath>
+      <HintPath>..\..\Dlls\Prism.dll</HintPath>
     </Reference>
     <Reference Include="Prism.Unity.Wpf">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.Unity.Wpf.dll</HintPath>
+      <HintPath>..\..\Dlls\Prism.Unity.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="Prism.Wpf">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Prism.Wpf.dll</HintPath>
+      <HintPath>..\..\Dlls\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -89,13 +83,13 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="TeeChart">
-      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.dll</HintPath>
+      <HintPath>..\..\Dlls\TeeChart.dll</HintPath>
     </Reference>
     <Reference Include="TeeChart.WPF">
-      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.WPF.dll</HintPath>
+      <HintPath>..\..\Dlls\TeeChart.WPF.dll</HintPath>
     </Reference>
     <Reference Include="TeeChart.Xaml.WPF">
-      <HintPath>..\..\..\Program Files (x86)\Steema Software\Steema TeeChart for .NET 2018 4.1.2018.05040\net40\x86\TeeChart.Xaml.WPF.dll</HintPath>
+      <HintPath>..\..\Dlls\TeeChart.Xaml.WPF.dll</HintPath>
     </Reference>
     <Reference Include="Telerik.Windows.Controls, Version=2019.3.1023.45, Culture=neutral, PublicKeyToken=5803cfa389c90ce7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -139,10 +133,10 @@
     <Reference Include="UIAutomationProvider" />
     <Reference Include="UIAutomationTypes" />
     <Reference Include="Unity.Abstractions">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Unity.Abstractions.dll</HintPath>
+      <HintPath>..\..\Dlls\Unity.Abstractions.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Container">
-      <HintPath>..\..\BEC_Ricarda\UsrControl\bin\Debug\Unity.Container.dll</HintPath>
+      <HintPath>..\..\Dlls\Unity.Container.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -152,8 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clases\Analisis.vb" />
-    <Compile Include="Clases\BaseDatos.vb" />
-    <Compile Include="Clases\BaseDatosServidor.vb" />
     <Compile Include="Clases\Inicial.vb" />
     <Compile Include="Clases\Mecanico.vb" />
     <Compile Include="Connected Services\SVDeclinacion\Reference.vb">

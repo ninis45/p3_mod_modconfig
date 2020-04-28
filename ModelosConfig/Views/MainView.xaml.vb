@@ -32,16 +32,21 @@
 
     Private Sub SetConfig(sender As Object, e As RoutedEventArgs)
         Dim db As New ModeloCI.Entities_ModeloCI()
-        Dim ConfigView As New ConfigView(Context.IdAgujero, Context.LiftMethod, Context.IdUsuario, Context.FechaPrueba)
+        Try
+            Dim ConfigView As New ConfigView(Context.IdAgujero, Context.LiftMethod, Context.IdUsuario, Context.FechaPrueba)
 
 
-        ConfigView.ShowDialog()
-        'Dim ModModel As New ModModel(Context.IdAgujero, Context.IdUsuario)
+            ConfigView.ShowDialog()
+            'Dim ModModel As New ModModel(Context.IdAgujero, Context.IdUsuario)
 
-        If ConfigView.ContextConfig.IsSaved Then
-            Context.IdModPozo = ConfigView.ContextConfig.IdModPozo 'Revisar para que no haya doble consulta en VWGeneral
-            Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
-        End If
+            If ConfigView.ContextConfig.IsSaved Then
+                Context.IdModPozo = ConfigView.ContextConfig.IdModPozo 'Revisar para que no haya doble consulta en VWGeneral
+                Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error)
+        End Try
+
 
 
     End Sub
