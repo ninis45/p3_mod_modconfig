@@ -574,7 +574,7 @@ Public Class MainViewModel
 
 
         'Ocultar series
-        For i = 0 To cat_correlas.Count - 1
+        For i = 0 To cat_correlas.Count
             grfCorrelacion.TChart1.Series(i + 1).Clear()
             grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = False
 

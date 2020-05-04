@@ -6,8 +6,12 @@ Namespace Interfaces
         <OperationContract>
         Function Monitor(ByRef OpenServer As String) As List(Of String)
 
+
         <OperationContract>
-        Function Reading(ByVal FileUpload As Byte(), ByVal FileName As String) As List(Of String)
+        Function Dispose(ByRef OpenServer As String) As Boolean
+
+        <OperationContract>
+        Function Reading(ByVal LiftMethod As Integer, ByVal FileUpload As Byte(), ByVal FileName As String) As List(Of String)
     End Interface
 
 End Namespace

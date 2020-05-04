@@ -160,7 +160,7 @@ Public Class ConfigView
     Private Sub SelectFile(sender As Object, e As RoutedEventArgs)
         Dim Dialog As New System.Windows.Forms.OpenFileDialog()
 
-        Dialog.Filter = "All files (*.Out)|*.Out"
+        Dialog.Filter = "" '"All files (*.Out)|*.Out"
         'Dialog.ShowDialog()
         If Dialog.ShowDialog() = Forms.DialogResult.OK Then
             ContextConfig.NewArchivoPvt = Dialog.FileName
@@ -212,11 +212,32 @@ Public Class ConfigView
 
     End Sub
     Private Function SendPvt() As List(Of String)
-        Dim factory = New ChannelFactory(Of Interfaces.IModelo)(New BasicHttpBinding() With {.SendTimeout = TimeSpan.Parse("0:15:00")}, EndPointModelo)
+        Dim httpBinding As New BasicHttpBinding() With {
+            .SendTimeout = TimeSpan.Parse("1:30:00"),
+            .MaxBufferSize = 2147483647,
+            .MaxReceivedMessageSize = 2147483647,
+            .MaxBufferPoolSize = 2147483647,
+            .MessageEncoding = WSMessageEncoding.Text,
+            .TransferMode = TransferMode.Streamed
+        }
+        httpBinding.ReaderQuotas.MaxDepth = 128
+        httpBinding.ReaderQuotas.MaxStringContentLength = 2147483647
+        httpBinding.ReaderQuotas.MaxArrayLength = 2147483647
+        httpBinding.ReaderQuotas.MaxBytesPerRead = 2147483647
+
+        'httpBinding.Security.Mode = BasicHttpSecurityMode.None
+        'httpBinding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None
+        'httpBinding.Security.Transport.ProxyCredentialType = HttpProxyCredentialType.None
+        'httpBinding.Security.Transport.Realm = ""
+        'httpBinding.Security.Message.ClientCredentialType = BasicHttpMessageCredentialType.UserName
+        'httpBinding.Security.Message.AlgorithmSuite = Security.SecurityAlgorithmSuite.Default
+
+
+        Dim factory = New ChannelFactory(Of Interfaces.IModelo)(httpBinding, EndPointModelo)
         Dim server As Interfaces.IModelo = factory.CreateChannel()
         Try
             ''Dim BytesSend = File.RewArchiadAllBytes(ContextConfig.NevoPvt)
-            Return server.Reading(File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
+            Return server.Reading(ContextConfig.LiftMethod, File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
         Catch ex As Exception
             MessageBox.Show(ex.Message & Chr(13) & "El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
             'MessageBox.Show("El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
