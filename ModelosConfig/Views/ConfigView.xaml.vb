@@ -3,6 +3,7 @@ Imports System.IO
 Imports System.ServiceModel
 Imports ModeloCI
 Imports Telerik.Windows.Controls
+Imports Newtonsoft.Json
 
 Public Class ConfigView
 
@@ -20,6 +21,7 @@ Public Class ConfigView
         GraphMec2 = New UC_EstadoMecanico.EstadoMecanico()
 
         ContextConfig = New ConfigViewModel(IdAgujero, IdModPozo, Me.wfhTrayectoria, Me.wfhTemperatura, Me.wfhAforos, Me.wfhPvts, Me.wfhMecanico)
+        ContextConfig.FormView = Me
         Me.DataContext = ContextConfig
         wfhMecanico2.Child = GraphMec2
         GraphMec2.BackColor = System.Drawing.Color.White
@@ -69,6 +71,7 @@ Public Class ConfigView
 
         Me.DataContext = ContextConfig
         Me.Tab = 0
+
 
         wfhMecanico2.Child = GraphMec2
         GraphMec2.BackColor = System.Drawing.Color.White
@@ -160,7 +163,7 @@ Public Class ConfigView
     Private Sub SelectFile(sender As Object, e As RoutedEventArgs)
         Dim Dialog As New System.Windows.Forms.OpenFileDialog()
 
-        Dialog.Filter = "" '"All files (*.Out)|*.Out"
+        Dialog.Filter = "All files (*.Out)|*.Out"
         'Dialog.ShowDialog()
         If Dialog.ShowDialog() = Forms.DialogResult.OK Then
             ContextConfig.NewArchivoPvt = Dialog.FileName
@@ -169,39 +172,65 @@ Public Class ConfigView
                 ContextConfig.IsBusy = True
 
                 Try
-                    ' Dim factory = New ChannelFactory(Of Interfaces.IModelo)(New BasicHttpBinding() With {.SendTimeout = TimeSpan.Parse("0:30:00"), .MaxBufferSize = 20000000, .MaxReceivedMessageSize = 20000000}, EndPointModelo)
-                    'Dim server As Interfaces.IModelo = factory.CreateChannel()
 
-                    'Dim result = server.Monitor("OpenServer")
-                    'Dim Errors As List(Of String)
                     Task.Factory.StartNew(Function() SendPvt()).ContinueWith(Sub(r)
                                                                                  ContextConfig.IsBusy = False
                                                                                  If r.IsCompleted Then
 
-                                                                                     Dim Errors = r.Result
-                                                                                     If Errors.Count > 0 Then
-                                                                                         Dim StrErrors As String = ""
-                                                                                         For i = 0 To Errors.Count - 1
-                                                                                             'ContextConfig.Errors.Add(Errors(i))
-                                                                                             StrErrors += " - " + Errors(i) & Chr(13)
-                                                                                         Next
+                                                                                     Dim Result = CType(r.Result, Dictionary(Of String, String))
 
-                                                                                         If StrErrors <> "" Then
-                                                                                             MessageBox.Show(StrErrors, "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Error)
-                                                                                             ContextConfig.NewArchivoPvt = Nothing
+                                                                                     If Result.Count > 2 Then
+                                                                                         Dim Errors = JsonConvert.DeserializeObject(Of List(Of String))(Result("errors"))
+                                                                                         Dim ModPozoTmp = JsonConvert.DeserializeObject(Of MOD_POZO)(Result("data"))
+                                                                                         Dim ModTubsTmp = JsonConvert.DeserializeObject(Of List(Of MOD_POZO_TUBERIA))(Result("mecanico"))
+                                                                                         If Errors.Count > 0 Then
+                                                                                             Dim StrErrors As String = ""
+                                                                                             For i = 0 To Errors.Count - 1
+                                                                                                 'ContextConfig.Errors.Add(Errors(i))
+                                                                                                 StrErrors += " - " + Errors(i) & Chr(13)
+                                                                                             Next
+
+                                                                                             If StrErrors <> "" Then
+                                                                                                 MessageBox.Show(StrErrors, "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Error)
+                                                                                                 ContextConfig.NewArchivoPvt = Nothing
+                                                                                             End If
+
+
                                                                                          End If
 
 
+                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).IDMODPOZO = ContextConfig.ModGeneral.IDMODPOZO
+                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).IDMODPOZOGENERAL = ContextConfig.ModGeneral.IDMODPOZOGENERAL
+                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).MOD_POZO = ContextConfig.ModGeneral.MOD_POZO
+                                                                                         ContextConfig.ModGeneral = ModPozoTmp.MOD_POZO_GENERAL(0)
+                                                                                         ContextConfig.LiftMethod = ContextConfig.ModGeneral.LIFTMETHOD
+
+                                                                                         Select Case ContextConfig.LiftMethod
+                                                                                             Case 1
+                                                                                                 If ModPozoTmp.MOD_POZO_BNC.Count > 0 Then
+                                                                                                     'ModPozoTmp.MOD_POZO_BNC(0).IDMODPOZO = ContextConfig.ModBNC.IDMODPOZO
+                                                                                                     'ModPozoTmp.MOD_POZO_BNC(0).IDMODPOZOBNC = ContextConfig.ModBNC.IDMODPOZOBNC
+                                                                                                     ContextConfig.ModBNC = ModPozoTmp.MOD_POZO_BNC(0)
+                                                                                                 End If
+                                                                                             Case 2
+                                                                                                 If ModPozoTmp.MOD_POZO_BEC.Count > 0 Then
+                                                                                                     'ModPozoTmp.MOD_POZO_BEC(0).IDMODPOZO = ContextConfig.ModBEC.IDMODPOZO
+                                                                                                     'ModPozoTmp.MOD_POZO_BEC(0).IDMODPOZOBEC = ContextConfig.ModBEC.IDMODPOZOBEC
+                                                                                                     ContextConfig.ModBEC = ModPozoTmp.MOD_POZO_BEC(0)
+                                                                                                 End If
+                                                                                         End Select
+
+                                                                                         ContextConfig.LoadMecanico(ModTubsTmp)
+                                                                                         ContextConfig.ModTrayectorias = New ObservableCollection(Of MOD_POZO_TRAYEC)(ModPozoTmp.MOD_POZO_TRAYEC)
+                                                                                         ContextConfig.ModTemperaturas = New ObservableCollection(Of MOD_POZO_TEMP)(ModPozoTmp.MOD_POZO_TEMP)
                                                                                      End If
 
 
 
-                                                                                     'ContextConfig.Errors = CType(Errors,List(Of String))
-                                                                                     'ContextConfig.Errors.Add(Errors(0))
                                                                                  End If
 
                                                                              End Sub, TaskScheduler.FromCurrentSynchronizationContext)
-                    'Dim result = server.Reading(File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
+
                 Catch ex As Exception
                     ContextConfig.IsBusy = False
                     MessageBox.Show(ex.Message, "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
@@ -211,7 +240,7 @@ Public Class ConfigView
         End If
 
     End Sub
-    Private Function SendPvt() As List(Of String)
+    Private Function SendPvt() As Dictionary(Of String, String)
         Dim httpBinding As New BasicHttpBinding() With {
             .SendTimeout = TimeSpan.Parse("1:30:00"),
             .MaxBufferSize = 2147483647,
@@ -236,15 +265,14 @@ Public Class ConfigView
         Dim factory = New ChannelFactory(Of Interfaces.IModelo)(httpBinding, EndPointModelo)
         Dim server As Interfaces.IModelo = factory.CreateChannel()
         Try
-            ''Dim BytesSend = File.RewArchiadAllBytes(ContextConfig.NevoPvt)
+
             Return server.Reading(ContextConfig.LiftMethod, File.ReadAllBytes(ContextConfig.NewArchivoPvt), ContextConfig.NewArchivoPvt)
         Catch ex As Exception
             MessageBox.Show(ex.Message & Chr(13) & "El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
-            'MessageBox.Show("El archivo PVT(.Out) no pudo ser verificado y validado.", "Campos inteligentes", MessageBoxButton.OK, MessageBoxImage.Warning)
-            'Return New List(Of String) From {ex.Message}
+
         End Try
 
-        Return New List(Of String)
+        Return New Dictionary(Of String, String)
     End Function
 
     Private Sub LoadMecanico(ByVal IdAgujero As String)
@@ -410,5 +438,7 @@ Public Class ConfigView
         End If
     End Sub
 
+    Private Sub ResetTemp(sender As Object, e As RoutedEventArgs)
 
+    End Sub
 End Class

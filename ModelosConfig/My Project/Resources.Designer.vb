@@ -727,7 +727,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a P Cab Dinámica (kg/cm2).
+        '''  Busca una cadena traducida similar a Presion Cab. Dinámica (kg/cm2).
         '''</summary>
         Public ReadOnly Property THPD() As String
             Get
@@ -736,7 +736,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a Temperatura Dinámica en la Cabeza del Pozo (°C).
+        '''  Busca una cadena traducida similar a Temp. Dinámica en la Cab. del Pozo (°C).
         '''</summary>
         Public ReadOnly Property THTD() As String
             Get
@@ -745,7 +745,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Busca una cadena traducida similar a T Cab Estática (ºC).
+        '''  Busca una cadena traducida similar a Temp. Cab. Estática (ºC).
         '''</summary>
         Public ReadOnly Property THTE() As String
             Get

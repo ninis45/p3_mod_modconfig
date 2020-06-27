@@ -98,7 +98,7 @@
         </Style>
     </Window.Resources>
 
-    <Grid Background="#FFE5E5E5">
+    <Grid Background="#FFE5E5E5" Margin="5">
         <Grid.Resources>
             <ResourceDictionary>
                 <ResourceDictionary.MergedDictionaries>
@@ -111,16 +111,17 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
-
         
-        <telerik:RadTabControl HorizontalAlignment="Stretch"  Grid.Row="0"  BorderThickness="0" Margin="15"    >
+        
+
+            <telerik:RadTabControl HorizontalAlignment="Stretch"  Grid.Row="0"  BorderThickness="0" Margin="15"     >
             <telerik:RadTabItem x:Name="ItemGral" Header="Generales" FontFamily="Century Gothic" FontSize="14" Background="#FF918F8F" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=1}"  >
                 <ScrollViewer>
                     <StackPanel Orientation="Vertical" Margin="10">
                         <!--<Border Style="{StaticResource alert-warning}" Visibility="{Binding Warnings.Count,Converter={StaticResource NumberToVisibilityConverter}}">
                             <TextBlock Text="Existen observaciones y/o faltantes de datos, favor de solventar o corregir dicha observaciones."/>
                         </Border>-->
-                        <telerik:RadBusyIndicator IsBusy="{Binding IsBusy}" BusyContent="Comunicando con el servidor.." Background="Transparent" BorderThickness="0" Foreground="DarkCyan" >
+                        <telerik:RadBusyIndicator Name="pnlUpload" IsBusy="{Binding IsBusy}" BusyContent="Comunicando con el servidor.." Background="Transparent" BorderThickness="0" Foreground="DarkCyan" Visibility="{Binding IsReadOnly,Converter={StaticResource InvertedBooleanToVisibilityConverter}}" >
 
 
                             <Grid Margin="4">
@@ -138,7 +139,7 @@
                                 <Label Content="Archivo (.Out)" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"></Label>
 
                                 <TextBox IsReadOnly="True" Grid.Column="0" Grid.Row="1" Text="{Binding NewArchivoPvt}" Visibility="{Binding ElementName=txtFileName,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}" Name="txtPath"></TextBox>
-                                <TextBlock Padding="4 2" Grid.Column="0" Background="#EFEFEF" Grid.Row="1" Text="{Binding ModArchivo.nombreArchivo}" Visibility="{Binding ModArchivo,Converter={StaticResource NullToVisibilityConverter}}" Name="txtFileName"></TextBlock>
+                                <TextBlock Padding="4 2" Grid.Column="0" ToolTip="{Binding ModArchivo.nombreArchivo}" Background="#EFEFEF" Grid.Row="1" Text="{Binding ModArchivo.nombreArchivo}" Visibility="{Binding ModArchivo,Converter={StaticResource NullToVisibilityConverter}}" Name="txtFileName"></TextBlock>
 
 
 
@@ -159,6 +160,40 @@
                                 <CheckBox IsEnabled="{Binding EnabledPvt,Converter={StaticResource WRInverseBoolean}}" Name="chkEquipment" IsChecked="{Binding EnabledEquip}" Grid.Row="2" Grid.ColumnSpan="2" Content="Extraer datos del  archivo.Out y guardarlo en la Base de Datos." Margin="0 10" ToolTip="Actualizar directamente del archivo PVT(.Out) hacia la base de datos"></CheckBox>
                             </Grid>
                         </telerik:RadBusyIndicator>
+                        <Grid Margin="4" Visibility="{Binding ElementName=pnlUpload,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="26"></RowDefinition>
+                                <RowDefinition Height="26"></RowDefinition>
+                                <RowDefinition Height="36"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <Label Content="Archivo (.Out)" Grid.Row="0" Grid.ColumnSpan="3" FontWeight="Bold"></Label>
+
+                            
+                            <TextBlock Padding="4 2" Grid.ColumnSpan="2" Grid.Column="0" ToolTip="{Binding ModArchivo.nombreArchivo}" Background="#EFEFEF" Grid.Row="1" Text="{Binding ModArchivo.nombreArchivo}" Visibility="{Binding ModArchivo,Converter={StaticResource NullToVisibilityConverter}}" ></TextBlock>
+
+
+
+                            
+                           
+                            <Button Grid.Column="2" Grid.Row="1" Background="#999999" BorderThickness="0"  Foreground="White" Click="DownloadFile">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <telerik:RadGlyph Glyph="&#xe132;"></telerik:RadGlyph>
+                                        <TextBlock Text="Descargar"></TextBlock>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+
+                           
+
+                        
+                        </Grid>
                         <Separator ></Separator>
 
                         
@@ -476,7 +511,7 @@
 
 
 
-                    <Grid IsEnabled="{Binding EnabledPvt}" Visibility="{Binding Formaciones.Count,Converter={StaticResource NumberToVisibilityConverter}}" Name="grdPvt">
+                    <Grid  Visibility="{Binding Formaciones.Count,Converter={StaticResource NumberToVisibilityConverter}}" Name="grdPvt">
 
                         <telerik:RadExpander  Header="Gráfica" ExpandDirection="Left" >
                             <WindowsFormsHost Name="wfhPvts"></WindowsFormsHost>
@@ -576,7 +611,7 @@
 
 
                         <Label Grid.Column="0" Grid.Row="4" Content="{x:Static lang:Resources.MGSKINMETHOD}"/>
-                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMETHOD}" Grid.Column="2" Grid.Row="4" Height="22" >
+                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMETHOD}" Name="ddlSkinMethod" Grid.Column="2" Grid.Row="4" Height="22" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }">
                             <ComboBoxItem Content="Agregar Daño Manualmente"></ComboBoxItem>
                             <ComboBoxItem Content="Loke"></ComboBoxItem>
                             <ComboBoxItem Content="MacLeod"></ComboBoxItem>
@@ -584,8 +619,8 @@
                         </ComboBox>
 
 
-                        <Label Grid.Column="0" Grid.Row="5" Content="{x:Static lang:Resources.MGSKINMODEL}"/>
-                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMODEL}" Grid.Column="1" Grid.Row="5" Height="22">
+                        <Label Grid.Column="0" Grid.Row="5" Content="{x:Static lang:Resources.MGSKINMODEL}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=3 }"/>
+                        <ComboBox SelectedIndex="{Binding ModGeneral.MGSKINMODEL}" IsEnabled="{Binding ElementName=ddlSkinMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool}}" Grid.Column="1" Grid.Row="5" Height="22">
                             <ComboBoxItem Content="Cinco / Martín-Bronz"></ComboBoxItem>
                             <ComboBoxItem Content="Wong-Cliford"></ComboBoxItem>
                             <ComboBoxItem Content="Cinco (2) / Martín-Bronz"></ComboBoxItem>
@@ -606,9 +641,9 @@
                         <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PI}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=0 }" Grid.Row="12" Height="22" ShowButtons="False" ></telerik:RadNumericUpDown>
                         <Separator Grid.Row="13" Grid.ColumnSpan="2"></Separator>
                         <Label Grid.Column="0" Grid.Row="14" Content="{x:Static lang:Resources.QTEST}"/>
-                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.QTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="14" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.QTEST}"  Grid.Row="14" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
                         <Label Grid.Column="0" Grid.Row="15" Content="{x:Static lang:Resources.PTEST}"/>
-                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PTEST}" IsEnabled="{Binding ElementName=ddlIPRMethod,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1 }" Grid.Row="15" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                        <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.PTEST}" Grid.Row="15" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
                         <Separator Grid.Row="16" Grid.ColumnSpan="2"></Separator>
 
                         <Label Grid.Column="0" Grid.Row="17" Content="{x:Static lang:Resources.RESPERM}"/>
@@ -644,10 +679,10 @@
             <telerik:RadTabItem Header="Condiciones" FontFamily="Century Gothic" FontSize="14" Background="#FF8BA28F" HeaderForeground="#FF022927" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=5}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
                 <Grid Margin="10" IsEnabled="{Binding ElementName=pnlEdit,Path=IsVisible}">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="300"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="30"></ColumnDefinition>
-                        <ColumnDefinition Width="200"></ColumnDefinition>
+                        <ColumnDefinition Width="250"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -677,103 +712,119 @@
                         <GradientStop Color="#FF525353" Offset="1"/>
                     </LinearGradientBrush>
                 </telerik:RadTabItem.Foreground>
-                <StackPanel Margin="10">
+                <ScrollViewer>
+                    <StackPanel Margin="10">
 
-                    <StackPanel Visibility="{Binding ElementName=pnlEdit,Path=IsVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
-                        <Border Style="{StaticResource alert-info}" Visibility="{Binding Tuberias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock TextWrapping="Wrap"  Text="Listado del estado mecánico para este modelo. Podras restaurar nuevamente la lista del estado mecánico de este modelo por el actual, pulsando el botón Restaurar"></TextBlock>
-                                <Button  Width="100" Content="Restaurar" Command="{Binding CommandResetMec}" Background="#EFEFEF" ToolTip="Restaurar los registros del estado mecanico actual"></Button>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                   
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Menu HorizontalContentAlignment="Left" Background="Transparent" Width="26">
-                            <MenuItem>
-                                <MenuItem.Icon>
-                                    <telerik:RadGlyph Glyph="&#xe030;" />
-                                </MenuItem.Icon>
-                                <MenuItem Header="Listado PROSPER" Click="MenuItemListado"/>
-                                <MenuItem Header="Estado mecánico" Click="MenuItemMecanico"/>
-
-
-                            </MenuItem>
-                        </Menu>
-                    </StackPanel>
-                   
-
-                    <Grid Margin="20 0 0 0" Name="grdListado">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="40"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.Resources>
-                            <ResourceDictionary>
-                                <ResourceDictionary.MergedDictionaries>
-                                    <ResourceDictionary Source="../Resources/Notices.xaml" />
-                                </ResourceDictionary.MergedDictionaries>
-                            </ResourceDictionary>
-                        </Grid.Resources>
-                        <telerik:RadListBox Grid.Column="0" ItemsSource="{Binding ModMecanicos,Mode=TwoWay}" ItemTemplate="{StaticResource TemplateMecanico}" BorderThickness="0" SelectedItem="{Binding Mecanico,Mode=TwoWay}"/>
-                        <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center" Margin="4 0" Visibility="{Binding ElementName=pnlEdit,Path=IsVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <Button  Margin="2"  Height="30" Background="DarkCyan" Command="{Binding CommandUp}" BorderThickness="0"  IsEnabled="{Binding Mecanico,Converter={StaticResource  RWNullToBoolean} }" ToolTip="Mover hacia arriba">
-                                <Button.Content>
-                                    <telerik:RadGlyph Glyph="&#xe004;" FontSize="18" Foreground="White" />
-                                </Button.Content>
-
-                            </Button>
-                            <Button Margin="2" Height="30" Background="DarkCyan"   Command="{Binding CommandDown}" BorderThickness="0" Name="btnDown" IsEnabled="{Binding Mecanico,Converter={StaticResource  RWNullToBoolean} }" ToolTip="Mover hacia abajo">
-                                <Button.Content>
-                                    <telerik:RadGlyph Glyph="&#xe006;" FontSize="18" Foreground="White" />
-                                </Button.Content>
-
-                            </Button>
+                        <StackPanel Visibility="{Binding ElementName=pnlEdit,Path=IsVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Border Style="{StaticResource alert-info}" Visibility="{Binding Tuberias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock TextWrapping="Wrap"  Text="Listado del estado mecánico para este modelo. Podras restaurar nuevamente la lista del estado mecánico de este modelo por el actual, pulsando el botón Restaurar"></TextBlock>
+                                    <Button  Width="100" Content="Restaurar" Command="{Binding CommandResetMec}" Background="#EFEFEF" ToolTip="Restaurar los registros del estado mecanico actual"></Button>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
-                    </Grid>
+
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Label>Total registros: </Label>
+                            <TextBlock Text="{Binding ModMecanicos.Count}" Padding="5"></TextBlock>
+                            <Menu HorizontalContentAlignment="Left" Background="Transparent" Width="26" Margin="20 0">
+                                <MenuItem>
+                                    <MenuItem.Icon>
+                                        <telerik:RadGlyph Glyph="&#xe030;" />
+                                    </MenuItem.Icon>
+                                    <MenuItem Header="Listado PROSPER" Click="MenuItemListado"/>
+                                    <MenuItem Header="Estado mecánico" Click="MenuItemMecanico"/>
 
 
-                    <Grid Name="grdMecanico" Visibility="{Binding ElementName=grdListado,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30"></RowDefinition>
-                            <RowDefinition Height="auto"></RowDefinition>
-                        </Grid.RowDefinitions>
+                                </MenuItem>
+                            </Menu>
+                        </StackPanel>
 
-                        <TextBlock Padding="6" Margin="2" Background="#EFEFEF" Grid.Column="0" Grid.Row="0" Text="Estado mecánico actual" FontWeight="Bold" TextAlignment="Center"></TextBlock>
-                        <TextBlock Padding="6" Margin="2" Background="#EFEFEF" Grid.Column="1" Grid.Row="0" Text="Estado mecánico por selección" FontWeight="Bold" TextAlignment="Center"></TextBlock>
 
-                        
-                        <WindowsFormsHost Name="wfhMecanico" Grid.Column="0" Grid.Row="1" Height="480"></WindowsFormsHost>                     
-                       
-                        <WindowsFormsHost Name="wfhMecanico2" Grid.Column="1" Grid.Row="1" Height="480"></WindowsFormsHost>
-                        
-                    </Grid>
-                    
-                    
-                    
-                    
-                    
-                   
-                    
-                    
-                   
 
-                </StackPanel>
+                        <Grid Margin="20 0 0 0" Name="grdListado">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="40"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.Resources>
+                                <ResourceDictionary>
+                                    <ResourceDictionary.MergedDictionaries>
+                                        <ResourceDictionary Source="../Resources/Notices.xaml" />
+                                    </ResourceDictionary.MergedDictionaries>
+                                </ResourceDictionary>
+                            </Grid.Resources>
+                            <telerik:RadListBox  Grid.Column="0" ItemsSource="{Binding ModMecanicos,Mode=TwoWay}" ItemTemplate="{StaticResource TemplateMecanico}" BorderThickness="0" SelectedItem="{Binding Mecanico,Mode=TwoWay}"/>
+                            <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center" Margin="4 0" Visibility="{Binding ElementName=pnlEdit,Path=IsVisible,Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <Button  Margin="2"  Height="30" Background="DarkCyan" Command="{Binding CommandUp}" BorderThickness="0"  IsEnabled="{Binding Mecanico,Converter={StaticResource  RWNullToBoolean} }" ToolTip="Mover hacia arriba">
+                                    <Button.Content>
+                                        <telerik:RadGlyph Glyph="&#xe004;" FontSize="18" Foreground="White" />
+                                    </Button.Content>
+
+                                </Button>
+                                <Button Margin="2" Height="30" Background="DarkCyan"   Command="{Binding CommandDown}" BorderThickness="0" Name="btnDown" IsEnabled="{Binding Mecanico,Converter={StaticResource  RWNullToBoolean} }" ToolTip="Mover hacia abajo">
+                                    <Button.Content>
+                                        <telerik:RadGlyph Glyph="&#xe006;" FontSize="18" Foreground="White" />
+                                    </Button.Content>
+
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+
+
+
+
+
+
+
+                        <Grid Name="grdMecanico" Visibility="{Binding ElementName=grdListado,Path=IsVisible,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Padding="6" Margin="2" Background="#EFEFEF" Grid.Column="0" Grid.Row="0" Text="Estado mecánico actual" FontWeight="Bold" TextAlignment="Center"></TextBlock>
+                            <TextBlock Padding="6" Margin="2" Background="#EFEFEF" Grid.Column="1" Grid.Row="0" Text="Estado mecánico por selección" FontWeight="Bold" TextAlignment="Center"></TextBlock>
+
+
+                            <WindowsFormsHost Name="wfhMecanico" Grid.Column="0" Grid.Row="1" Height="480"></WindowsFormsHost>
+
+                            <WindowsFormsHost Name="wfhMecanico2" Grid.Column="1" Grid.Row="1" Height="480"></WindowsFormsHost>
+
+                        </Grid>
+
+
+
+
+
+
+
+
+
+
+                    </StackPanel>
+                </ScrollViewer>
+                
                 
 
             </telerik:RadTabItem>
             <telerik:RadTabItem x:Name="ItemTray" Header="Trayectorias"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=7}">
+                <ScrollViewer>
                 <StackPanel Orientation="Vertical" Margin="10">
                     <Border Style="{StaticResource alert-info}" Visibility="{Binding Trayectorias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock TextWrapping="Wrap"  Text="Listado de la trayectoria. Podras restaurar nuevamente la siguiente lista del modelo por el actual, pulsando el botón Restaurar"></TextBlock>
+                            <TextBlock TextWrapping="Wrap"  Text="La siguiente lista de trayectorias se podra restaurar nuevamente de acuerdo al estado mecanico, pulsando el boton Restaurar."></TextBlock>
                             <Button  Width="100" Content="Restaurar" Command="{Binding CommandResetTray}" Background="#EFEFEF" ToolTip="Restaurar los registros de trayectoria por el actual"></Button>
                         </StackPanel>
                     </Border>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="30 0">
+                        <Label>Total registros:</Label>
+                        <TextBlock Text="{Binding ModTrayectorias.Count}" Padding="5"></TextBlock>
+                    </StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"></ColumnDefinition>
@@ -782,7 +833,9 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="560"></RowDefinition>
                         </Grid.RowDefinitions>
-
+                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
+                            <WindowsFormsHost Name="wfhTrayectoria" ></WindowsFormsHost>
+                        </telerik:RadExpander>
                         <telerik:RadGridView Grid.Column="0" ItemsSource="{Binding ModTrayectorias}" IsReadOnly="True" AutoGenerateColumns="False" Margin="0 0  30 0" telerik:StyleManager.Theme="Windows8Touch" ShowGroupPanel="False">
                             <telerik:RadGridView.Columns >
                                 <telerik:GridViewDataColumn Header="mD" DataMemberBinding="{Binding PROFUNDIDADMD}"  DataFormatString="0.00"/>
@@ -793,52 +846,63 @@
 
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
-                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
-                            <WindowsFormsHost Name="wfhTrayectoria" ></WindowsFormsHost>
-                        </telerik:RadExpander>
+                        
 
 
                     </Grid>
 
 
                 </StackPanel>
-                
+                </ScrollViewer>
             </telerik:RadTabItem>
             <telerik:RadTabItem x:Name="ItemTemps" Header="Temperaturas"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=8}">
                 <ScrollViewer>
-                    <Grid Margin="10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
-                            <WindowsFormsHost Name="wfhTemperatura" ></WindowsFormsHost>
-                        </telerik:RadExpander>
-                        <Grid Grid.Column="0" Margin="0 0  30 0">
+                    <StackPanel Margin="10">
+                        <Border Style="{StaticResource alert-info}" Visibility="{Binding Trayectorias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock TextWrapping="Wrap"  Text="La siguiente lista de temperaturas se genera automaticamente tomando en cuenta la lista e informacion de las trayectorias"></TextBlock>
+                                
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="30 0">
+                            <Label>Total registros:</Label>
+                            <TextBlock Text="{Binding ModTemperaturas.Count}" Padding="5"></TextBlock>
+                        </StackPanel>
+                        <Grid Margin="10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="2*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="580"></RowDefinition>
-                                <RowDefinition Height="20"></RowDefinition>
-                                <RowDefinition Height="40"></RowDefinition>
+                            <telerik:RadExpander Grid.Column="0" Header="Gráfica" ExpandDirection="Left" >
+                                <WindowsFormsHost Name="wfhTemperatura" ></WindowsFormsHost>
+                            </telerik:RadExpander>
+                            <Grid Grid.Column="0" Margin="0 0  30 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="580"></RowDefinition>
+                                    <RowDefinition Height="20"></RowDefinition>
+                                    <RowDefinition Height="40"></RowDefinition>
 
-                            </Grid.RowDefinitions>
-                            <telerik:RadGridView Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ModTemperaturas}" IsReadOnly="True" AutoGenerateColumns="False" Visibility="{Binding Temperaturas.Count,Converter={StaticResource NumberToVisibilityConverter}}"  telerik:StyleManager.Theme="Windows8Touch" ShowGroupPanel="False">
-                                <telerik:RadGridView.Columns >
-                                    <telerik:GridViewDataColumn Header="mD" DataMemberBinding="{Binding PROFUNDIDADMD}" DataFormatString="0.00" />
-                                    <telerik:GridViewDataColumn Header="TEMPERATURA (°C)" DataMemberBinding="{Binding TEMPERATURA}"  DataFormatString="0.00"/>
-                                </telerik:RadGridView.Columns>
-                            </telerik:RadGridView>
+                                </Grid.RowDefinitions>
+                                <telerik:RadGridView Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding ModTemperaturas}" IsReadOnly="True" AutoGenerateColumns="False" Visibility="{Binding Temperaturas.Count,Converter={StaticResource NumberToVisibilityConverter}}"  telerik:StyleManager.Theme="Windows8Touch" ShowGroupPanel="False">
+                                    <telerik:RadGridView.Columns >
+                                        <telerik:GridViewDataColumn Header="mD" DataMemberBinding="{Binding PROFUNDIDADMD}" DataFormatString="0.00" />
+                                        <telerik:GridViewDataColumn Header="TEMPERATURA (°C)" DataMemberBinding="{Binding TEMPERATURA}"  DataFormatString="0.00"/>
+                                    </telerik:RadGridView.Columns>
+                                </telerik:RadGridView>
 
-                            <Separator Grid.Row="1" Grid.ColumnSpan="2"></Separator>
-                            <Label Grid.Column="0" Grid.Row="2" Content="{x:Static lang:Resources.HTC}"/>
-                            <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.HTC}" Grid.Row="2" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                                <Separator Grid.Row="1" Grid.ColumnSpan="2"></Separator>
+                                <Label Grid.Column="0" Grid.Row="2" Content="{x:Static lang:Resources.HTC}"/>
+                                <telerik:RadNumericUpDown Grid.Column="1" Value="{Binding ModGeneral.HTC}" Grid.Row="2" Height="22" ShowButtons="False"></telerik:RadNumericUpDown>
+                            </Grid>
+
+
+
                         </Grid>
-
-
-
-                    </Grid>
+                    </StackPanel>
+                    
                 </ScrollViewer>
               
 
@@ -932,11 +996,11 @@
                             </telerik:RadNumericUpDown>
 
                             <Label Grid.Column="0" Grid.Row="6" Content="{x:Static lang:Resources.GLRINY}"/>
-                            <telerik:RadNumericUpDown Value="{Binding GLRINY}" IsEnabled="{Binding ElementName=ddlEntry,Path=SelectedIndex,Converter={StaticResource  WRNumToBool},ConverterParameter=0}" Grid.Column="1" Grid.Row="6" Height="22" ShowButtons="False" >
+                            <telerik:RadNumericUpDown Value="{Binding GLRINY}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}" Grid.Column="1" Grid.Row="6" Height="22" ShowButtons="False" >
                             </telerik:RadNumericUpDown>
 
                             <Label Grid.Column="0" Grid.Row="7" Content="{x:Static lang:Resources.GLRATE}"/>
-                            <telerik:RadNumericUpDown Value="{Binding GLRATE}" IsEnabled="{Binding ElementName=ddlEntry,Path=SelectedIndex,Converter={StaticResource WRNumToBool},ConverterParameter=1}" Grid.Column="1" Grid.Row="7" Height="22" ShowButtons="False" >
+                            <telerik:RadNumericUpDown Value="{Binding GLRATE}" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}" Grid.Column="1" Grid.Row="7" Height="22" ShowButtons="False" >
                             </telerik:RadNumericUpDown>
 
                             <Separator Grid.Row="8" Grid.ColumnSpan="6"></Separator>
@@ -947,12 +1011,12 @@
                             <Separator Grid.Row="10" Grid.ColumnSpan="6"></Separator>
 
                             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="11" Content="{x:Static lang:Resources.TRPRES}"/>
-                            <telerik:RadNumericUpDown Grid.Column="3" Value="{Binding TRPRES}" Grid.Row="11" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">                                
+                            <telerik:RadNumericUpDown Grid.Column="3" Value="{Binding TRPRES}" Grid.Row="11" Height="22" ShowButtons="False" >                                
                             </telerik:RadNumericUpDown >
 
                             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="12" Content="{x:Static lang:Resources.DIAMVAL}"/>
-                            <telerik:RadNumericUpDown Value="{Binding DIAMVAL}" Grid.Column="3" Grid.Row="12" Height="22" ShowButtons="False" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}">
-                            </telerik:RadNumericUpDown >
+                           
+                            <telerik:RadNumericUpDown Value="{Binding DIAMVAL}" Grid.Column="3" Grid.Row="12" Height="22" ShowButtons="False"/>
                             <Separator Grid.Row="13" Grid.ColumnSpan="6"></Separator>
 
                             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="14" Content="{x:Static lang:Resources.QGIMIN}"/>
@@ -1170,6 +1234,8 @@
                 </Button.Content>
             </Button>
         </StackPanel>
+        
+
     </Grid>
 
 </Window>

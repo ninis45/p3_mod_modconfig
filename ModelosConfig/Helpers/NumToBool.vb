@@ -4,7 +4,14 @@ Public Class NumToBool
     Implements IValueConverter
 
     Public Function Convert(value As Object, targetType As Type, parameter As Object, culture As CultureInfo) As Object Implements IValueConverter.Convert
-        If value = parameter Then Return True
+
+
+        If parameter Is Nothing Then
+            If value > 0 Then Return True
+        Else
+            If value = parameter Then Return True
+        End If
+
 
         Return False
     End Function

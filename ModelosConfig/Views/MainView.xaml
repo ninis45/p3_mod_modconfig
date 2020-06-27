@@ -26,11 +26,11 @@
             </Style.Triggers>
 
         </Style>
-        
+
         <Style TargetType="{x:Type telerik:PaneHeader}">
             <Setter Property="Background" Value="#9d2449" />
             <Setter Property="Foreground" Value="White"></Setter>
-           
+
         </Style>
     </UserControl.Resources>
 
@@ -67,7 +67,7 @@
             </StackPanel>
             <StackPanel Grid.Row="1"  Orientation="Horizontal" Margin="6" HorizontalAlignment="Right">
 
-                <telerik:RadComboBox 
+                <!--<telerik:RadComboBox 
                 EmptyText="Modelos"
                 ItemsSource="{Binding Modelos,Mode=TwoWay}"              
                   
@@ -75,25 +75,52 @@
                 SelectedValuePath="IDMODPOZO"
                 DisplayMemberPath="FECHAMODELO"
                 Visibility="{Binding Modelos.Count,Converter={StaticResource NumberToVisibilityConverter}}" FontFamily="Century Gothic" FontSize="14"    >
-                </telerik:RadComboBox >
+                </telerik:RadComboBox >-->
 
-                <Button  Margin="1 0"  Width="30" Padding="2" Click="ShowConfig" Background="#CECECE" BorderThickness="0"   HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Datalles del modelo" IsEnabled="{Binding EnabledView}">
+                <!--<Button  Margin="1 0"  Width="30" Padding="2" Click="ShowConfig" Background="#CECECE" BorderThickness="0"   HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Datalles del modelo" IsEnabled="{Binding EnabledView}">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <telerik:RadGlyph Glyph="&#xe13e;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
-                </Button>
-                
-                <Button  Margin="1 0"  Width="30" Padding="2" Click="SetConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Crear / Actualizar nuevo modelo">
+                </Button>-->
+
+                <!--<Button  Margin="1 0"  Width="30" Padding="2" Click="SetConfig" Background="#FF024426" BorderThickness="0"  Foreground="White" HorizontalAlignment="Right" FontFamily="Century Gothic" FontSize="14" ToolTip="Crear / Actualizar nuevo modelo">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <telerik:RadGlyph Glyph="&#xe907;" />
                             <TextBlock  ToolTip="Configuración" Text="" FontFamily="Century Gothic"></TextBlock>
                         </StackPanel>
                     </Button.Content>
-                </Button>
+                </Button>-->
+
+                <ToolBarTray Background="#EFEFEF" >
+
+                    <ToolBar Background="Transparent" FontSize="14" >
+                        <Button Background="#CECECE" Padding="4"   Name="btnNew" ToolTip="Nueva configuracion" >
+                            <telerik:RadGlyph Glyph="&#xe907;" Foreground="White" />
+                        </Button>
+                        <Button Background="#CECECE" Padding="4" Name="btnCopy"  IsEnabled="{Binding EnabledView}" ToolTip="Copiar configuracion">
+
+                            <telerik:RadGlyph Glyph="&#xe65d;" Foreground="DarkBlue" ></telerik:RadGlyph>
+                        </Button>
+                        <Button Background="#CECECE" Padding="4"   Name="btnRefresh" ToolTip="Actualizar" >
+                            <telerik:RadGlyph Glyph="&#xe106;" />
+                        </Button>
+                        <Button  Name="btnAfter" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion anterior">
+                            <telerik:RadGlyph Glyph="&#xe007;"></telerik:RadGlyph>
+                        </Button>
+                        <TextBlock Background="White"  Text="{Binding VwGeneral.FECHAMODELO,StringFormat={}{0:dd/MM/yyyy hh:mm:ss tt}}" MinWidth="50" Padding="3"></TextBlock>
+                        <Button Name="btnBefore" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion siguiente">
+                            <telerik:RadGlyph Glyph="&#xe005;"></telerik:RadGlyph>
+                        </Button>
+                        <Button Background="#CECECE" Padding="4" Name="btnView"  IsEnabled="{Binding EnabledView}" ToolTip="Ver configuracion">
+                            <telerik:RadGlyph Glyph="&#xe13e;" />
+                        </Button>
+                    </ToolBar>
+
+                </ToolBarTray>
 
 
 
@@ -212,7 +239,7 @@
                                 <telerik:GridViewDataColumn Header="Estatus" DataMemberBinding="{Binding Estatus,Converter={StaticResource WREstatusHelper}}"></telerik:GridViewDataColumn>
                             </telerik:RadGridView.Columns>
                         </telerik:RadGridView>
-                        
+
                     </telerik:RadPane>
                 </telerik:RadPaneGroup>
             </telerik:RadSplitContainer>

@@ -1,7 +1,7 @@
 ﻿Class MainWindow
 
     Dim Context As MainViewModel
-
+    Private SelectedMod As Integer = 0
 
     Sub New(ByVal IdAgujero As String, ByVal Fecha As String, ByVal IdUsuario As String)
 
@@ -15,6 +15,22 @@
 
         Context.Initialize(hstProductividad, hstCorrelacion, hstVpl, hstGas, hstDiag, hstWc)
 
+        btnAfter.IsEnabled = False
+        btnBefore.IsEnabled = False
+
+
+        If Context.Estatus = 3 Then
+            SelectedMod = Context.Modelos.Count - 1
+            If Context.Modelos.Count > 1 Then
+                btnAfter.IsEnabled = True
+            End If
+        Else
+            If Context.Modelos.Count > 1 Then
+                btnBefore.IsEnabled = True
+            End If
+        End If
+
+
 
     End Sub
     Public Sub actualizar(ByVal IdAgujero As String, ByVal Fecha As String, ByVal IdUsuario As String)
@@ -26,7 +42,18 @@
         Context.FechaPrueba = Fecha
         Context.IdUsuario = IdUsuario
 
-
+        btnAfter.IsEnabled = False
+        btnBefore.IsEnabled = False
+        If Context.Estatus = 3 Then
+            SelectedMod = Context.Modelos.Count - 1
+            If Context.Modelos.Count > 1 Then
+                btnAfter.IsEnabled = True
+            End If
+        Else
+            If Context.Modelos.Count > 1 Then
+                btnBefore.IsEnabled = True
+            End If
+        End If
 
     End Sub
 
@@ -107,5 +134,92 @@
 
 
         CondView.ShowDialog()
+    End Sub
+
+    Private Sub BtnAfter_Click(sender As Object, e As RoutedEventArgs) Handles btnAfter.Click
+        SelectedMod -= 1
+        btnBefore.IsEnabled = True
+        If SelectedMod <= 0 Then
+            SelectedMod = 0
+            btnAfter.IsEnabled = False
+
+        Else
+            btnAfter.IsEnabled = True
+        End If
+        Context.IdModPozo = Context.Modelos(SelectedMod).IDMODPOZO
+    End Sub
+
+    Private Sub BtnBefore_Click(sender As Object, e As RoutedEventArgs) Handles btnBefore.Click
+        SelectedMod += 1
+        btnAfter.IsEnabled = True
+        If SelectedMod > Context.Modelos.Count - 2 Then
+            SelectedMod = Context.Modelos.Count - 1
+            btnBefore.IsEnabled = False
+        Else
+            btnBefore.IsEnabled = True
+        End If
+        Context.IdModPozo = Context.Modelos(SelectedMod).IDMODPOZO
+    End Sub
+
+    Private Sub BtnCopy_Click(sender As Object, e As RoutedEventArgs) Handles btnCopy.Click
+        Dim db As New ModeloCI.Entities_ModeloCI()
+        Try
+            Dim ConfigView As New ConfigView(Context.IdAgujero, Context.IdModPozo)
+
+            ConfigView.Title = "Copiar configuracion "
+            ConfigView.ShowDialog()
+
+
+            'If ConfigView.ContextConfig.IsSaved Then
+            '    Context.IdModPozo = ConfigView.ContextConfig.IdModPozo 'Revisar para que no haya doble consulta en VWGeneral
+            '    Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+            'End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error)
+        End Try
+    End Sub
+
+    Private Sub BtnNew_Click(sender As Object, e As RoutedEventArgs) Handles btnNew.Click
+        Dim db As New ModeloCI.Entities_ModeloCI()
+        Try
+            Dim ConfigView As New ConfigView(Context.IdAgujero, Context.LiftMethod, Context.IdUsuario, Context.FechaPrueba)
+
+
+            ConfigView.ShowDialog()
+
+
+            'If ConfigView.ContextConfig.IsSaved Then
+            '    Context.IdModPozo = ConfigView.ContextConfig.IdModPozo 'Revisar para que no haya doble consulta en VWGeneral
+            '    Context.VwGeneral = db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = ConfigView.ContextConfig.IdModPozo).SingleOrDefault()
+            'End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error)
+        End Try
+    End Sub
+
+    Private Sub BtnView_Click(sender As Object, e As RoutedEventArgs) Handles btnView.Click
+        Dim db As New ModeloCI.Entities_ModeloCI()
+        Dim ConfigView As New ConfigView(Context.IdAgujero, Context.IdModPozo)
+
+        ConfigView.ContextConfig.IsReadOnly = True
+
+
+        ConfigView.ShowDialog()
+    End Sub
+
+    Private Sub BtnRefresh_Click(sender As Object, e As RoutedEventArgs) Handles btnRefresh.Click
+        Context.IdAgujero = Context.IdAgujero
+        btnAfter.IsEnabled = False
+        btnBefore.IsEnabled = False
+        If Context.Estatus = 3 Then
+            SelectedMod = Context.Modelos.Count - 1
+            If Context.Modelos.Count > 1 Then
+                btnAfter.IsEnabled = True
+            End If
+        Else
+            If Context.Modelos.Count > 1 Then
+                btnBefore.IsEnabled = True
+            End If
+        End If
     End Sub
 End Class

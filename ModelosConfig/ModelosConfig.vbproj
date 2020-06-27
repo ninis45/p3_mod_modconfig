@@ -59,6 +59,9 @@
     <Reference Include="ModeloCI">
       <HintPath>..\..\ModeloCI.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Prism">
       <HintPath>..\..\Dlls\Prism.dll</HintPath>
     </Reference>
@@ -370,6 +373,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{94E38DFF-614B-4CBD-B67C-F211BB35CE8B}" />

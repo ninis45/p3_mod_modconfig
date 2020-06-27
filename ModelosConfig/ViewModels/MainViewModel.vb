@@ -14,12 +14,12 @@ Public Class MainViewModel
     Public grfWc As New grfWc()
     Public usrTrayectoria As New usrTrayectoria()
 
-
+    Private NivMedDis As Double = 0
 
     'Private MPrsp As Crea.Modelo
     Private db As New Entities_ModeloCI()
 
-    Private AgujeroModel As AgujeroModel
+    Public AgujeroModel As AgujeroModel
     'Private Estabilidad As ModelosEstabilidad.Main
     Property Mecanicos As List(Of Tuberia)
     Property NewMecanicos As List(Of Tuberia)
@@ -85,8 +85,8 @@ Public Class MainViewModel
             Pozo += " - " + SAPs(LiftMethod)
         End If
 
-        If AgujeroModel.VWModPozo IsNot Nothing Then
-            IdModPozo = AgujeroModel.VWModPozo.IDMODPOZO
+        If Modelos.Count > 0 Then
+            IdModPozo = Modelos(Modelos.Count - 1).IDMODPOZO ' AgujeroModel.VWModPozo.IDMODPOZO
         Else
             IdModPozo = Nothing
             'Infos.Add("Pozo sin modelo, para agregar uno, pulsa el botón [+] para abrir el formulario de captura.")
@@ -121,7 +121,7 @@ Public Class MainViewModel
         Set(value As List(Of VW_MOD_POZO))
             _condiciones = value
 
-            If _condiciones IsNot Nothing AndAlso _modelos.Count > 0 Then
+            If _condiciones IsNot Nothing AndAlso Modelos.Count > 0 Then
                 Infos.Add("Actualmente existen modelos ejecutados por condiciones de operación, puedes consultarlo en este panel.")
             End If
 
@@ -174,6 +174,8 @@ Public Class MainViewModel
 
 
                 VwGeneral = AgujeroModel.GetEdoGeneral(_id_mod_pozo) 'db.VW_EDO_GENERAL.Where(Function(w) w.IDMODPOZO = _id_mod_pozo).SingleOrDefault()
+                'temporal BNC
+
 
 
 
@@ -447,7 +449,13 @@ Public Class MainViewModel
         If Intentos IsNot Nothing Then
             For Each i In Intentos
 
-                If i.ESTATUS = -1 Then Errors.Add(i.ERRORS)
+                If i.ESTATUS = False Then
+                    Errors.Add(i.ERRORS)
+                Else
+                    Infos.Add(i.ERRORS)
+                End If
+
+
             Next
         End If
         'Se podria extraer al momento de crear el modelo - Posible depreciacion
@@ -520,45 +528,47 @@ Public Class MainViewModel
 
 
 
-
-        Dim vlp = db.VLP_IPR.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO And w.ENDRECORD Is Nothing).SingleOrDefault()
-        If vlp IsNot Nothing Then
-            Dim vlp_detalles = db.VLP_IPR_DETALLE.Where(Function(w) w.IDVLPIPR = vlp.IDVLPIPR And w.ENDRECORD Is Nothing).OrderBy(Function(o) o.IPR_RTEL).ToList()
-
-
-            Dim IPR_RTEL(vlp_detalles.Count - 1) As Double
-            Dim IPR_WPF(vlp_detalles.Count - 1) As Double
-
-            Dim NdatAux As Integer
-            NdatAux = 19
-            Dim Xaux(vlp_detalles.Count - 1), Yaux(vlp_detalles.Count - 1) As Double
-
-            For i = 0 To vlp_detalles.Count - 1
-                IPR_RTEL(i) = vlp_detalles(i).IPR_RTEL
-                IPR_WPF(i) = vlp_detalles(i).IPR_PWF
+        Try
+            Dim vlp = db.VLP_IPR.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO And w.ENDRECORD Is Nothing).SingleOrDefault()
+            If vlp IsNot Nothing Then
+                Dim vlp_detalles = db.VLP_IPR_DETALLE.Where(Function(w) w.IDVLPIPR = vlp.IDVLPIPR And w.ENDRECORD Is Nothing).OrderBy(Function(o) o.IPR_RTEL).ToList()
 
 
-                Xaux(i) = vlp_detalles(i).VLP_RTEL
-                Yaux(i) = vlp_detalles(i).VLP_PWF
-            Next i
+                Dim IPR_RTEL(vlp_detalles.Count - 1) As Double
+                Dim IPR_WPF(vlp_detalles.Count - 1) As Double
 
-            'line1
-            grfProductividad.TChart1.Series(0).Title = vlp.TITULO2 'IPR
-            grfProductividad.TChart1.Series(0).Add(IPR_RTEL, IPR_WPF)
+                Dim NdatAux As Integer
+                NdatAux = 19
+                Dim Xaux(vlp_detalles.Count - 1), Yaux(vlp_detalles.Count - 1) As Double
 
-            'line2
-            grfProductividad.TChart1.Series(1).Add(RTEOTest1, PTest1)
-            grfProductividad.TChart1.Series(1).Legend.Visible = False
-
-            'line3
-            grfProductividad.TChart1.Series(2).Add(Xaux, Yaux)
-            grfProductividad.TChart1.Series(2).Title = vlp.TITULO1
+                For i = 0 To vlp_detalles.Count - 1
+                    IPR_RTEL(i) = vlp_detalles(i).IPR_RTEL
+                    IPR_WPF(i) = vlp_detalles(i).IPR_PWF
 
 
+                    Xaux(i) = vlp_detalles(i).VLP_RTEL
+                    Yaux(i) = vlp_detalles(i).VLP_PWF
+                Next i
+
+                'line1
+                grfProductividad.TChart1.Series(0).Title = vlp.TITULO2 'IPR
+                grfProductividad.TChart1.Series(0).Add(IPR_RTEL, IPR_WPF)
+
+                'line2
+                grfProductividad.TChart1.Series(1).Add(RTEOTest1, PTest1)
+                grfProductividad.TChart1.Series(1).Legend.Visible = False
+
+                'line3
+                grfProductividad.TChart1.Series(2).Add(Xaux, Yaux)
+                grfProductividad.TChart1.Series(2).Title = vlp.TITULO1
 
 
-        End If
 
+
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia IPR", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
 
     End Sub
     'Datos Chart2
@@ -569,84 +579,106 @@ Public Class MainViewModel
         Dim yaux As New Dictionary(Of String, ArrayList)
 
 
+
         Dim cat_correlas = db.CAT_CORRELACION.Where(Function(w) w.ENDRECORD Is Nothing).OrderBy(Function(o) o.NUM).ToDictionary(Function(d) d.IDCATCORRELACION, Function(d) d.NOMBRE)
         Dim correlaciones = (From correlas In db.VW_CORRELACIONES Where correlas.IDMODPOZO = model.IDMODPOZO Order By correlas.IDCORRELACION, correlas.PROFMD).ToList() 'db.VW_CORRELACIONES.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.IDCORRELACION).OrderBy(Function(o) o.IDCORRELACION).OrderBy(Function(o) o.PROFMD).ToList()
-
-
-        'Ocultar series
-        For i = 0 To cat_correlas.Count
-            grfCorrelacion.TChart1.Series(i + 1).Clear()
-            grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = False
-
-        Next
-
-        For Each correlacion In correlaciones
-            If xaux.ContainsKey(correlacion.IDCATCORRELACION) = False Then
-
-
-
-                xaux.Add(correlacion.IDCATCORRELACION, New ArrayList())
-                yaux.Add(correlacion.IDCATCORRELACION, New ArrayList())
+        Try
+            If cat_correlas.Count = 0 Then
+                Throw New Exception("No hay catalogo de correlaciones")
             End If
-            xaux(correlacion.IDCATCORRELACION).Add(Math.Round(correlacion.PRES, 2))
-            yaux(correlacion.IDCATCORRELACION).Add(Math.Round(correlacion.PROFMD, 2))
-        Next
+
+            'Ocultar series
+            For i = 0 To grfCorrelacion.TChart1.Series.Count - 1
+                If i > 0 Then
+                    grfCorrelacion.TChart1.Series(i).Clear()
+                End If
+
+                grfCorrelacion.TChart1.Series(i).Legend.Visible = False
+
+            Next
+
+            For Each correlacion In correlaciones
+                If xaux.ContainsKey(correlacion.IDCATCORRELACION) = False Then
 
 
-        Select Case model.LIFTMETHOD
-            Case 1 'BN
 
-
-
-                PrfTest1(0) = AgujeroModel.ModTuberias(AgujeroModel.ModTuberias.Count - 1).MD 'nivel medio de disparo
-                PrfTest1(1) = AgujeroModel.ModTuberias(AgujeroModel.ModTuberias.Count - 1).MD '100'.NivMedDisp.Val
-
-
-                PTest1(0) = 0
-                PTest1(1) = model.PTEST
-                PTest1(2) = model.PTEST
-
-                PrfTest1(2) = 0
-
-
-            Case 2 'BEC
-                PrfTest1(0) = model.PROF_BEC '.Prof_BEC.Val Esperar nuevo formulario
-                PrfTest1(1) = model.PROF_BEC '.Prof_BEC.Val Esperar nuevo formulario
-
-                PTest1(0) = 0
-                PTest1(1) = model.PREDES_BEC
-                PTest1(2) = model.PREDES_BEC
-
-                PrfTest1(2) = 0
-        End Select
+                    xaux.Add(correlacion.IDCATCORRELACION, New ArrayList())
+                    yaux.Add(correlacion.IDCATCORRELACION, New ArrayList())
+                End If
+                xaux(correlacion.IDCATCORRELACION).Add(Math.Round(correlacion.PRES, 2))
+                yaux(correlacion.IDCATCORRELACION).Add(Math.Round(correlacion.PROFMD, 2))
+            Next
 
 
 
 
 
 
-        grfCorrelacion.TChart1.Series(0).Add(PTest1, PrfTest1) 'Revisar el PrfTest1 esta erroneo
-        grfCorrelacion.TChart1.Series(0).Legend.Text = "Punto de operación"
+            Select Case model.LIFTMETHOD
+                Case 1 'BN
+
+                    Dim TmpBNC = db.MOD_POZO_BNC.Where(Function(w) w.IDMODPOZO = VwGeneral.IDMODPOZO).SingleOrDefault()
+                    If TmpBNC IsNot Nothing Then
+                        NivMedDis = TmpBNC.NivMedDisp.GetValueOrDefault()
+                    End If
+                    If NivMedDis = 0 AndAlso AgujeroModel.ModTuberias.Count > 0 Then
+                        NivMedDis = AgujeroModel.ModTuberias(AgujeroModel.ModTuberias.Count - 1).MD
+                    End If
+
+
+                    PrfTest1(0) = NivMedDis 'nivel medio de disparo
+                    PrfTest1(1) = NivMedDis  '100'.NivMedDisp.Val
+
+
+                    PTest1(0) = 0
+                    PTest1(1) = model.PTEST
+                    PTest1(2) = model.PTEST
+
+                    PrfTest1(2) = 0
+
+
+                Case 2 'BEC
+                    PrfTest1(0) = model.PROF_BEC '.Prof_BEC.Val Esperar nuevo formulario
+                    PrfTest1(1) = model.PROF_BEC '.Prof_BEC.Val Esperar nuevo formulario
+
+                    PTest1(0) = 0
+                    PTest1(1) = model.PREDES_BEC
+                    PTest1(2) = model.PREDES_BEC
+
+                    PrfTest1(2) = 0
+            End Select
 
 
 
 
 
 
-        For i = 0 To xaux.Count - 1
-            grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = True
-            grfCorrelacion.TChart1.Series(i + 1).Title = IIf(cat_correlas.ContainsKey(xaux.Keys(i)), cat_correlas(xaux.Keys(i)), "Sin titulo (" + xaux.Keys(i) + ")")
+            grfCorrelacion.TChart1.Series(0).Add(PTest1, PrfTest1) 'Revisar el PrfTest1 esta erroneo
+            grfCorrelacion.TChart1.Series(0).Legend.Text = "Punto de operación"
+            grfCorrelacion.TChart1.Series(0).Visible = True
 
 
 
-            Dim x = xaux.Values(i).ToArray(GetType(Double))
-            Dim y = yaux.Values(i).ToArray(GetType(Double))
-            grfCorrelacion.TChart1.Series(i + 1).Add(x, y)
-
-        Next i
 
 
+            For i = 0 To xaux.Count - 1
+                If grfCorrelacion.TChart1.Series.Count <= i Then
+                    Exit For
+                End If
+                grfCorrelacion.TChart1.Series(i + 1).Legend.Visible = True
+                grfCorrelacion.TChart1.Series(i + 1).Title = IIf(cat_correlas.ContainsKey(xaux.Keys(i)), cat_correlas(xaux.Keys(i)), "Sin titulo (" + xaux.Keys(i) + ")")
 
+
+
+                Dim x = xaux.Values(i).ToArray(GetType(Double))
+                Dim y = yaux.Values(i).ToArray(GetType(Double))
+                grfCorrelacion.TChart1.Series(i + 1).Add(x, y)
+
+            Next i
+
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia TCC", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
 
     End Sub
     'Datos TChart3
@@ -673,81 +705,84 @@ Public Class MainViewModel
         PTest1(0) = model.PTEST
         PTest1(1) = model.PTEST
         PTest1(2) = 0
-
-        ' grfVpl.TChart1.Series(0).Legend.Visible = False
-        For i = 0 To 10
-            grfVpl.TChart1.Series(i).Clear()
-            grfVpl.TChart1.Series(i).Legend.Visible = False
-        Next
-
-
-        Dim NdatAux As Integer
-        NdatAux = NumDat - 1
+        Try
+            ' grfVpl.TChart1.Series(0).Legend.Visible = False
+            For i = 0 To 10
+                grfVpl.TChart1.Series(i).Clear()
+                grfVpl.TChart1.Series(i).Legend.Visible = False
+            Next
 
 
-
-        For Each gasto In vlp_gastos
-            If gasto.IS_VLP And xaux.ContainsKey(gasto.TITULO.ToString()) = False Then
-                xaux.Add(gasto.TITULO.ToString(), New ArrayList())
-                yaux.Add(gasto.TITULO.ToString(), New ArrayList())
-                Exit For
-            End If
-
-        Next
-
-
-        For Each gasto In vlp_gastos
-
-            If xaux.ContainsKey(gasto.TITULO.ToString()) = False And gasto.IS_VLP = 0 Then
-                xaux.Add(gasto.TITULO.ToString(), New ArrayList())
-                yaux.Add(gasto.TITULO.ToString(), New ArrayList())
-            End If
-
-            xaux(gasto.TITULO.ToString()).Add(gasto.XAUX)
-            yaux(gasto.TITULO.ToString()).Add(gasto.YAUX)
-
-        Next
-
-        grfVpl.TChart1.Series(11).Clear()
-
-        Select Case model.LIFTMETHOD
-            Case 1
+            Dim NdatAux As Integer
+            NdatAux = NumDat - 1
 
 
 
+            For Each gasto In vlp_gastos
+                If gasto.IS_VLP And xaux.ContainsKey(gasto.TITULO.ToString()) = False Then
+                    xaux.Add(gasto.TITULO.ToString(), New ArrayList())
+                    yaux.Add(gasto.TITULO.ToString(), New ArrayList())
+                    Exit For
+                End If
 
-                grfVpl.TChart1.Text = "VLP/IPR-Sensibilidad de Qgi"
-                grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Fondo Fluyendo [Kg/cm2]"
-                grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
+            Next
 
-                'Punto de operacion
-                grfVpl.TChart1.Series(11).Add(model.QTEST, model.PTEST)
-                grfVpl.TChart1.Series(11).Legend.Visible = True
+
+            For Each gasto In vlp_gastos
+
+                If xaux.ContainsKey(gasto.TITULO.ToString()) = False And gasto.IS_VLP = 0 Then
+                    xaux.Add(gasto.TITULO.ToString(), New ArrayList())
+                    yaux.Add(gasto.TITULO.ToString(), New ArrayList())
+                End If
+
+                xaux(gasto.TITULO.ToString()).Add(gasto.XAUX)
+                yaux(gasto.TITULO.ToString()).Add(gasto.YAUX)
+
+            Next
+
+            grfVpl.TChart1.Series(11).Clear()
+
+            Select Case model.LIFTMETHOD
+                Case 1
 
 
 
 
+                    grfVpl.TChart1.Text = "VLP/IPR-Sensibilidad de Qgi"
+                    grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Fondo Fluyendo [Kg/cm2]"
+                    grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
 
-            Case 2
-                grfVpl.TChart1.Text = "VLP/Presión de Descargar Sensibilizando Frecuencia"
-                grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Descarga [Kg/cm2]"
-                grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
+                    'Punto de operacion
+                    grfVpl.TChart1.Series(11).Add(model.QTEST, model.PTEST)
+                    grfVpl.TChart1.Series(11).Legend.Visible = True
 
-                grfVpl.TChart1.Series(11).Legend.Visible = False
-        End Select
 
-        Dim titulos As List(Of String) = xaux.Keys.ToList()
 
-        For i = 0 To titulos.Count - 1
 
-            Dim x = xaux.Values(i).ToArray(GetType(Double))
-            Dim y = yaux.Values(i).ToArray(GetType(Double))
 
-            grfVpl.TChart1.Series(i).Legend.Visible = True
-            grfVpl.TChart1.Series(i).Title = titulos(i)
-            grfVpl.TChart1.Series(i).Add(x, y)
+                Case 2
+                    grfVpl.TChart1.Text = "VLP/Presión de Descargar Sensibilizando Frecuencia"
+                    grfVpl.TChart1.Axes.Left.Title.Text = "Presión de Descarga [Kg/cm2]"
+                    grfVpl.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [STBPD]"
 
-        Next i
+                    grfVpl.TChart1.Series(11).Legend.Visible = False
+            End Select
+
+            Dim titulos As List(Of String) = xaux.Keys.ToList()
+
+            For i = 0 To titulos.Count - 1
+
+                Dim x = xaux.Values(i).ToArray(GetType(Double))
+                Dim y = yaux.Values(i).ToArray(GetType(Double))
+
+                grfVpl.TChart1.Series(i).Legend.Visible = True
+                grfVpl.TChart1.Series(i).Title = titulos(i)
+                grfVpl.TChart1.Series(i).Add(x, y)
+
+            Next i
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia VLP - IPR", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
     End Sub
     'Datos Tchart4
     Sub LoadGAS(ByVal model As VW_EDO_GENERAL)
@@ -755,145 +790,152 @@ Public Class MainViewModel
 
         Dim xaux As New Dictionary(Of String, ArrayList)
         Dim yaux As New Dictionary(Of String, ArrayList)
+        Try
+            'Reseteamos gráficas
+            For i = 0 To 8
+                grfGas.TChart1.Series(i).Clear()
+            Next
 
-        'Reseteamos gráficas
-        For i = 0 To 8
-            grfGas.TChart1.Series(i).Clear()
-        Next
+            If comportamientos.Count > 0 Then
+
+                For Each com In comportamientos
+
+                    If com.det.YAUX > 0 Then
+                        If xaux.ContainsKey(com.com.TITULO.ToString()) = False Then
+                            xaux.Add(com.com.TITULO.ToString(), New ArrayList())
+                            yaux.Add(com.com.TITULO.ToString(), New ArrayList())
+                        End If
+                        xaux(com.com.TITULO.ToString()).Add(com.det.XAUX)
+                        yaux(com.com.TITULO.ToString()).Add(com.det.YAUX)
+                    End If
 
 
-        For Each com In comportamientos
-
-            If com.det.YAUX > 0 Then
-                If xaux.ContainsKey(com.com.TITULO.ToString()) = False Then
-                    xaux.Add(com.com.TITULO.ToString(), New ArrayList())
-                    yaux.Add(com.com.TITULO.ToString(), New ArrayList())
-                End If
-                xaux(com.com.TITULO.ToString()).Add(com.det.XAUX)
-                yaux(com.com.TITULO.ToString()).Add(com.det.YAUX)
-            End If
-
-
-        Next
-
-        Select Case model.LIFTMETHOD
-            Case 1
-                grfGas.TChart1.Text = "Comportamiento del Gas de BN"
-                grfGas.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
-                grfGas.TChart1.Axes.Bottom.Title.Text = "Qgi [MMSCFPD]"
-
-                Dim QgiTest1(1), QliqTest1(1) As Double
-                Dim QgiTest2(1), QliqTest2(1) As Double
-
-                Dim GlRate As Double = model.GLRATE
-
-                QgiTest1(0) = GlRate
-                QgiTest1(1) = GlRate
-                QliqTest1(0) = model.QTEST
-                QliqTest1(1) = model.QTEST
-                QgiTest2(0) = 0
-                QgiTest2(1) = GlRate
-                QliqTest2(0) = model.QTEST
-                QliqTest2(1) = model.QTEST
-
-                grfGas.TChart1.Series(0).Add(QgiTest1, QliqTest1)
-                grfGas.TChart1.Series(1).Add(QgiTest2, QliqTest2)
-                grfGas.TChart1.Series(2).Title = "Qgi"
-
-                Dim x = xaux.Values(0).ToArray(GetType(Double))
-                Dim y = yaux.Values(0).ToArray(GetType(Double))
-                grfGas.TChart1.Series(2).Add(x, y)
-
-                grfGas.TChart1.Series(0).Legend.Visible = False
-                grfGas.TChart1.Series(1).Title = "Punto de operación"
-
-                For i = 3 To 7
-                    grfGas.TChart1.Series(i).Legend.Visible = False
                 Next
-                grfGas.TChart1.Series(8).Legend.Visible = False
-            Case 2
-                grfGas.TChart1.Text = "Carta de la Bomba "
-                grfGas.TChart1.Axes.Left.Title.Text = "Carga de la Bomba (m)"
-                grfGas.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [RBPD]"
 
-                Dim titulos As List(Of String) = xaux.Keys.ToList()
+                Select Case model.LIFTMETHOD
+                    Case 1
+                        grfGas.TChart1.Text = "Comportamiento del Gas de BN"
+                        grfGas.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
+                        grfGas.TChart1.Axes.Bottom.Title.Text = "Qgi [MMSCFPD]"
+
+                        Dim QgiTest1(1), QliqTest1(1) As Double
+                        Dim QgiTest2(1), QliqTest2(1) As Double
+
+                        Dim GlRate As Double = model.GLRATE
+
+                        QgiTest1(0) = GlRate
+                        QgiTest1(1) = GlRate
+                        QliqTest1(0) = model.QTEST
+                        QliqTest1(1) = model.QTEST
+                        QgiTest2(0) = 0
+                        QgiTest2(1) = GlRate
+                        QliqTest2(0) = model.QTEST
+                        QliqTest2(1) = model.QTEST
+
+                        grfGas.TChart1.Series(0).Add(QgiTest1, QliqTest1)
+                        grfGas.TChart1.Series(1).Add(QgiTest2, QliqTest2)
+                        grfGas.TChart1.Series(2).Title = "Qgi"
+
+                        Dim x = xaux.Values(0).ToArray(GetType(Double))
+                        Dim y = yaux.Values(0).ToArray(GetType(Double))
+                        grfGas.TChart1.Series(2).Add(x, y)
+
+                        grfGas.TChart1.Series(0).Legend.Visible = False
+                        grfGas.TChart1.Series(1).Title = "Punto de operación"
+
+                        For i = 3 To 7
+                            grfGas.TChart1.Series(i).Legend.Visible = False
+                        Next
+                        grfGas.TChart1.Series(8).Legend.Visible = False
+                    Case 2
+                        grfGas.TChart1.Text = "Carta de la Bomba "
+                        grfGas.TChart1.Axes.Left.Title.Text = "Carga de la Bomba (m)"
+                        grfGas.TChart1.Axes.Bottom.Title.Text = "Gasto de Líquido [RBPD]"
+
+                        Dim titulos As List(Of String) = xaux.Keys.ToList()
 
 
 
-                For i = 0 To titulos.Count - 1
+                        For i = 0 To titulos.Count - 1
 
-                    Dim x = xaux.Values(i).ToArray(GetType(Double))
-                    Dim y = yaux.Values(i).ToArray(GetType(Double))
-                    grfGas.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
-                    grfGas.TChart1.Series(i).Add(x, y)
+                            Dim x = xaux.Values(i).ToArray(GetType(Double))
+                            Dim y = yaux.Values(i).ToArray(GetType(Double))
+                            grfGas.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
+                            grfGas.TChart1.Series(i).Add(x, y)
 
-                Next i
+                        Next i
 
-                grfGas.TChart1.Series(7).Legend.Visible = False
+                        grfGas.TChart1.Series(7).Legend.Visible = False
 
-                Dim bec = db.MOD_POZO_BEC.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO).SingleOrDefault()
+                        Dim bec = db.MOD_POZO_BEC.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO).SingleOrDefault()
 
-                grfGas.TChart1.Series(8).Add(bec.Qpromedio.GetValueOrDefault(), bec.General.GetValueOrDefault()) 'REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
+                        grfGas.TChart1.Series(8).Add(bec.Qpromedio.GetValueOrDefault(), bec.General.GetValueOrDefault()) 'REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
 
-        End Select
+                End Select
+            End If
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia G4", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
     End Sub
     'Datos Tchart5
     Sub LoadDiag(ByVal model As VW_EDO_GENERAL)
         Dim diagnosticos = db.VW_DIAGNOSTICOS.Where(Function(w) w.IDMODPOZO = model.IDMODPOZO).OrderBy(Function(o) o.YAUX).ToList()
         Dim xaux As New Dictionary(Of String, ArrayList)
         Dim yaux As New Dictionary(Of String, ArrayList)
-
-        For i = 0 To 3
-            grfDiag.TChart1.Series(i).Clear()
-        Next
-
-
-        For Each diag In diagnosticos
-            If xaux.ContainsKey(diag.TITULO.ToString()) = False Then
-                xaux.Add(diag.TITULO.ToString(), New ArrayList())
-                yaux.Add(diag.TITULO.ToString(), New ArrayList())
-            End If
-            xaux(diag.TITULO.ToString()).Add(diag.XAUX)
-            yaux(diag.TITULO.ToString()).Add(diag.YAUX)
-
-        Next
-
-        Select Case model.LIFTMETHOD
-            Case 1
-                grfDiag.TChart1.Text = "Diagnóstico de BNC (Quick Look)"
-                Dim titulos As List(Of String) = xaux.Keys.ToList()
+        Try
+            For i = 0 To 3
+                grfDiag.TChart1.Series(i).Clear()
+            Next
 
 
+            For Each diag In diagnosticos
+                If xaux.ContainsKey(diag.TITULO.ToString()) = False Then
+                    xaux.Add(diag.TITULO.ToString(), New ArrayList())
+                    yaux.Add(diag.TITULO.ToString(), New ArrayList())
+                End If
+                xaux(diag.TITULO.ToString()).Add(diag.XAUX)
+                yaux(diag.TITULO.ToString()).Add(diag.YAUX)
 
-                For i = 0 To titulos.Count - 1
+            Next
 
-                    Dim x = xaux.Values(i).ToArray(GetType(Double))
-                    Dim y = yaux.Values(i).ToArray(GetType(Double))
-                    grfDiag.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
-                    grfDiag.TChart1.Series(i).Add(x, y)
+            Select Case model.LIFTMETHOD
+                Case 1
+                    grfDiag.TChart1.Text = "Diagnóstico de BNC (Quick Look)"
+                    Dim titulos As List(Of String) = xaux.Keys.ToList()
 
-                Next i
+
+
+                    For i = 0 To titulos.Count - 1
+
+                        Dim x = xaux.Values(i).ToArray(GetType(Double))
+                        Dim y = yaux.Values(i).ToArray(GetType(Double))
+                        grfDiag.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
+                        grfDiag.TChart1.Series(i).Add(x, y)
+
+                    Next i
 
                 'grfDiag.TChart1.Series(3).Legend.Visible = False
-            Case 2
-                grfDiag.TChart1.Text = "Diagnóstico de BEC"
+                Case 2
+                    grfDiag.TChart1.Text = "Diagnóstico de BEC"
 
-                Dim titulos As List(Of String) = xaux.Keys.ToList()
+                    Dim titulos As List(Of String) = xaux.Keys.ToList()
 
 
 
-                For i = 0 To titulos.Count - 1
+                    For i = 0 To titulos.Count - 1
 
-                    Dim x = xaux.Values(i).ToArray(GetType(Double))
-                    Dim y = yaux.Values(i).ToArray(GetType(Double))
-                    grfDiag.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
-                    grfDiag.TChart1.Series(i).Add(x, y)
+                        Dim x = xaux.Values(i).ToArray(GetType(Double))
+                        Dim y = yaux.Values(i).ToArray(GetType(Double))
+                        grfDiag.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
+                        grfDiag.TChart1.Series(i).Add(x, y)
 
-                Next i
+                    Next i
 
-                grfDiag.TChart1.Series(3).Legend.Visible = False
-        End Select
-
+                    grfDiag.TChart1.Series(3).Legend.Visible = False
+            End Select
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia  QUICKLOOK", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
     End Sub
     'Datos Tchart6
     Sub LoadWC(ByVal model As VW_EDO_GENERAL)
@@ -902,31 +944,56 @@ Public Class MainViewModel
         Dim xaux As New Dictionary(Of String, ArrayList)
         Dim yaux As New Dictionary(Of String, ArrayList)
 
+        Try
 
-        For i = 0 To 9
-            grfWc.TChart1.Series(i).Legend.Visible = False
-            grfWc.TChart1.Series(i).Clear()
-        Next
+            For i = 0 To 9
+                grfWc.TChart1.Series(i).Legend.Visible = False
+                grfWc.TChart1.Series(i).Clear()
+            Next
 
-        For Each prod In productividad
-            If xaux.ContainsKey(prod.TITULO.ToString()) = False Then
-                xaux.Add(prod.TITULO.ToString(), New ArrayList())
-                yaux.Add(prod.TITULO.ToString(), New ArrayList())
-            End If
-            xaux(prod.TITULO.ToString()).Add(prod.WC_RES)
-            yaux(prod.TITULO.ToString()).Add(prod.QGI_RES)
+            For Each prod In productividad
+                If xaux.ContainsKey(prod.TITULO.ToString()) = False Then
+                    xaux.Add(prod.TITULO.ToString(), New ArrayList())
+                    yaux.Add(prod.TITULO.ToString(), New ArrayList())
+                End If
+                xaux(prod.TITULO.ToString()).Add(prod.WC_RES)
+                yaux(prod.TITULO.ToString()).Add(prod.QGI_RES)
 
-        Next
+            Next
 
-        Select Case model.LIFTMETHOD
-            Case 1
-                grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Gasto de Qgi"
-                grfWc.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
-                grfWc.TChart1.Axes.Bottom.Title.Text = "Corte de Agua [%]"
-                Dim titulos As List(Of String) = xaux.Keys.ToList()
+            Select Case model.LIFTMETHOD
+                Case 1
+                    grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Gasto de Qgi"
+                    grfWc.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
+                    grfWc.TChart1.Axes.Bottom.Title.Text = "Corte de Agua [%]"
+                    Dim titulos As List(Of String) = xaux.Keys.ToList()
 
-                If titulos.Count > 0 Then
-                    grfWc.Visible = True
+                    If titulos.Count > 0 Then
+                        grfWc.Visible = True
+                        For i = 0 To titulos.Count - 1
+                            grfWc.TChart1.Series(i).Legend.Visible = True
+                            Dim x = xaux.Values(i).ToArray(GetType(Double))
+                            Dim y = yaux.Values(i).ToArray(GetType(Double))
+                            grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
+                            grfWc.TChart1.Series(i).Add(x, y)
+
+
+                        Next i
+                    Else
+                        grfWc.Visible = False
+                    End If
+
+                Case 2
+
+                    grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Frecuencia de BEC"
+                    grfWc.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
+                    grfWc.TChart1.Axes.Bottom.Title.Text = "Corte de Agua [%]"
+
+
+                    Dim titulos As List(Of String) = xaux.Keys.ToList()
+
+
+
                     For i = 0 To titulos.Count - 1
                         grfWc.TChart1.Series(i).Legend.Visible = True
                         Dim x = xaux.Values(i).ToArray(GetType(Double))
@@ -934,33 +1001,11 @@ Public Class MainViewModel
                         grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
                         grfWc.TChart1.Series(i).Add(x, y)
 
-
                     Next i
-                Else
-                    grfWc.Visible = False
-                End If
-
-            Case 2
-
-                grfWc.TChart1.Text = "Sensibilidad de Corte de Agua-Frecuencia de BEC"
-                grfWc.TChart1.Axes.Left.Title.Text = "Gasto de Líquido [STBPD]"
-                grfWc.TChart1.Axes.Bottom.Title.Text = "Corte de Agua [%]"
-
-
-                Dim titulos As List(Of String) = xaux.Keys.ToList()
-
-
-
-                For i = 0 To titulos.Count - 1
-                    grfWc.TChart1.Series(i).Legend.Visible = True
-                    Dim x = xaux.Values(i).ToArray(GetType(Double))
-                    Dim y = yaux.Values(i).ToArray(GetType(Double))
-                    grfWc.TChart1.Series(i).Title = titulos(i) 'xaux.Keys(i)
-                    grfWc.TChart1.Series(i).Add(x, y)
-
-                Next i
-        End Select
-
+            End Select
+        Catch ex As Exception
+            MessageBox.Show(ex.Message, "Advertencia  WC", MessageBoxButton.OK, MessageBoxImage.Warning)
+        End Try
     End Sub
 
 #End Region

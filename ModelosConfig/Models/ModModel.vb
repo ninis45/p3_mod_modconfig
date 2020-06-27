@@ -198,104 +198,123 @@ Public Class ModModel
         End If
     End Sub
     Public Function Save(ByVal Comenta As String) As Boolean
-        Try
-            Dim ModPozo As MOD_POZO
-
-            If Estatus = 3 Or IdModPozo Is Nothing Then
-
-                ModPozo = New MOD_POZO() With {
-                    .IDMODPOZO = Guid.NewGuid().ToString().ToUpper(),
-                    .IDAGUJERO = IdAgujero,
-                    .OBSERVACIONES = Comenta,
-                    .FUNCION = 6,
-                    .FECHAMODELO = DateTime.Now
-                }
-
-                'If ArchivoProsper IsNot Nothing And ArchivoPvt Is Nothing Then
-                '    ModPozo.ARCHIVO = Nothing
-                'End If
-
-                db.MOD_POZO.Add(ModPozo)
-                IdModPozo = ModPozo.IDMODPOZO
-
-            Else
+        Using Transaction = db.Database.BeginTransaction()
 
 
-                ModPozo = db.MOD_POZO.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
-                ModPozo.OBSERVACIONES = Comenta
-                ModPozo.FECHAMODELO = DateTime.Now
+            Try
+                Dim ModPozo As MOD_POZO
 
-                'If ArchivoPvt Is Nothing Then
-                '    ModPozo.ARCHIVO = Nothing
-                'End If
+                If Estatus = 3 Or IdModPozo Is Nothing Then
+                    'Bloquear algunos modelos que quedan colgados
+                    '========================================================================
+                    Dim ModPozosDel = db.VW_MOD_POZO.Where(Function(w) w.FUNCION = 6 And w.IDAGUJERO = IdAgujero And (w.ESTATUS = 0 Or w.ESTATUS = -1 Or w.ESTATUS Is Nothing)).ToList()
+                    If ModPozosDel.Count > 0 Then
+                        For Each vwmod In ModPozosDel
+                            Dim ToDelete = db.MOD_POZO.Find(vwmod.IDMODPOZO)
+                            db.MOD_POZO.Remove(ToDelete)
 
-
-                db.Entry(ModPozo).State = System.Data.Entity.EntityState.Modified
-
-            End If
-            db.SaveChanges()
-            Estatus = 0
-
-            'Guardado de Archivo PVT
-            '===================================================
-            SavePvt(ModPozo.IDMODPOZO)
-
-
-
-
-
-
-
-            Reset()
-
-
-            'Actualizamos General
-            '=================================================================
-            'ModGeneral.IDPVT = IdPvt 'Luego se revisarás mas adelante
-
-            If ModGeneral.IDMODPOZO <> IdModPozo Then
-                db.Entry(ModGeneral).State = Entity.EntityState.Detached
-                ModGeneral.IDMODPOZO = IdModPozo
-                ModGeneral.IDMODPOZOGENERAL = Guid.NewGuid().ToString().ToUpper()
-                ModGeneral.COMPANY = ht.Item("COMPANY")
-                ModGeneral.ANALYST = ht.Item("ANALYST")
-                ModGeneral.LOCATIONS = ht.Item("LOCATIONS")
-                ModGeneral.WELL = Me.Pozo
-
-                db.MOD_POZO_GENERAL.Add(ModGeneral)
-            Else
-                db.Entry(ModGeneral).State = System.Data.Entity.EntityState.Modified
-            End If
-            db.SaveChanges()
-
-
-            Select Case ModGeneral.LIFTMETHOD
-                Case 1
-                    If ModBNC.IDMODPOZO = IdModPozo Then
-                        db.Entry(ModBNC).State = System.Data.Entity.EntityState.Modified
-                    Else
-                        ModBNC.IDMODPOZO = IdModPozo
-                        db.MOD_POZO_BNC.Add(ModBNC)
+                        Next
+                        db.SaveChanges()
                     End If
 
-                Case 2
-                    If ModBEC.IDMODPOZO = IdModPozo Then
-                        db.Entry(ModBEC).State = System.Data.Entity.EntityState.Modified
+
+                    ModPozo = New MOD_POZO() With {
+                        .IDMODPOZO = Guid.NewGuid().ToString().ToUpper(),
+                        .IDAGUJERO = IdAgujero,
+                        .OBSERVACIONES = Comenta,
+                        .FUNCION = 6,
+                        .FECHAMODELO = DateTime.Now
+                    }
+
+                        db.MOD_POZO.Add(ModPozo)
+                        IdModPozo = ModPozo.IDMODPOZO
+
                     Else
-                        db.Entry(ModBEC).State = Entity.EntityState.Detached
-                        ModBEC.IDMODPOZOBEC = Guid.NewGuid().ToString().ToUpper()
-                        ModBEC.IDMODPOZO = IdModPozo
-                        db.MOD_POZO_BEC.Add(ModBEC)
+
+                        ModPozo = db.MOD_POZO.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+                    ModPozo.OBSERVACIONES = Comenta
+                    ModPozo.FECHAMODELO = DateTime.Now
+
+                    db.Entry(ModPozo).State = System.Data.Entity.EntityState.Modified
+
+                End If
+                db.SaveChanges()
+                Estatus = 0
+
+                'Guardado de Archivo PVT
+                '===================================================
+                SavePvt(ModPozo.IDMODPOZO)
+
+                Reset()
+
+
+                'Actualizamos General
+                '=================================================================
+                'ModGeneral.IDPVT = IdPvt 'Luego se revisarás mas adelante
+
+                If ModGeneral.IDMODPOZO <> IdModPozo Then
+                    If ModGeneral.IDMODPOZO Is Nothing Then
+                        Dim ModGeneralTmp = db.MOD_POZO_GENERAL.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+                        If ModGeneralTmp IsNot Nothing Then db.MOD_POZO_GENERAL.Remove(ModGeneralTmp)
+                        'Else
+                        '    db.Entry(ModGeneral).State = Entity.EntityState.Detached
                     End If
-            End Select
-            db.SaveChanges()
+                    'db.Entry(ModGeneral).State = Entity.EntityState.Detached
+                    'db.SaveChanges()
+
+                    ModGeneral.IDMODPOZO = IdModPozo
+                        ModGeneral.IDMODPOZOGENERAL = Guid.NewGuid().ToString().ToUpper()
+                        ModGeneral.COMPANY = ht.Item("COMPANY")
+                        ModGeneral.ANALYST = ht.Item("ANALYST")
+                        ModGeneral.LOCATIONS = ht.Item("LOCATIONS")
+                    ModGeneral.WELL = Me.Pozo
+                    db.MOD_POZO_GENERAL.Add(ModGeneral)
+
+                Else
+                        db.Entry(ModGeneral).State = System.Data.Entity.EntityState.Modified
+                End If
+                db.SaveChanges()
 
 
+                Select Case ModGeneral.LIFTMETHOD
+                    Case 1
+                        If ModBNC.IDMODPOZO = IdModPozo Then
+                            db.Entry(ModBNC).State = System.Data.Entity.EntityState.Modified
+                        Else
+                            Dim ModBNCTmp = db.MOD_POZO_BNC.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+                            If ModBNCTmp IsNot Nothing Then db.MOD_POZO_BNC.Remove(ModBNCTmp)
+                            ModBNC.IDMODPOZO = IdModPozo
+                            db.MOD_POZO_BNC.Add(ModBNC)
+                        End If
 
-            Return True
-        Catch ex As Exception
-            Throw New Exception(ex.Message)
-        End Try
+                    Case 2
+                        If ModBEC.IDMODPOZO = IdModPozo Then
+                            db.Entry(ModBEC).State = System.Data.Entity.EntityState.Modified
+                        Else
+                            '
+                            Dim ModBECTmp = db.MOD_POZO_BEC.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
+                            If ModBECTmp IsNot Nothing Then
+                                db.MOD_POZO_BEC.Remove(ModBECTmp)
+                                'Else
+                                '    db.Entry(ModBEC).State = Entity.EntityState.Detached
+                            End If
+
+                            ModBEC.IDMODPOZOBEC = Guid.NewGuid().ToString().ToUpper()
+                            ModBEC.IDMODPOZO = IdModPozo
+                            db.MOD_POZO_BEC.Add(ModBEC)
+                        End If
+                End Select
+                db.SaveChanges()
+
+                Transaction.Commit()
+
+                Return True
+            Catch ex As Exception
+                Transaction.Rollback()
+                Throw New Exception(ex.Message)
+            End Try
+        End Using
     End Function
 
     Public Sub SavePvt(ByVal IdModPozo As String)
@@ -395,6 +414,7 @@ Public Class ModModel
                         Mecanicos(i).IDMODPOZOTUBERIA = Guid.NewGuid().ToString().ToUpper()
                         db.MOD_POZO_TUBERIA.Add(Mecanicos(i))
                     Else
+                        Mecanicos(i).IDAGUJERO = IdAgujero
                         db.Entry(Mecanicos(i)).State = Entity.EntityState.Modified
                     End If
 
@@ -405,11 +425,14 @@ Public Class ModModel
 
                 Dim to_deletes = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero And Ids.Contains(w.IDMODPOZOTUBERIA) = False).ToList()
 
-                to_deletes.ForEach(Function(e) db.MOD_POZO_TUBERIA.Remove(e))
-                db.SaveChanges()
+                If to_deletes.Count > 0 Then
+                    to_deletes.ForEach(Function(e) db.MOD_POZO_TUBERIA.Remove(e))
+                    db.SaveChanges()
+                End If
 
 
                 Return Mecanicos.Count
+
             End If
 
             'Eliminamos tuberias
@@ -490,6 +513,7 @@ Public Class ModModel
             For Each tray In ModTrayectorias
                 If tray.IDMODPOZOTRAYEC Is Nothing Then
                     tray.IDMODPOZOTRAYEC = Guid.NewGuid().ToString().ToUpper()
+                    tray.IDMODPOZO = IdModPozo
                     db.MOD_POZO_TRAYEC.Add(tray)
 
                 Else
@@ -510,122 +534,11 @@ Public Class ModModel
                 'Eliminamos elementos
                 Dim deletes = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo And ids.Contains(w.IDMODPOZOTRAYEC) = False).ToList()
                 deletes.ForEach(Function(e) db.MOD_POZO_TRAYEC.Remove(e))
-                ' db.SaveChanges()
+
             Next
 
             db.SaveChanges()
 
-            'Dim mod_trayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
-
-            'If DelTrays Then
-            '    mod_trayectorias.ForEach(Function(e) db.MOD_POZO_TRAYEC.Remove(e))
-            '    db.SaveChanges()
-            '    mod_trayectorias = New List(Of MOD_POZO_TRAYEC)()
-
-            'End If
-
-
-            'If mod_trayectorias.Count = 0 Then
-            '    Dim Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
-
-            '    Dim mds(Trayectorias.Count - 1), mvs(Trayectorias.Count - 1), sevs(Trayectorias.Count - 1), dezps(Trayectorias.Count - 1), desvs(Trayectorias.Count - 1) As Double
-            '    Dim tmp_trayectorias As New List(Of VW_TRAYECTORIA)
-
-
-
-
-
-
-
-            '    If Trayectorias.Count > 0 Then
-            '        'Indice 0 obligatorio inicialiar PMD a 0
-            '        result(0, 0) = Trayectorias(0).PROFUNDIDADMD 'dt.Rows(0).Item(0)
-            '        result(0, 1) = Trayectorias(0).PROFMV 'dt.Rows(0).Item(1)
-            '        result(0, 2) = Trayectorias(0).SEVERIDAD
-            '        result(0, 3) = Trayectorias(0).DESPLAZAMIENTO
-            '        result(0, 4) = Trayectorias(0).DESVIACION
-            '        Dim finMD As Double = max_md
-
-
-
-            '        For i = 0 To Trayectorias.Count - 1
-            '            mds(i) = Trayectorias(i).PROFUNDIDADMD
-            '            mvs(i) = Trayectorias(i).PROFMV
-            '            sevs(i) = Trayectorias(i).SEVERIDAD
-            '            dezps(i) = Trayectorias(i).DESPLAZAMIENTO
-            '            desvs(i) = Trayectorias(i).DESVIACION
-            '            If Trayectorias(i).PROFUNDIDADMD <= max_md Then
-            '                tmp_trayectorias.Add(Trayectorias(i))
-            '            End If
-
-            '        Next i
-            '        'Interpolaciones
-            '        Dim finMV As Double = Analisis.InterpolarProfundidadesVertical(mds, mvs, max_md)
-            '        Dim finSV As Double = Analisis.InterpolarProfundidadesVertical(mvs, sevs, max_md)
-            '        Dim finDP As Double = Analisis.InterpolarProfundidadesVertical(mvs, dezps, max_md)
-            '        Dim finDV As Double = Analisis.InterpolarProfundidadesVertical(mvs, desvs, max_md)
-
-            '        tmp_trayectorias = tmp_trayectorias.OrderBy(Function(o) o.SEVERIDAD).ToList()
-
-
-            '        Dim indice As Integer = 1 '2
-            '        Dim j As Integer = tmp_trayectorias.Count - 1
-            '        Do While (indice < 17)
-            '            result(indice, 0) = tmp_trayectorias(j).PROFUNDIDADMD 'View.Item(i).Item(0)
-            '            result(indice, 1) = tmp_trayectorias(j).PROFMV 'View.Item(i).Item(1)
-            '            result(indice, 2) = tmp_trayectorias(j).SEVERIDAD
-            '            result(indice, 3) = tmp_trayectorias(j).DESPLAZAMIENTO
-            '            result(indice, 4) = tmp_trayectorias(j).DESVIACION
-
-            '            indice += 1
-            '            j -= 1
-            '        Loop
-
-            '        ReDim Preserve result(indice, 4)
-            '        result(indice, 0) = finMD
-            '        result(indice, 1) = finMV 'El Único que se interpola
-            '        result(indice, 2) = finSV
-            '        result(indice, 3) = finDP
-            '        result(indice, 4) = finDV
-            '        Analisis.ordenarMatriz(result, 0)
-
-            '        'Guardado de la trayectoria a la Base de Datos
-            '        '====================================================
-
-            '        For i = 0 To result.GetUpperBound(0)
-            '            Dim insert_tray As New MOD_POZO_TRAYEC() With {
-            '                .IDMODPOZOTRAYEC = Guid.NewGuid().ToString().ToUpper(),
-            '                .IDMODPOZO = IdModPozo,
-            '                .PROFUNDIDADMD = result(i, 0),
-            '                .PROFUNDIDADMV = result(i, 1),
-            '                .SEVERIDAD = result(i, 2),
-            '                .DESP = result(i, 3),
-            '                .DESV = result(i, 4)
-            '            }
-
-
-            '            db.MOD_POZO_TRAYEC.Add(insert_tray)
-
-            '        Next i
-
-            '        db.SaveChanges()
-
-
-            '    End If
-
-
-
-
-            'Else
-
-
-            '    'Indice 0 obligatorio inicialiar PMD a 0
-            '    For i = 0 To mod_trayectorias.Count - 1
-            '        result(i, 0) = mod_trayectorias(i).PROFUNDIDADMD 'dt.Rows(0).Item(0)
-            '        result(i, 1) = mod_trayectorias(i).PROFUNDIDADMV 'dt.Rows(0).Item(1)
-            '    Next
-
-            'End If
 
 
             Return result
@@ -642,6 +555,7 @@ Public Class ModModel
 
             For Each temp In ModTemperaturas
                 If temp.IDMODPOZOTEMP Is Nothing Then
+                    temp.IDMODPOZO = IdModPozo
                     temp.IDMODPOZOTEMP = Guid.NewGuid().ToString().ToUpper()
                     db.MOD_POZO_TEMP.Add(temp)
 

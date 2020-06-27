@@ -340,13 +340,13 @@
     <value>Espesor del yacimiento (m)</value>
   </data>
   <data name="THPD" xml:space="preserve">
-    <value>P Cab Dinámica (kg/cm2)</value>
+    <value>Presion Cab. Dinámica (kg/cm2)</value>
   </data>
   <data name="THTD" xml:space="preserve">
-    <value>Temperatura Dinámica en la Cabeza del Pozo (°C)</value>
+    <value>Temp. Dinámica en la Cab. del Pozo (°C)</value>
   </data>
   <data name="THTE" xml:space="preserve">
-    <value>T Cab Estática (ºC)</value>
+    <value>Temp. Cab. Estática (ºC)</value>
   </data>
   <data name="TOTGOR" xml:space="preserve">
     <value>RGA Total(m3/m3)</value>

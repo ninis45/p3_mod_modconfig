@@ -10,7 +10,7 @@ Public Class Mecanico
     Private Tr_remove As Integer
 
     Private ComponentsTP() As String = {"TUBERIA DE PRODUCCION", "VALVULA DE TORMENTA"}
-    Private ComponentsTR() As String = {"TUBERIA DE REVESTIMIENTO", "COLGADOR VERSAFLEX", "CONDUCTOR", "TUBO COaNDUCTOR", "LINER (DESCONTINUADO)", "PATA DE MULA", "CEDAZO", "TR 30", "TR Prueba", "ZAPATA RANURADA", "AGUJERO DESCUBIERTO"}
+    Private ComponentsTR() As String = {"tuberia de revestimiento", "COLGADOR VERSAFLEX", "CONDUCTOR", "TUBO COaNDUCTOR", "LINER (DESCONTINUADO)", "PATA DE MULA", "CEDAZO", "ZAPATA RANURADA", "agujero descubierto"}
     Private TiposTuberias As Dictionary(Of Integer, String)
 
     Property Tps As New List(Of Tuberia)
@@ -23,7 +23,7 @@ Public Class Mecanico
     Sub New(ByVal VwTrs As List(Of VW_TR), ByVal VwTps As List(Of VW_TP), Optional ByVal Err As Boolean = True)
         'Depreciado temporalmente talvez no sea necesario, marca error al cargar los datos iniciales del ViewModel
         If Err And (VwTrs.Count = 0) Then
-            Throw New Exception("No hay tuberias de revestimiento, se necesita al menos uno para iniciar.")
+            Throw New Exception("No hay tuberias de revestimiento, se necesita al menos uno para iniciar la lista del estado mecanico.")
         End If
 
 
@@ -37,7 +37,7 @@ Public Class Mecanico
         'If VwTrs.Count > 0 Then
         For i = 0 To VwTrs.Count - 1
 
-            If ComponentsTR.Contains(VwTrs(i).COMPONENTE) = False Then
+            If ComponentsTR.Contains(SupAccent(VwTrs(i).COMPONENTE.ToLower())) = False Then
                 Continue For
             End If
 
@@ -60,8 +60,8 @@ Public Class Mecanico
         'Extraccion de TPS
         '========================================================================================================================
         If VwTps.Count > 0 Then
-
-            If VwTps.Where(Function(w) w.COMPONENTE.ToLower().Contains("capsula")).Count > 0 Then MaxTp = (From tp In VwTps Where tp.COMPONENTE.Contains("CAPSULA") Select tp).Max(Function(m) m.PROFUNDIDAD) ''IIf(VwTps.Count > 0, (From tp In VwTps Where tp.COMPONENTE.Contains("CAPSULA") Select tp).Max(Function(m) m.PROFUNDIDAD), 0)
+            Dim Emr As Boolean = False
+            If VwTps.Where(Function(w) w.COMPONENTE.ToLower().Contains("capsula")).Count > 0 Then MaxTp = (From tp In VwTps Where tp.COMPONENTE.ToLower().Contains("capsula") Select tp).Max(Function(m) m.PROFUNDIDAD) ''IIf(VwTps.Count > 0, (From tp In VwTps Where tp.COMPONENTE.Contains("CAPSULA") Select tp).Max(Function(m) m.PROFUNDIDAD), 0)
             For i = 0 To VwTps.Count - 1
 
                 Dim TrActive = (From Tr In VwTrs Where Tr.PROFUNDIDADINICIO < VwTps(i).PROFUNDIDAD And Tr.PROFUNDIDADFIN > VwTps(i).PROFUNDIDAD).OrderByDescending(Function(o) o.PROFUNDIDADFIN).ToList()
@@ -79,7 +79,7 @@ Public Class Mecanico
                 Dim type As Integer = -1
 
 
-                Select Case VwTps(i).COMPONENTE.ToLower().Trim()
+                Select Case SupAccent(VwTps(i).COMPONENTE.ToLower().Trim())
                     Case "E.M.R. Elevacion de la Mesa Rotaria"
                         type = 0
                         ciroug = 0
@@ -88,38 +88,38 @@ Public Class Mecanico
                         todiam = 0
                         toroug = 0
                         md = 0
-
-                    Case "PORTA SENSORES"
+                        Emr = True
+                    Case "porta sensores"
                         type = 1
-                    Case "TUBO"
+                    Case "tubo"
                         type = 1
-                    Case "COLA EXTENDIDA "
+                    Case "cola extendida "
                         type = 1
-                    Case "COPLE ESPACIADOR"
+                    Case "cople espaciador"
                         type = 1
-                    Case "TUBERIA FLEXIBLE"
+                    Case "tuberia flexible"
                         type = 1
-                    Case "ESPACIADOR DE SEGURIDAD"
+                    Case "espaciador de seguridad"
                         type = 1
-                    Case "EXTENSION "
+                    Case "extension"
                         type = 1
-                    Case "TUBO DENTADO"
+                    Case "tubo dentado"
                         type = 1
-                    Case "TUBO MADRINA"
+                    Case "tubo madrina"
                         type = 1
                     Case "TFTV"
                         type = 1
-                    Case "TUBERIA DE PRODUCCION"
+                    Case "tuberia de produccion"
                         type = 1
-                    Case "EXTUBERIA"
+                    Case "extuberia"
                         type = 1
-                    Case "COLA EXTENDIDA"
+                    Case "cola extendida"
                         type = 1
-                    Case "VALVULA DE SEGURIDAD"
+                    Case "valvula de seguridad"
                         type = 2
-                    Case "VALVULA DE CHARNELA"
+                    Case "valvula de charnela"
                         type = 2
-                    Case "VALVULA DE TORMENTA"
+                    Case "valvula de tormenta"
                         type = 2
                     Case Else
                         type = -1
@@ -139,7 +139,7 @@ Public Class Mecanico
                 MaxTp = (From Tp In Tps Select Tp).Max(Function(m) m.MD) 'VwTps(0).PROFUNDIDAD
             End If
 
-            Dim Emr As Boolean = False
+
 
             For i = 0 To Tps.Count - 1
                 Dim ini As Double = 0
@@ -162,7 +162,7 @@ Public Class Mecanico
 
             Next
             'Por si no se encuentra definido alguna EMR
-            If VwTps.Count > 0 And Emr = False Then
+            If Tps.Count > 0 AndAlso Emr = False Then
                 Tuberias.Add(New Tuberia() With {.Label = "E.M.R.", .MD = 0, .CIDIAM = 0, .CIROUG = 0, .TIDIAM = 0, .TIROUG = 0, .TODIAM = 0, .TOROUG = 0, .Type = 0})
             End If
         End If
@@ -178,7 +178,12 @@ Public Class Mecanico
 
 
     End Sub
+    Function SupAccent(ByVal l As String) As String
+        l = l.Replace("í", "i")
+        l = l.Replace("ó", "o")
 
+        Return l
+    End Function
     Sub AddCuts(ByVal Tp As Tuberia, ByVal Ini As Double, ByVal Fin As Double)
         Dim TotalTrs As Integer = Trs.Count
         Dim NextTr As Integer = 0
