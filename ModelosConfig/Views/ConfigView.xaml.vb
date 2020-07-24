@@ -112,15 +112,17 @@ Public Class ConfigView
     End Sub
     Private Sub SetStepNext(sender As Object, e As RoutedEventArgs)
 
-
-
-        If ContextConfig.Tab = 5 And ContextConfig.EnabledEquip = True Then
-            ContextConfig.Tab += 3
-
-
+        If ContextConfig.EnabledEquip Then
+            ContextConfig.Tab = 7
         End If
 
-        If ContextConfig.Tab = 8 And ContextConfig.LiftMethod = 2 Then
+        'If ContextConfig.Tab = 5 And ContextConfig.EnabledEquip = True Then
+        '    ContextConfig.Tab += 3
+
+
+        'End If
+
+        If ContextConfig.Tab = 7 And ContextConfig.LiftMethod = 2 Then
             ContextConfig.Tab += 1
         End If
 
@@ -131,9 +133,28 @@ Public Class ConfigView
 
 
     End Sub
+    Private Sub SetStepPrev(sender As Object, e As RoutedEventArgs)
+        If ContextConfig.EnabledEquip Then
+            ContextConfig.Tab = 1
+        End If
+        If ContextConfig.Tab = 9 And ContextConfig.LiftMethod = 2 Then
+            ContextConfig.Tab -= 1
+
+        End If
+
+        'If (ContextConfig.Tab = 9 Or ContextConfig.Tab = 10) And ContextConfig.EnabledEquip = True Then
+        '    ContextConfig.Tab = 6
+        'End If
+
+        'If ContextConfig.Tab > 2 Then
+        ContextConfig.Tab = ContextConfig.Tab - 1
+        'Else
+        '    ContextConfig.Tab = 1
+        'End If
+    End Sub
     Private Sub SetStepAfter(sender As Object, e As RoutedEventArgs)
 
-        Dim Tmp As Integer = ContextConfig.Tab - 1
+        'Dim Tmp As Integer = ContextConfig.Tab - 1
 
         If ContextConfig.Tab = 10 And ContextConfig.LiftMethod = 2 Then
             ContextConfig.Tab -= 1
@@ -186,7 +207,7 @@ Public Class ConfigView
                                                                                          If Errors.Count > 0 Then
                                                                                              Dim StrErrors As String = ""
                                                                                              For i = 0 To Errors.Count - 1
-                                                                                                 'ContextConfig.Errors.Add(Errors(i))
+
                                                                                                  StrErrors += " - " + Errors(i) & Chr(13)
                                                                                              Next
 
@@ -199,11 +220,14 @@ Public Class ConfigView
                                                                                          End If
 
 
-                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).IDMODPOZO = ContextConfig.ModGeneral.IDMODPOZO
-                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).IDMODPOZOGENERAL = ContextConfig.ModGeneral.IDMODPOZOGENERAL
-                                                                                         'ModPozoTmp.MOD_POZO_GENERAL(0).MOD_POZO = ContextConfig.ModGeneral.MOD_POZO
                                                                                          ContextConfig.ModGeneral = ModPozoTmp.MOD_POZO_GENERAL(0)
                                                                                          ContextConfig.LiftMethod = ContextConfig.ModGeneral.LIFTMETHOD
+                                                                                         ContextConfig.ModPvt = ModPozoTmp.MOD_POZO_PVT(0)
+                                                                                         ContextConfig.PvtMatch = New ObservableCollection(Of MOD_POZO_PVT_MATCH)(ContextConfig.ModPvt.MOD_POZO_PVT_MATCH.ToList())
+
+                                                                                         If ContextConfig.Comenta = "" Or ContextConfig.Comenta Is Nothing Then
+                                                                                             ContextConfig.Comenta = ContextConfig.ModGeneral.COMENTA
+                                                                                         End If
 
                                                                                          Select Case ContextConfig.LiftMethod
                                                                                              Case 1
@@ -441,4 +465,25 @@ Public Class ConfigView
     Private Sub ResetTemp(sender As Object, e As RoutedEventArgs)
 
     End Sub
+
+    Private Sub ShowMecMD(sender As Object, e As MouseButtonEventArgs)
+        RadWindow.Prompt("Metros desarrollados:", AddressOf OnClosedd, ContextConfig.Mecanico.ModPozoTuberia.MD)
+    End Sub
+    Private Sub OnClosedd(ByVal sender As Object, ByVal e As WindowClosedEventArgs)
+
+
+        If e.DialogResult Then
+            Dim index = ContextConfig.ModMecanicos.IndexOf(ContextConfig.Mecanico)
+            ContextConfig.Mecanico.ModPozoTuberia.MD = e.PromptResult
+            ' ContextConfig.Mecanico = ContextConfig.Mecanico
+            ContextConfig.ModMecanicos(index).ModPozoTuberia = ContextConfig.Mecanico.ModPozoTuberia
+
+            ContextConfig.ModMecanicos = ContextConfig.ModMecanicos
+        End If
+
+
+        'Dim message = "Hello " + result + "!"
+    End Sub
+
+
 End Class

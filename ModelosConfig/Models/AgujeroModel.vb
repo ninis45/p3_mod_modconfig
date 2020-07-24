@@ -80,7 +80,8 @@ Public Class AgujeroModel
 
 
         Me.VWModPozo = GetModPozo()
-        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.ORDEN).ToList() 'Mec.GetTuberias() 'db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
+        '
+        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.ORDEN).ToList() 'Mec.GetTuberias() 'db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = IdAgujero).OrderBy(Function(o) o.MD).ToList()
 
         Return result
 

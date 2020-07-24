@@ -12,6 +12,7 @@
     <UserControl.Resources>
         <telerik:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <telerik:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+        <telerik:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <telerik:StringToGlyphConverter x:Key="StringToGlyphConverter"/>
         <telerik:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter"></telerik:NumberToVisibilityConverter>
         <local:ToVisibility x:Key="WRToVisibility"></local:ToVisibility>
@@ -101,21 +102,21 @@
                         <Button Background="#CECECE" Padding="4"   Name="btnNew" ToolTip="Nueva configuracion" >
                             <telerik:RadGlyph Glyph="&#xe907;" Foreground="White" />
                         </Button>
-                        <Button Background="#CECECE" Padding="4" Name="btnCopy"  IsEnabled="{Binding EnabledView}" ToolTip="Copiar configuracion">
+                        <Button Background="#CECECE" Padding="4" Name="btnCopy"  IsEnabled="{Binding EnabledView}" ToolTip="Copiar configuracion" Visibility="{Binding Modelos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
 
                             <telerik:RadGlyph Glyph="&#xe65d;" Foreground="DarkBlue" ></telerik:RadGlyph>
                         </Button>
                         <Button Background="#CECECE" Padding="4"   Name="btnRefresh" ToolTip="Actualizar" >
                             <telerik:RadGlyph Glyph="&#xe106;" />
                         </Button>
-                        <Button  Name="btnAfter" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion anterior">
+                        <Button  Name="btnAfter" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion anterior" Visibility="{Binding Modelos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
                             <telerik:RadGlyph Glyph="&#xe007;"></telerik:RadGlyph>
                         </Button>
-                        <TextBlock Background="White"  Text="{Binding VwGeneral.FECHAMODELO,StringFormat={}{0:dd/MM/yyyy hh:mm:ss tt}}" MinWidth="50" Padding="3"></TextBlock>
-                        <Button Name="btnBefore" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion siguiente">
+                        <TextBlock Background="White"  Text="{Binding VwGeneral.FECHAMODELO,StringFormat={}{0:dd/MM/yyyy hh:mm:ss tt}}" MinWidth="50" Padding="3" Visibility="{Binding Modelos.Count, Converter={StaticResource NumberToVisibilityConverter}}"></TextBlock>
+                        <Button Name="btnBefore" Background="#CECECE" Foreground="Green"  Padding="4" ToolTip="Configuracion siguiente" Visibility="{Binding Modelos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
                             <telerik:RadGlyph Glyph="&#xe005;"></telerik:RadGlyph>
                         </Button>
-                        <Button Background="#CECECE" Padding="4" Name="btnView"  IsEnabled="{Binding EnabledView}" ToolTip="Ver configuracion">
+                        <Button Background="#CECECE" Padding="4" Name="btnView"  IsEnabled="{Binding EnabledView}" ToolTip="Ver configuracion" Visibility="{Binding Modelos.Count, Converter={StaticResource NumberToVisibilityConverter}}">
                             <telerik:RadGlyph Glyph="&#xe13e;" />
                         </Button>
                     </ToolBar>
@@ -152,7 +153,10 @@
                     <WindowsFormsHost Grid.Column="3" Name="hstVpl" />
 
 
-                    <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas"/>
+                    <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas" Visibility="{Binding ShowGraphGas,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <Border Background="#bbbbbb"  Grid.Row="1" Grid.Column="0" Visibility="{Binding ShowGraphGas,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                        <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
+                    </Border>
                     <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" Grid.ColumnSpan="2" />
                     <WindowsFormsHost Grid.Row="1" Grid.Column="3" Name="hstWc"/>
 

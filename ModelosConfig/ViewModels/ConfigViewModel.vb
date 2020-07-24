@@ -33,7 +33,16 @@ Public Class ConfigViewModel
     Public Property IsSaved As Boolean
 
     Private MaxTp As Double
-    Private MaxMd As Double
+    Private _max_md As Double
+    Public Property MaxMd As Double
+        Get
+            Return _max_md
+        End Get
+        Set(value As Double)
+            _max_md = value
+            RaisePropertyChanged("MaxMd")
+        End Set
+    End Property
 
 
 
@@ -46,35 +55,32 @@ Public Class ConfigViewModel
         WfhTemperatura.Child = usrTemperatura
         WfhAforo.Child = usrAforo
         WfhPvt.Child = usrPvt
-
         Me.IdAgujero = IdAgujero
         Titulo = "Detalles " + ModModel.VwGeneral.NOMBRE
-        'If IsReadOnly = True Then
-        '    Titulo = "Detalles " + ModModel.VwGeneral.NOMBRE
-        'Else
-        '    Titulo = "Copiando configuracion " + ModModel.VwGeneral.NOMBRE
-        'End If
+
 
 
         Warnings = New ObjectModel.ObservableCollection(Of String)
         Errors = New ObjectModel.ObservableCollection(Of String)
 
 
-        If ModModel.ModTuberias.Count > 0 Then
-            LoadMecanico(ModModel.ModTuberias)
-        End If
+        'If ModModel.ModTuberias.Count > 0 Then
+        '    LoadMecanico(ModModel.ModTuberias)
+        'End If
         Trayectorias = New List(Of VW_TRAYECTORIA)() 'db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
 
         If ModModel.IdModPozo IsNot Nothing Then
             Me.IdModPozo = ModModel.VwGeneral.IDMODPOZO
             Me.LiftMethod = ModModel.VwGeneral.LIFTMETHOD
-
             Me.EnabledEquip = ModModel.Equipment
 
 
             ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)(ModModel.ModTrayectorias) ' db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
             ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)(ModModel.ModTemperaturas)
-            LoadMecanico(ModModel.ModTuberias)
+
+            If ModModel.ModTuberias.Count > 0 Then
+                LoadMecanico(ModModel.ModTuberias)
+            End If
             SetData()
 
         Else
@@ -111,7 +117,6 @@ Public Class ConfigViewModel
         If ModBNC IsNot Nothing Then db.Entry(ModBNC).State = System.Data.Entity.EntityState.Detached
         If ModBEC IsNot Nothing Then db.Entry(ModBEC).State = System.Data.Entity.EntityState.Detached
 
-        'EnabledPvt = False
 
     End Sub
 
@@ -132,11 +137,7 @@ Public Class ConfigViewModel
         '***********************************************************************************************************************
 
         Tuberias = ModModel.Tuberias 'Mecanico.GetTuberias() 17 feb 2019
-        If ModModel.ModTuberias.Count > 0 Then
-            LoadMecanico(ModModel.ModTuberias)
-        Else
-            LoadMecanico()
-        End If
+
 
         Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
 
@@ -152,6 +153,7 @@ Public Class ConfigViewModel
             Me.ModArchivo = ModModel.ArchivoProsper
             Me.EnabledEquip = ModModel.Equipment
             Me.LiftMethod = ModModel.LiftMethod
+            Me.Warnings = New ObjectModel.ObservableCollection(Of String)(ModModel.Messages)
 
 
 
@@ -162,9 +164,6 @@ Public Class ConfigViewModel
 
 
 
-            'If ModTrayectorias.Count > 0 Then
-            '    Me.MV = ModTrayectorias(ModTrayectorias.Count - 1).PROFUNDIDADMV
-            'End If
 
             If ModModel.VwGeneral.ESTATUS.GetValueOrDefault() <> 3 AndAlso MessageBox.Show("Una forma ha sido inicializada, desea continuar modificando?", "Campos inteligentes", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
                 Titulo = "Última modificacion " + ModModel.CreatedOn
@@ -188,7 +187,9 @@ Public Class ConfigViewModel
         End If
 
         'ModModel.LiftMethod
-
+        If ModMecanicos.Count = 0 Then
+            LoadMecanico()
+        End If
         If ModTrayectorias.Count = 0 Then
             LoadTrayectoria()
         End If
@@ -237,6 +238,12 @@ Public Class ConfigViewModel
 
 
         ModPvt = ModModel.ModPvt
+
+        If ModModel.ModTuberias.Count > 0 Then
+            LoadMecanico(ModModel.ModTuberias)
+        Else
+            ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)
+        End If
         ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)(ModModel.ModTrayectorias)
         ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)(ModModel.ModTemperaturas)
 
@@ -297,9 +304,9 @@ Public Class ConfigViewModel
 
         'PROXIMO A REMOVER
         '=====================================================================================================
-        If ModModel.ModPvt IsNot Nothing AndAlso ModPvt.IDPVTGENERAL <> "NA" Then
-            Me.Formacion = db.VW_PVT.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero And w.IDPVTGENERAL = ModModel.ModPvt.IDPVTGENERAL).SingleOrDefault()
-        End If
+        'If ModModel.ModPvt IsNot Nothing AndAlso ModPvt.IDPVTGENERAL <> "NA" Then
+        '    Me.Formacion = db.VW_PVT.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero And w.IDPVTGENERAL = ModModel.ModPvt.IDPVTGENERAL).SingleOrDefault()
+        'End If
 
         ModArchivo = ModModel.ArchivoProsper
 
@@ -392,6 +399,17 @@ Public Class ConfigViewModel
             .PI = 0,
             .DATGENDATE = DateTime.Now
         }
+
+        ResetSAP()
+
+
+
+        ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
+        ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
+        ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)
+
+    End Sub
+    Private Sub ResetSAP()
         Select Case LiftMethod
             Case 1
                 ModBNC = New MOD_POZO_BNC() With {
@@ -434,15 +452,7 @@ Public Class ConfigViewModel
            .FREC_BEC = 0
        }
         End Select
-
-
-
-
-        ModTrayectorias = New ObjectModel.ObservableCollection(Of MOD_POZO_TRAYEC)
-        ModTemperaturas = New ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
-
     End Sub
-
     Private _mecanico As MecanicoModel
     Public Property Mecanico As MecanicoModel
         Get
@@ -610,6 +620,31 @@ Public Class ConfigViewModel
             _mod_pvt = value
 
             'If _mod_pvt Is Nothing Then _mod_pvt = New MOD_POZO_PVT()
+            usrPvt.TChart1.Series(0).Clear()
+            usrPvt.TChart1.Series(1).Clear()
+            usrPvt.TChart1.Series(2).Clear()
+            usrPvt.TChart1.Series(3).Clear()
+            If _mod_pvt.IDPVTGENERAL Is Nothing Or _mod_pvt.IDPVTGENERAL = "NA" Then
+                PvtMatch = New ObjectModel.ObservableCollection(Of MOD_POZO_PVT_MATCH)(_mod_pvt.MOD_POZO_PVT_MATCH)
+            Else
+                Pvts = db.VW_PVT_GRAFICA.Where(Function(w) w.IDPVTGENERAL = _mod_pvt.IDPVTGENERAL And w.TEMPERATURA = _mod_pvt.TEMP).OrderBy(Function(o) o.PPRUEBA).ToList()
+
+                If Pvts IsNot Nothing Then
+
+                    PvtMatch = New ObjectModel.ObservableCollection(Of MOD_POZO_PVT_MATCH)
+                    For Each Pvt In Pvts
+                        PvtMatch.Add(New MOD_POZO_PVT_MATCH() With {
+                            .IDMOD_POZO_PVT_MATCH = Guid.NewGuid().ToString().ToUpper(),
+                            .BP = Pvt.PB,
+                            .OVIS = Pvt.VISCOSIDADACEITE,
+                            .PRES = Pvt.PPRUEBA,
+                            .RGA = Pvt.RS,
+                            .OFVF = Pvt.BO
+                        })
+                    Next
+                End If
+            End If
+
             RaisePropertyChanged("ModPvt")
         End Set
     End Property
@@ -670,6 +705,8 @@ Public Class ConfigViewModel
                 Dim q = MessageBox.Show("El Sistema de Producción Artificial es diferente.¿Desea cambiarla?", "Campos Inteligentes", MsgBoxStyle.YesNo, MessageBoxImage.Question)
                 If q = MessageBoxResult.Yes Then
                     _lift_method = value
+
+                    ResetSAP()
                 End If
             Else
                 _lift_method = value
@@ -678,64 +715,7 @@ Public Class ConfigViewModel
 
 
 
-            'Select Case _lift_method
-            '    Case 1
-            '        ModBNC = db.MOD_POZO_BNC.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
 
-
-            '        If ModBNC.IDMODPOZOBNC > 0 Then
-            '            Method = ModBNC.METHOD.GetValueOrDefault()
-            '            Entry = ModBNC.ENTRY.GetValueOrDefault()
-            '        Else
-            '            ModBNC = New MOD_POZO_BNC() With {
-            '            .CO2 = 0,
-            '            .GRAVITY = 0,
-            '            .GLRINY = 0,
-            '            .GLRATE = 0,
-            '            .ENTRY = 0,
-            '            .DIAMVAL = 0,
-            '            .H2S = 0,
-            '            .METHOD = 0,
-            '            .N2 = 0,
-            '            .QGIMAX = 0,
-            '            .QGIMIN = 0,
-            '            .RANGESYSTEM = 0,
-            '            .VALVEDEPTH = 0,
-            '            .TRPRES = 0
-            '        }
-            '        End If
-
-
-            '    Case 2
-            '        'FileBEC = ModModel.FilePath
-            '        ModBEC = db.MOD_POZO_BEC.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
-
-            '        If ModBEC.IDMODPOZOBEC Is Nothing Then
-            '            ModBEC = New MOD_POZO_BEC() With {
-            '            .IDMODPOZOBEC = 0,
-            '            .BOMBA_BEC = 0,
-            '            .CABLE_BEC = 0,
-            '            .CORRIENTE_BEC = 0,
-            '            .DESGASTE_BEC = 0,
-            '            .EFISEPGAS_BEC = 0,
-            '            .ETAPAS_BEC = 0,
-            '            .FRECMAX = 0,
-            '            .FRECMIN = 0,
-            '            .LONGCABLE_BEC = 0,
-            '            .MOTOR_BEC = 0,
-            '            .ODMAX_BEC = 0,
-            '            .POTENCIAMOTOR_BEC = 0,
-            '            .POTENCIA_BEC = 0,
-            '            .PREDES_BEC = 0,
-            '            .PRESUC_BEC = 0,
-            '            .PROF_BEC = 0,
-            '            .REDUCGAS_BEC = 0,
-            '            .VOLTSUP_BEC = 0,
-            '            .FREC_BEC = 0
-            '        }
-
-            '        End If
-            'End Select
 
             RaisePropertyChanged("LiftMethod")
         End Set
@@ -751,24 +731,7 @@ Public Class ConfigViewModel
         Set(value As VW_PVT)
             _formacion = value
 
-            If _formacion Is Nothing Then _formacion = New VW_PVT()
-
-
-
-            If ModPvt IsNot Nothing Then
-                If ModPvt.IDPVTGENERAL <> _formacion.IDPVTGENERAL AndAlso MessageBox.Show("Se van a perder los datos de esta sección: Pvt.¿Desea continuar?", "Campos Inteligentes", MessageBoxButton.YesNo) = MessageBoxResult.No Then
-                    Return
-                End If
-
-                ModPvt.API = _formacion.API
-                ModPvt.CO2 = _formacion.CO2
-                ModPvt.DRG = _formacion.DRG
-                ModPvt.GOR = _formacion.GOR
-                ModPvt.H2S = _formacion.H2S
-                ModPvt.N2 = _formacion.N2
-                ModPvt.WSAL = _formacion.SALINIDAD
-                ModPvt.IDPVTGENERAL = _formacion.IDPVTGENERAL
-            Else
+            If ModPvt Is Nothing Then
                 ModPvt = New MOD_POZO_PVT() With {
                     .API = _formacion.API,
                     .CO2 = _formacion.CO2,
@@ -777,21 +740,45 @@ Public Class ConfigViewModel
                     .H2S = _formacion.H2S,
                     .N2 = _formacion.N2,
                     .WSAL = _formacion.SALINIDAD,
+                    .TEMP = _formacion.TEMP,
                     .IDPVTGENERAL = _formacion.IDPVTGENERAL
                 }
+            Else
+                ModPvt.API = _formacion.API
+                ModPvt.CO2 = _formacion.CO2
+                ModPvt.DRG = _formacion.DRG
+                ModPvt.GOR = _formacion.GOR
+                ModPvt.H2S = _formacion.H2S
+                ModPvt.N2 = _formacion.N2
+                ModPvt.WSAL = _formacion.SALINIDAD
+                ModPvt.TEMP = _formacion.TEMP
+                ModPvt.IDPVTGENERAL = _formacion.IDPVTGENERAL
 
+                ModPvt = ModPvt
             End If
-
-
-
-
-
-            Pvts = db.VW_PVT_GRAFICA.Where(Function(w) w.IDPVTGENERAL = _formacion.IDPVTGENERAL And w.TEMPERATURA = _formacion.TEMP).OrderBy(Function(o) o.PPRUEBA).ToList()
 
 
             RaisePropertyChanged("Formacion")
         End Set
     End Property
+    Private _pvt_match As ObjectModel.ObservableCollection(Of MOD_POZO_PVT_MATCH)
+    Public Property PvtMatch As ObjectModel.ObservableCollection(Of MOD_POZO_PVT_MATCH)
+        Get
+            Return _pvt_match
+        End Get
+        Set(value As ObjectModel.ObservableCollection(Of MOD_POZO_PVT_MATCH))
+            _pvt_match = value
+
+            For i = 0 To PvtMatch.Count - 1
+                usrPvt.TChart1.Series(0).Add(PvtMatch(i).PRES, PvtMatch(i).BP)
+                usrPvt.TChart1.Series(1).Add(PvtMatch(i).PRES, PvtMatch(i).RGA)
+                usrPvt.TChart1.Series(2).Add(PvtMatch(i).PRES, PvtMatch(i).OFVF)
+                usrPvt.TChart1.Series(3).Add(PvtMatch(i).PRES, PvtMatch(i).OVIS)
+            Next
+            RaisePropertyChanged("PvtMatch")
+        End Set
+    End Property
+    'Sustituido por PvtMatch
     Private _pvts As List(Of VW_PVT_GRAFICA)
     Public Property Pvts As List(Of VW_PVT_GRAFICA)
         Get
@@ -813,16 +800,6 @@ Public Class ConfigViewModel
         End Set
     End Property
 
-    'Private _messages_pvt As ModelosEstabilidad.FlashData
-    'Public Property MessagesPVT As ModelosEstabilidad.FlashData
-    '    Get
-    '        Return _messages_pvt
-    '    End Get
-    '    Set(value As ModelosEstabilidad.FlashData)
-    '        _messages_pvt = value
-    '        RaisePropertyChanged("MessagesPVT")
-    '    End Set
-    'End Property
 
     Private _mod_temperaturas As ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
     Property ModTemperaturas As ObjectModel.ObservableCollection(Of MOD_POZO_TEMP)
@@ -929,7 +906,7 @@ Public Class ConfigViewModel
 
             If IsReadOnly = False Then
 
-                If Tab > 8 Then
+                If Tab > 7 Then
                     VisibleSave = True
                     GetErrors()
                 Else
@@ -1093,33 +1070,34 @@ Public Class ConfigViewModel
             If MessageBox.Show("¿Desea guardar los datos del siguiente modelo?", "Campos Inteligentes", MessageBoxButton.YesNo) = MessageBoxResult.No Then
                 Exit Sub
             End If
-            'Revisamos nuevamente que el modelo no haya cambiado a último momento
+            'Revisamos nuevamente que el modelo no haya cambiado a último momento en caso de duplicacion de una ya corrido
+
+            If ModModel.Estatus <> 3 Then
+                Dim VwModelo = ModModel.GetModelo()
+                Dim MaxMd As Double = 0
 
 
-            Dim VwModelo = ModModel.GetModelo()
-            Dim MaxMd As Double = 0
+                If VwModelo IsNot Nothing Then
 
+                    If VwModelo.ESTATUS = 1 Then
 
-            If VwModelo IsNot Nothing Then
+                        MsgBox("La configuración ha sido programada por el Administrador, una vez ejecutado podra seguir actualizando")
+                        Exit Sub
+                    End If
 
-                If VwModelo.ESTATUS = 1 Then
-
-                    MsgBox("La configuración ha sido programada por el Administrador, una vez ejecutado podra seguir actualizando")
-                    Exit Sub
+                    If VwModelo.ESTATUS = 2 Then
+                        Throw New Exception("Configuración bloqueada temporalmente")
+                    End If
+                    ModModel.Estatus = VwModelo.ESTATUS.GetValueOrDefault()
                 End If
 
-                If VwModelo.ESTATUS = 2 Then
-                    Throw New Exception("Configuración bloqueada temporalmente")
-                End If
-                ModModel.Estatus = VwModelo.ESTATUS.GetValueOrDefault()
             End If
 
 
 
-
-            'ModModel.DelMecas = DelMecanico
-            'ModModel.DelTrays = DelTrayectoria
-            'ModModel.DelTemps = DelTemperatura
+            If ModArchivo Is Nothing And (NewArchivoPvt Is Nothing Or NewArchivoPvt = "") Then
+                ModPvt.MOD_POZO_PVT_MATCH = PvtMatch.ToList()
+            End If
 
 
 
@@ -1129,6 +1107,7 @@ Public Class ConfigViewModel
             ModModel.ArchivoProsper = ModArchivo
             ModModel.Equipment = EnabledEquip
             ModModel.ModPvt = ModPvt
+            'ModModel.PvtMatch = PvtMatch.ToList()
 
 
 
@@ -1157,16 +1136,7 @@ Public Class ConfigViewModel
                     Next
                     ModModel.SaveMecanico()
 
-                    'If ModModel.SaveMecanico() > 0 Then
-                    '    MaxMd = db.VW_EDO_MECANICO.Where(Function(w) w.IDAGUJERO = ModModel.IdAgujero).Max(Function(m) m.MD)
 
-                    '    If MaxMd > 0 Then
-                    '        Dim puntos = ModModel.SaveTrayectorias(MaxMd)
-                    '        ModModel.SaveTemperatura(puntos)
-
-                    '    End If
-
-                    'End If
                 End If
                 If ModTrayectorias.Count > 0 Then
                     ModModel.SaveTrayectorias(ModTrayectorias.ToList())
@@ -1257,7 +1227,10 @@ Public Class ConfigViewModel
 
     End Sub
     Private Function Valid() As Boolean
-
+        If EnabledEquip = False And ModBNC.TRPRES = 0 Then
+            MsgBox("La presión Qgi debe ser mayor a cero ", MsgBoxStyle.Critical, "Error")
+            Return False
+        End If
         Select Case LiftMethod
             Case 1
                 If ModBNC.DIAMVAL = 0 Then
@@ -1332,6 +1305,7 @@ Public Class ConfigViewModel
             Dim MecanicoModel As New MecanicoModel(Tuberias)
             ModMecanicos = New ObjectModel.ObservableCollection(Of MecanicoModel)(MecanicoModel.GetList().OrderBy(Function(o) o.Orden))
             MaxTp = MecanicoModel.GetMaxTp()
+            MaxMd = ModMecanicos.Max(Function(m) m.ModPozoTuberia.MD)
 
             If ModBEC.PROF_BEC = 0 And MaxTp > 0 Then
                 ModBEC.PROF_BEC = MaxTp
@@ -1486,8 +1460,8 @@ Public Class ConfigViewModel
         'New ObjectModel.ObservableCollection(Of String)
         Errors.Clear()
 
-        If Formacion Is Nothing And ModArchivo Is Nothing And (NewArchivoPvt = Nothing Or NewArchivoPvt = "") Then
-            Errors.Add("No hay datos para generar el PVT, debes seleccionar alguna opcion en la pestaña PVT o cargar un archivo.Out.")
+        If ModPvt Is Nothing And ModArchivo Is Nothing And (NewArchivoPvt = Nothing Or NewArchivoPvt = "") Then
+            Errors.Add("No hay datos para generar el PVT, debes seleccionar alguna opcion en la pestaña PVT o cargar un archivo.Out en Generales")
         End If
 
         'If Aforos.Count = 0 Then

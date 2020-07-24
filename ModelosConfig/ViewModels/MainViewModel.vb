@@ -400,6 +400,16 @@ Public Class MainViewModel
     End Property
 
 #Region "HABILITADORES / DESHABILITADORES"
+    Private _show_graph_gas As Boolean
+    Public Property ShowGraphGas As Boolean
+        Get
+            Return _show_graph_gas
+        End Get
+        Set(value As Boolean)
+            _show_graph_gas = value
+            RaisePropertyChanged("ShowGraphGas")
+        End Set
+    End Property
     Private _enabled_view As Boolean
     Public Property EnabledView As Boolean
         Get
@@ -786,7 +796,11 @@ Public Class MainViewModel
     End Sub
     'Datos Tchart4
     Sub LoadGAS(ByVal model As VW_EDO_GENERAL)
+        ShowGraphGas = False
         Dim comportamientos = (From com In db.COMPORTAMIENTO_GAS Join det In db.COMPORTAMIENTO_GAS_DETALLES On com.IDCOMPORTAMIENTOGAS Equals det.IDCOMPORTAMIENTOGAS Where com.IDMODPOZO = model.IDMODPOZO).ToList()
+
+
+
 
         Dim xaux As New Dictionary(Of String, ArrayList)
         Dim yaux As New Dictionary(Of String, ArrayList)
@@ -872,6 +886,8 @@ Public Class MainViewModel
                         grfGas.TChart1.Series(8).Add(bec.Qpromedio.GetValueOrDefault(), bec.General.GetValueOrDefault()) 'REVISAR URGENTEMENTE HAY Q MODIFICAR VALORES
 
                 End Select
+
+                ShowGraphGas = True
             End If
         Catch ex As Exception
             MessageBox.Show(ex.Message, "Advertencia G4", MessageBoxButton.OK, MessageBoxImage.Warning)

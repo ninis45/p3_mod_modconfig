@@ -32,11 +32,14 @@ Public Class ModModel
     Property ModBNC As MOD_POZO_BNC
     Property ModBEC As MOD_POZO_BEC
     Property ModPvt As MOD_POZO_PVT
+    Public PvtMatch As List(Of MOD_POZO_PVT_MATCH)
+
     Property NewArchivoPvt As String
     Property ArchivoProsper As ARCHIVOS_PROSPER
     Property ArchivoPvt As String
 
     Property IdPvt As String
+    Public Messages As List(Of String) = New List(Of String)
 
     Property Equipment As Boolean
 
@@ -55,11 +58,12 @@ Public Class ModModel
 
     Public Sub New(ByVal IdAgujero As String, ByVal IdModPozo As String)
         Me.db = New Entities_ModeloCI()
+
         Me.IdAgujero = IdAgujero
         Me.IdModPozo = IdModPozo
 
         Me.VwGeneral = GetModelo(IdModPozo)
-        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
+
 
         If Me.VwGeneral IsNot Nothing Then
             'Posiblemente depreciado
@@ -71,6 +75,8 @@ Public Class ModModel
 
             Me.ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
             Me.ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
+            Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDMODPOZO = IdModPozo).ToList()
+
         End If
 
         Dim Agujero As VW_AGUJEROS = db.VW_AGUJEROS.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
@@ -87,7 +93,7 @@ Public Class ModModel
 
         Me.IdUsuario = IdUsuario
         Me.LiftMethod = LiftMethod
-        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
+
         Me.Trayectorias = db.VW_TRAYECTORIA.Where(Function(w) w.IDAGUJERO = IdAgujero).ToList()
 
         'Buscamos Edo Mecanico
@@ -103,6 +109,15 @@ Public Class ModModel
 
             If ArchivoProsper IsNot Nothing Then
                 Equipment = ArchivoProsper.equipment.GetValueOrDefault()
+            End If
+
+            If Me.Estatus = -1 Then
+                Dim Conf = db.CONFIGURACION_ADMINISTRADOR.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
+                If Conf.EJECUCION_PROCESOS.Count > 0 Then
+                    Messages = (From e In Conf.EJECUCION_PROCESOS Where e.ESTATUS = -1 And e.ENDRECORD Is Nothing Select e.ERRORS).ToList()
+                    'Messages = Conf.EJECUCION_PROCESOS.AsEnumerable().Select(Function(s) New With {s.ERRORS}).OfType(Of String)
+                End If
             End If
         End If
 
@@ -139,7 +154,7 @@ Public Class ModModel
         If General IsNot Nothing Then
             Me.VwGeneral = General
             Me.Comenta = General.OBSERVACIONES
-            Me.ModPvt = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = General.IDMODPOZO).SingleOrDefault()
+
 
             IdModPozo = VwGeneral.IDMODPOZO
             Estatus = VwGeneral.ESTATUS.GetValueOrDefault()
@@ -162,6 +177,10 @@ Public Class ModModel
         Me.ModTemperaturas = db.MOD_POZO_TEMP.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.TEMPERATURA).ToList()
         Me.ModTrayectorias = db.MOD_POZO_TRAYEC.Where(Function(w) w.IDMODPOZO = IdModPozo).OrderBy(Function(o) o.PROFUNDIDADMD).ToList()
         Me.ModPvt = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+        Me.ModTuberias = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDMODPOZO = IdModPozo).ToList()
+        If Me.ModPvt Is Nothing Then
+            Me.ModPvt = New MOD_POZO_PVT()
+        End If
     End Sub
 
     ''' <summary>
@@ -226,12 +245,12 @@ Public Class ModModel
                         .FECHAMODELO = DateTime.Now
                     }
 
-                        db.MOD_POZO.Add(ModPozo)
-                        IdModPozo = ModPozo.IDMODPOZO
+                    db.MOD_POZO.Add(ModPozo)
+                    IdModPozo = ModPozo.IDMODPOZO
 
-                    Else
+                Else
 
-                        ModPozo = db.MOD_POZO.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+                    ModPozo = db.MOD_POZO.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
                     ModPozo.OBSERVACIONES = Comenta
                     ModPozo.FECHAMODELO = DateTime.Now
 
@@ -320,26 +339,9 @@ Public Class ModModel
     Public Sub SavePvt(ByVal IdModPozo As String)
         Dim Fil As Byte()
 
-        ''Actualizamos PVT y moverlo a SavePvt()
-        'If ModPvt Is Nothing Then
-        '    ModPvt = New MOD_POZO_PVT() With {.CREATED_ON = DateTime.Now, .IDPVTGENERAL = Formacion.id}
-        'End If
 
 
-        'If IdPvt IsNot Nothing Then
-        'ModPvt.IDPVTGENERAL = IdPvt
 
-        If ModPvt IsNot Nothing AndAlso ModPvt.IDPVTGENERAL IsNot Nothing Then
-            If ModPvt.IDMODPOZO <> IdModPozo Then
-                db.Entry(ModPvt).State = Entity.EntityState.Detached
-                ModPvt.IDMODPOZO = IdModPozo
-                ModPvt.IDMODPOZOPVT = Guid.NewGuid().ToString().ToUpper()
-                db.MOD_POZO_PVT.Add(ModPvt)
-            Else
-                db.Entry(ModPvt).State = System.Data.Entity.EntityState.Modified
-            End If
-            db.SaveChanges()
-        End If
 
         'End If
 
@@ -364,18 +366,69 @@ Public Class ModModel
 
                 'Guardamos una copia en el historial de archivos
                 '============================================================
-                db.ARCHIVOS_PROSPER.Add(New ARCHIVOS_PROSPER() With {
+                ArchivoProsper = New ARCHIVOS_PROSPER() With {
                         .equipment = Equipment,
                         .idModPozo = IdModPozo,
                         .fecha = DateTime.Now,
                         .nombreArchivo = NewArchivoPvt,
                         .archivo = Fil,
                         .idUsuario = IdUsuario
-                })
+                }
+                db.ARCHIVOS_PROSPER.Add(ArchivoProsper)
+            Else
+                'Construimos el PVT desde la BD
+                '====================================================================
+                If ModPvt.IDMODPOZO <> IdModPozo Then
+
+                    If ModPvt.IDMODPOZO Is Nothing Then
+                        Dim ModPvtDel = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
+                        If ModPvtDel IsNot Nothing Then
+                            db.MOD_POZO_PVT.Remove(ModPvtDel)
+                        End If
+                    End If
+                    db.Entry(ModPvt).State = Entity.EntityState.Detached
+                    ModPvt.IDMODPOZO = IdModPozo
+                    ModPvt.IDMODPOZOPVT = Guid.NewGuid().ToString().ToUpper()
+                    db.MOD_POZO_PVT.Add(ModPvt)
+                Else
+                    db.Entry(ModPvt).State = System.Data.Entity.EntityState.Modified
+                End If
+                db.SaveChanges()
+
+                'Dim ToDelete = db.MOD_POZO_PVT_MATCH.Where(Function(w) w.IDMODPOZOPVT = ModPvt.IDMODPOZOPVT).ToList()
+                'If ToDelete.Count > 0 Then
+                '    ToDelete.ForEach(Function(e) db.MOD_POZO_PVT_MATCH.Remove(e))
+                '    db.SaveChanges()
+                'End If
+
+                'For Each PvtM In PvtMatch
+                '    If PvtM.IDMOD_POZO_PVT_MATCH IsNot Nothing Then
+                '        db.Entry(PvtM).State = Entity.EntityState.Detached
+                '    End If
+                '    PvtM.IDMOD_POZO_PVT_MATCH = Guid.NewGuid().ToString().ToUpper()
+                '    PvtM.IDMODPOZOPVT = ModPvt.IDMODPOZOPVT
+                '    db.MOD_POZO_PVT_MATCH.Add(PvtM)
+                'Next
+                'db.SaveChanges()
+
+
+
+                'Termina PVT
             End If
 
 
         Else
+
+            'Borramos el PVT de la BD
+            Dim DelPvt = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
+            If DelPvt IsNot Nothing Then
+                db.MOD_POZO_PVT.Remove(DelPvt)
+                db.SaveChanges()
+            End If
+
+
             ArchivoProsper.equipment = Equipment
 
             If ArchivoProsper.idModPozo <> IdModPozo Then
@@ -393,7 +446,44 @@ Public Class ModModel
 
         End If
 
+        'If ModPvt IsNot Nothing AndAlso ModPvt.IDPVTGENERAL IsNot Nothing Then
+        '    If ModPvt.IDMODPOZO <> IdModPozo Then
 
+        '        If ModPvt.IDMODPOZO Is Nothing Then
+        '            Dim ModPvtDel = db.MOD_POZO_PVT.Where(Function(w) w.IDMODPOZO = IdModPozo).SingleOrDefault()
+
+        '            If ModPvtDel IsNot Nothing Then
+        '                db.MOD_POZO_PVT.Remove(ModPvtDel)
+        '            End If
+        '        End If
+        '        db.Entry(ModPvt).State = Entity.EntityState.Detached
+        '        ModPvt.IDMODPOZO = IdModPozo
+        '        ModPvt.IDMODPOZOPVT = Guid.NewGuid().ToString().ToUpper()
+        '        db.MOD_POZO_PVT.Add(ModPvt)
+        '    Else
+        '        db.Entry(ModPvt).State = System.Data.Entity.EntityState.Modified
+        '    End If
+        '    db.SaveChanges()
+
+
+        '    Dim ToDelete = db.MOD_POZO_PVT_MATCH.Where(Function(w) w.IDMODPOZOPVT = ModPvt.IDMODPOZOPVT).ToList()
+        '    If ToDelete.Count > 0 Then
+        '        ToDelete.ForEach(Function(e) db.MOD_POZO_PVT_MATCH.Remove(e))
+        '        db.SaveChanges()
+        '    End If
+
+        '    For Each PvtM In PvtMatch
+        '        If PvtM.IDMOD_POZO_PVT_MATCH IsNot Nothing Then
+        '            db.Entry(PvtM).State = Entity.EntityState.Detached
+        '        End If
+        '        PvtM.IDMOD_POZO_PVT_MATCH = Guid.NewGuid().ToString().ToUpper()
+        '        PvtM.IDMODPOZOPVT = ModPvt.IDMODPOZOPVT
+        '        db.MOD_POZO_PVT_MATCH.Add(PvtM)
+        '    Next
+        '    db.SaveChanges()
+
+
+        'End If
     End Sub
 
     Function SaveMecanico() As Integer
@@ -408,13 +498,16 @@ Public Class ModModel
                 For i = 0 To Mecanicos.Count - 1
                     Mecanicos(i).ORDEN = i
 
-                    If Mecanicos(i).IDMODPOZOTUBERIA Is Nothing Then
+                    If Mecanicos(i).IDMODPOZOTUBERIA Is Nothing Or Mecanicos(i).IDMODPOZO <> IdModPozo Then
 
-                        Mecanicos(i).IDAGUJERO = IdAgujero
+                        If Mecanicos(i).IDMODPOZOTUBERIA IsNot Nothing Then
+                            db.Entry(Mecanicos(i)).State = Entity.EntityState.Detached
+                        End If
+                        Mecanicos(i).IDMODPOZO = IdModPozo
                         Mecanicos(i).IDMODPOZOTUBERIA = Guid.NewGuid().ToString().ToUpper()
                         db.MOD_POZO_TUBERIA.Add(Mecanicos(i))
                     Else
-                        Mecanicos(i).IDAGUJERO = IdAgujero
+
                         db.Entry(Mecanicos(i)).State = Entity.EntityState.Modified
                     End If
 
@@ -423,7 +516,7 @@ Public Class ModModel
                 Next
 
 
-                Dim to_deletes = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDAGUJERO = IdAgujero And Ids.Contains(w.IDMODPOZOTUBERIA) = False).ToList()
+                Dim to_deletes = db.MOD_POZO_TUBERIA.Where(Function(w) w.IDMODPOZO = IdModPozo And Ids.Contains(w.IDMODPOZOTUBERIA) = False).ToList()
 
                 If to_deletes.Count > 0 Then
                     to_deletes.ForEach(Function(e) db.MOD_POZO_TUBERIA.Remove(e))
