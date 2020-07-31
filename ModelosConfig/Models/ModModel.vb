@@ -149,7 +149,7 @@ Public Class ModModel
     End Function
     Public Function GetModelo() As VW_EDO_GENERAL
 
-        Dim General = (From edo_general In db.VW_EDO_GENERAL Where edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION = 6 And edo_general.LIFTMETHOD = LiftMethod And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION = 6 And edo_general.LIFTMETHOD = LiftMethod).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
+        Dim General = (From edo_general In db.VW_EDO_GENERAL Where edo_general.IDAGUJERO = IdAgujero And edo_general.FUNCION = 6 And edo_general.FECHAMODELO = (db.MOD_POZO.Where(Function(w) w.IDAGUJERO = IdAgujero And w.FUNCION = 6 And edo_general.LIFTMETHOD = LiftMethod).Max(Function(m) m.FECHAMODELO))).SingleOrDefault() ' db.VW_EDO_GENERAL.Where(Function(w) w.IDAGUJERO = IdAgujero).SingleOrDefault()
 
         If General IsNot Nothing Then
             Me.VwGeneral = General
@@ -296,6 +296,7 @@ Public Class ModModel
 
 
                 Select Case ModGeneral.LIFTMETHOD
+
                     Case 1
                         If ModBNC.IDMODPOZO = IdModPozo Then
                             db.Entry(ModBNC).State = System.Data.Entity.EntityState.Modified

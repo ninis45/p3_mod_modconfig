@@ -910,7 +910,12 @@ Public Class ConfigViewModel
                     VisibleSave = True
                     GetErrors()
                 Else
+                    'If LiftMethod = 0 Then
+                    '    VisibleSave = True
+                    'Else
                     VisibleSave = False
+                    'End If
+
                 End If
             End If
 

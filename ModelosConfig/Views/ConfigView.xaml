@@ -902,6 +902,7 @@
             <telerik:RadTabItem x:Name="ItemTemps" Header="Temperaturas"  Background="#FF7BB085"  HeaderForeground="#FF001909" FontFamily="Century Gothic" FontSize="14" IsEnabled="{Binding ElementName=chkEquipment,Path=IsChecked,Converter={StaticResource WRInverseBoolean}}" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=7}">
                 <ScrollViewer>
                     <StackPanel Margin="10">
+                       
                         <Border Style="{StaticResource alert-info}" Visibility="{Binding Trayectorias.Count,Converter={StaticResource NumberToVisibilityConverter}}">
                             <StackPanel Orientation="Vertical">
                                 <TextBlock TextWrapping="Wrap"  Text="La siguiente lista de temperaturas se genera automaticamente tomando en cuenta la lista e informacion de las trayectorias"></TextBlock>
@@ -951,7 +952,31 @@
               
 
             </telerik:RadTabItem>
-            <telerik:RadTabItem Header="BNC" Visibility="{Binding LiftMethod,Converter={StaticResource WREqualVisibility},ConverterParameter=1}"  FontFamily="Century Gothic" FontSize="14" Foreground="#FFBFBFBF" Background="#FF5FB974" HeaderForeground="#FF002B08" OpacityMask="Black"  Name="tabBNC" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=8}">
+            <telerik:RadTabItem Header="Simple" Visibility="{Binding LiftMethod,Converter={StaticResource WREqualVisibility},ConverterParameter=0}"  FontFamily="Century Gothic" FontSize="14" Foreground="#FFBFBFBF" Background="#FF5FB974" HeaderForeground="#FF002B08" OpacityMask="Black"  Name="tabSimple" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=8}">
+                <StackPanel Margin="10">
+                    <Border Style="{StaticResource alert-warning}">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock TextWrapping="Wrap"  Text="ATENCION: Este modelo no cuenta  con un Sistema Artificial definido, si está de acuerdo con esta configuración pulse el botón Guardar."></TextBlock>
+
+                        </StackPanel>
+                    </Border>
+                    <ItemsControl ItemsSource="{Binding Errors}" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource alert-danger}">
+                                    <StackPanel Orientation="Vertical">
+
+                                        <TextBlock Text="{Binding}" TextWrapping="Wrap" ></TextBlock>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+                
+            
+            </telerik:RadTabItem>
+            <telerik:RadTabItem Header="BNC" Visibility="{Binding LiftMethod,Converter={StaticResource WREqualVisibility},ConverterParameter=1}"  FontFamily="Century Gothic" FontSize="14" Foreground="#FFBFBFBF" Background="#FF5FB974" HeaderForeground="#FF002B08" OpacityMask="Black"  Name="tabBNC" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=9}">
                 <ScrollViewer>
                     <StackPanel Margin="10" IsEnabled="{Binding ElementName=pnlEdit,Path=IsVisible}">
 
@@ -1072,7 +1097,7 @@
 
 
             </telerik:RadTabItem>
-            <telerik:RadTabItem Header="BEC" Visibility="{Binding LiftMethod,Converter={StaticResource WREqualVisibility},ConverterParameter=2}" FontFamily="Century Gothic" FontSize="14" Background="#FF5FB974" Foreground="#FFBFBFBF" HeaderForeground="#FF002C08"  Name="tabBEC" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=9}">
+            <telerik:RadTabItem Header="BEC" Visibility="{Binding LiftMethod,Converter={StaticResource WREqualVisibility},ConverterParameter=2}" FontFamily="Century Gothic" FontSize="14" Background="#FF5FB974" Foreground="#FFBFBFBF" HeaderForeground="#FF002C08"  Name="tabBEC" IsSelected="{Binding Tab,Converter= {StaticResource WRNumToBool},ConverterParameter=10}">
                 <StackPanel Margin="10">
                     <ItemsControl ItemsSource="{Binding Errors}" >
                         <ItemsControl.ItemTemplate>

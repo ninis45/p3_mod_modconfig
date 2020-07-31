@@ -135,33 +135,46 @@
         <!--COMIENZA BODY-->
         <telerik:RadDocking Grid.Row="1" telerik:StyleManager.Theme="Windows8Touch">
             <telerik:RadDocking.DocumentHost>
+               
+                
+                    <Grid Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
 
-                <Grid Visibility="{Binding Estatus,ConverterParameter=3, Converter={StaticResource WRToVisibility}}">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="56*"/>
-                        <ColumnDefinition Width="33*"/>
-                        <ColumnDefinition Width="23*"/>
-                        <ColumnDefinition Width="57*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50*"/>
-                        <RowDefinition Height="50*"/>
-                    </Grid.RowDefinitions>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50*"/>
+                            <RowDefinition Height="50*"/>
+                        </Grid.RowDefinitions>
 
-                    <WindowsFormsHost Grid.Column="0" Name="hstProductividad" />
-                    <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" Grid.ColumnSpan="2" />
-                    <WindowsFormsHost Grid.Column="3" Name="hstVpl" />
+                        <WindowsFormsHost Grid.Column="0" Name="hstProductividad" />
+                        <WindowsFormsHost Grid.Column="1" Name="hstCorrelacion" />
 
+                        <WindowsFormsHost Grid.Column="2" Name="hstVpl" Visibility="{Binding ShowGraphVlp,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Border Background="#bbbbbb"  Grid.Row="0" Grid.Column="2" Visibility="{Binding ShowGraphVlp,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
+                        </Border>
 
-                    <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas" Visibility="{Binding ShowGraphGas,Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <Border Background="#bbbbbb"  Grid.Row="1" Grid.Column="0" Visibility="{Binding ShowGraphGas,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                        <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
-                    </Border>
-                    <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" Grid.ColumnSpan="2" />
-                    <WindowsFormsHost Grid.Row="1" Grid.Column="3" Name="hstWc"/>
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="0" Name="hstGas" Visibility="{Binding ShowGraphGas,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Border Background="#bbbbbb"  Grid.Row="1" Grid.Column="0" Visibility="{Binding ShowGraphGas,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
+                        </Border>
 
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="1" Name="hstDiag" Visibility="{Binding ShowGraphDiag,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Border Background="#bbbbbb"  Grid.Row="1" Grid.Column="1" Visibility="{Binding ShowGraphDiag,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
+                        </Border>
 
-                </Grid>
+                        <WindowsFormsHost Grid.Row="1" Grid.Column="2" Name="hstWc" Visibility="{Binding ShowGraphWc,Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <Border Background="#bbbbbb"  Grid.Row="1" Grid.Column="2" Visibility="{Binding ShowGraphWc,Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                            <TextBlock Foreground="#333333" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14">No disponible</TextBlock>
+                        </Border>
+
+                    </Grid>
+                
+                
 
 
 

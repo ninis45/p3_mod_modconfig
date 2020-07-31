@@ -122,10 +122,12 @@ Public Class ConfigView
 
         'End If
 
-        If ContextConfig.Tab = 7 And ContextConfig.LiftMethod = 2 Then
-            ContextConfig.Tab += 1
+        'If ContextConfig.Tab = 7 And ContextConfig.LiftMethod = 2 Then
+        '    ContextConfig.Tab += 1
+        'End If
+        If ContextConfig.Tab = 7 Then
+            ContextConfig.Tab += Int32.Parse(ContextConfig.LiftMethod)
         End If
-
 
         ContextConfig.Tab = ContextConfig.Tab + 1
 
@@ -152,27 +154,27 @@ Public Class ConfigView
         '    ContextConfig.Tab = 1
         'End If
     End Sub
-    Private Sub SetStepAfter(sender As Object, e As RoutedEventArgs)
+    'Private Sub SetStepAfter(sender As Object, e As RoutedEventArgs)
 
-        'Dim Tmp As Integer = ContextConfig.Tab - 1
+    '    'Dim Tmp As Integer = ContextConfig.Tab - 1
 
-        If ContextConfig.Tab = 10 And ContextConfig.LiftMethod = 2 Then
-            ContextConfig.Tab -= 1
+    '    If ContextConfig.Tab = 10 And ContextConfig.LiftMethod = 2 Then
+    '        ContextConfig.Tab -= 1
 
-        End If
+    '    End If
 
-        If (ContextConfig.Tab = 9 Or ContextConfig.Tab = 10) And ContextConfig.EnabledEquip = True Then
-            ContextConfig.Tab = 6
-        End If
+    '    If (ContextConfig.Tab = 9 Or ContextConfig.Tab = 10) And ContextConfig.EnabledEquip = True Then
+    '        ContextConfig.Tab = 6
+    '    End If
 
-        If ContextConfig.Tab > 2 Then
-            ContextConfig.Tab = ContextConfig.Tab - 1
-        Else
-            ContextConfig.Tab = 1
-        End If
+    '    If ContextConfig.Tab > 2 Then
+    '        ContextConfig.Tab = ContextConfig.Tab - 1
+    '    Else
+    '        ContextConfig.Tab = 1
+    '    End If
 
 
-    End Sub
+    'End Sub
 
     Private Sub DeleteFile(sender As Object, e As RoutedEventArgs)
         ContextConfig.ModArchivo = Nothing
@@ -436,7 +438,7 @@ Public Class ConfigView
     End Sub
 
     Private Sub DownloadFile(sender As Object, e As RoutedEventArgs)
-        Dim stream As Stream
+
         Dim saveFileDialog As New System.Windows.Forms.SaveFileDialog()
         Dim FileNames = ContextConfig.ModArchivo.nombreArchivo.Split("\".ToCharArray())
         saveFileDialog.Filter = "All files (*.Out)|*.Out"
