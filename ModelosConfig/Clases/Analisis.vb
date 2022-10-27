@@ -1,5 +1,6 @@
 ﻿Imports System.Data
 Imports Lagrange.Lagrange
+'cambio realizado
 Namespace Generales
     Public Class Analisis
         Public Shared Function conversion(ByVal dt As DataTable, ByRef TableVal(,) As String, ByRef CountReg As Integer, ByRef SinReg As Boolean) As Boolean
